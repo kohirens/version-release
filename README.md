@@ -9,11 +9,8 @@ Provides automating the release of software.
 [CircleCI Orb Registry Page](https://circleci.com/orbs/registry/orb/kohirens/version-release-orb) - The official registry page of this orb for all versions, executors, commands, and jobs described.
 [CircleCI Orb Docs](https://circleci.com/docs/2.0/orb-intro/#section=configuration) - Docs for using and creating CircleCI Orbs.
 
-### How to Contribute
-
-We welcome [issues](https://github.com/kohirens/version-release-orb/issues) to and [pull requests](https://github.com/kohirens/version-release-orb/pulls) against this repository!
-
 ### How to Publish
+
 * Create and push a branch with your new features.
 * When ready to publish a new production version, create a Pull Request from _feature branch_ to `master`.
 * The title of the pull request must contain a special semver tag: `[semver:<segment>]` where `<segment>` is replaced by one of the following values.
