@@ -1,4 +1,4 @@
-ConfigCheck() {
+GitChglogConfigCheck() {
     if [ -f "${PARAM_CONFIGFILE}" ]; then
         return 0
     fi
@@ -10,6 +10,6 @@ ConfigCheck() {
 # View src/tests for more information.
 ORB_TEST_ENV="bats-core"
 if [ "${0#*$ORB_TEST_ENV}" == "$0" ]; then
-    ConfigCheck
+    GitChglogConfigCheck
     exit $?
 fi
