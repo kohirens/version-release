@@ -1,9 +1,8 @@
+returnVal=0
 GitChglogConfigCheck() {
-    if [ -f "${PARAM_CONFIGFILE}" ]; then
-        return 0
+    if [ ! -f "${PARAM_CONFIGFILE}" ]; then
+        returnVal=1
     fi
-
-    return 1
 }
 
 # Will not run if sourced for bats-core tests.
@@ -11,5 +10,5 @@ GitChglogConfigCheck() {
 ORB_TEST_ENV="bats-core"
 if [ "${0#*$ORB_TEST_ENV}" == "$0" ]; then
     GitChglogConfigCheck
-    exit $?
+    exit $returnVal
 fi
