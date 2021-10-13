@@ -8,6 +8,6 @@ setup() {
     # Mock environment variables or functions by exporting them (after the script has been sourced)
     export PARAM_CONFIGFILE="./test/.chglog/config.yml"
     # Capture the output of our "Greet" function
-    result=$(Greet)
-    [ "$result" == "0" ]
+    result=$(GitChglogConfigCheck)
+    [ "${result}" == "0" ]
 }
