@@ -9,8 +9,4 @@ parameters:
 steps:
   - run:
       name: Updating the CHANGLOG.md
-      command: <<include(scripts/greet.sh)>>|
-        if [ -f "<<parameters.configFile>>" ]; then
-          exit 0
-        fi
-        exit 1
+      command: <<include(scripts/git-chglog-check.sh)>>
