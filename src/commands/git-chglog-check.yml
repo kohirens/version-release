@@ -1,0 +1,16 @@
+
+description: >
+  Update the CHANGELOG.md file.
+parameters:
+  configFile:
+    type: string
+    default: ".chglog/config.yml"
+    description: "The location of git-chglog configuration file in your repository."
+steps:
+  - run:
+      name: Updating the CHANGLOG.md
+      command: <<include(scripts/greet.sh)>>|
+        if [ -f "<<parameters.configFile>>" ]; then
+          exit 0
+        fi
+        exit 1
