@@ -1,0 +1,7 @@
+description: >
+  Update the CHANGELOG.md file.
+steps:
+  - run:
+      name: Updating the CHANGLOG.md
+      command: |
+        git-chglog --output CHANGELOG.md
