@@ -1,6 +1,7 @@
 returnVal=0
 GitChglogConfigCheck() {
     if [ ! -f "${PARAM_CONFIGFILE}" ]; then
+        echo "no changelog file found."
         returnVal=1
     fi
 }
