@@ -1,2 +1,7 @@
-# orb.yml is "packed" from source, and not published directly from the repository.
+# Directories
+# -----------
+/.idea/
+
+# Files
+# -----
 orb.yml
