@@ -43,9 +43,9 @@ jobs:
       - checkout
       # Push new changes first, before adding new tests to your config.
       - run: echo "<<pipeline.parameters.dev-orb-version>>"
-#      - version-release/git-chglog-update:
-#          config: "./test/data/.chglog/config.yml"
-#          outputFile: "./test/data/CHANGELOG.md"
+      - version-release/git-chglog-update:
+          config: "./test/data/.chglog/config.yml"
+          outputFile: "./test/data/CHANGELOG.md"
 
 workflows:
   # Prior to producing a development orb (which requires credentials) basic validation, linting, and even unit testing can be performed.
