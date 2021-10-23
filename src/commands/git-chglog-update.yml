@@ -1,7 +1,17 @@
 description: >
   Update the CHANGELOG.md file.
+parameters:
+  chglogFile:
+    description: Location to output/update the CHANGELOG file.
+    type: string
+    default: ".chglog/config.yml"
+    default: "./test/data/.chglog/config.yml"
+  chglogConfigFile:
+    description: An internal flag to prevent integration test from running before a development version has been created.
+    type: string
+    default: "CHANGELOG.md"
 steps:
   - run:
       name: Updating the CHANGLOG.md
       command: |
-        git-chglog --output CHANGELOG.md
+        git-chglog --output <<parameters.chglogFile>> -c <<parameters.chglogConfigFile>>
