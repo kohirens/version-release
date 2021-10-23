@@ -13,4 +13,6 @@ steps:
   - run:
       name: Updating the CHANGLOG.md
       command: |
+        wd=$(pwd)
+        printf "working directory: ${wd}\n"
         git-chglog --output <<parameters.outputFile>> -c <<parameters.config>>
