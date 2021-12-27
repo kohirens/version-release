@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+    cli:
+        build:
+            args:
+                USER_NAME: '${USER_NAME}'
+                REPO: '${REPO}'
+            dockerfile: '.docker/Dockerfile'
+            context: '..'
+        image: 'kohirens/version-release-orb:0.1.0'
+        volumes:
+            - '../:/home/${USER_NAME}/src/${REPO}'
+            - '~/.ssh/known_hosts:/home/${USER_NAME}/.ssh/known_hosts'
+            - 'vscode:/home/${USER_NAME}/.vscode-server'
+            - 'vscode_i:/home/${USER_NAME}/.vscode-server-insiders'
+
+volumes:
+    vscode: null
+    vscode_i: null
