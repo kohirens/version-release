@@ -4,14 +4,14 @@ orbs:
   # Chicken-Egg/Catch-22 scenario
   # So when the "test-pack" pipeline runs "dev-orb-version" will be "dev:alpha", the previous build.
   # Only after a successful run of "test-pack" does a new version of your orb exist with the latest features.
-  # This means you cannot use new features in the integration test pipeline until but afterward. Make the process as follows:
+  # This means you cannot use new features in the integration test pipeline until afterward. Make the process as follows:
   # 1. Push out new features/breaking changes without updating the integration pipeline.
   # 2. Make sure the pipeline succeeds.
   # 3. Update your integration pipeline to test the new features/breaking changes.
   # Further: When the "integration-test_deploy" pipeline runs it will use the latest dev image set to the latest hash.
   # However, the whole CI config is compiled before building your latest dev orb (with its latest features). So any
   # calls to those features will throw errors and the pipeline will fail.
-  version-release: kohirens/version-release@<<pipeline.parameters.dev-orb-version>> # are we calling our orb before we build the latest dev version.
+  version-release: kohirens/version-release@<<pipeline.parameters.dev-orb-version>> # Are we calling our orb before we build the latest dev version?
   orb-tools: circleci/orb-tools@10.0
   bats: circleci/bats@1.0
   shellcheck: circleci/shellcheck@2.0
