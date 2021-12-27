@@ -98,7 +98,7 @@ workflows:
           context: orb-publishing
           add-pr-comment: false
           fail-if-semver-not-indicated: true
-          publish-version-tag: false
+          publish-version-tag: true
           requires:
             - integration-test-1
           filters:
