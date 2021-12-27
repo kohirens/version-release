@@ -1,0 +1,25 @@
+{ // ref: https://code.visualstudio.com/docs/remote/devcontainerjson-reference
+	"name": "Version Release Orb",
+	"dockerComposeFile": "../.docker/docker-compose.yml",
+	"service": "cli",
+	"workspaceFolder": "/home/app/src/github.com/kohirens/git-tool-belt",
+	// Use this environment variable if you need to bind mount your local source code into a new container.
+	"remoteEnv": {
+		"LOCAL_WORKSPACE_FOLDER": "${localWorkspaceFolder}"
+	},
+
+	// Set *default* container specific settings.json values on container create.
+	"settings": {
+		"go.toolsManagement.checkForUpdates": "proxy",
+		"go.useLanguageServer": true,
+	},
+	
+	// Add the IDs of extensions you want installed when the container is created.
+	"extensions": [
+		"golang.go"
+	],
+
+	// Use 'postCreateCommand' to run commands after the container is created.
+	"postCreateCommand": "go version",
+    "remoteUser": "circleci"
+}
