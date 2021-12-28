@@ -12,4 +12,7 @@ parameters:
 steps:
   - run:
       name: Updating the CHANGLOG.md
-      command: <<include(scripts/git-chglog-update.sh)>>
+      command: |
+        export PARAM_CONFIGFILE="<<parameters.configFile>>"
+        export PARAM_OUTPUTFILE="<<parameters.outputFile>>"
+        source src/scripts/git-chglog-update.sh
