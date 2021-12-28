@@ -93,12 +93,14 @@ workflows:
       # version will be published or if publishing should
       # be skipped.
       # e.g. [semver:patch] will cause a patch version to be published.
+      # uses CircleCI Kohirens SSH key/fingerprint
       - orb-tools/dev-promote-prod-from-commit-subject:
           orb-name: kohirens/version-release
           context: orb-publishing
           add-pr-comment: false
           fail-if-semver-not-indicated: true
           publish-version-tag: true
+          ssh-fingerprints: ${SSH_FINGER}
           requires:
             - integration-test-1
           filters:
