@@ -1,7 +1,7 @@
 GitChglogUpdate() {
     wd=$(pwd)
-    printf "working directory: ${wd}\n"
-    git-chglog --output $PARAM_OUTPUTFILE -c $PARAM_CONFIGFILE
+    printf "working directory: %s\n" "${wd}"
+    git-chglog --output "${PARAM_OUTPUTFILE}" -c "${PARAM_CONFIGFILE}"
 }
 
 # Will not run if sourced for bats-core tests.
