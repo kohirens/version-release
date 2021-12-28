@@ -1,6 +1,9 @@
-<a name="unreleased"></a>
-## [Unreleased]
+<a name="0.3.0"></a>
+## 0.3.0 - 2021-12-28
 
+### Added
+- Check for tags before updating CHANGELOG.md.
+- SSH fingerprint to CI config.
 
 <a name="0.2.0"></a>
 ## 0.2.0 - 2021-12-26
@@ -20,6 +23,5 @@
 
 ### Removed
 - Sample command and job.
-
 
 [Unreleased]: https://github.com/kohirens/version-release-orb/compare/0.2.0...HEAD
