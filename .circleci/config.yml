@@ -44,7 +44,7 @@ jobs:
       # Push new changes first, before adding new tests to your config.
       - run: echo "<<pipeline.parameters.dev-orb-version>>"
       - version-release/git-chglog-update:
-          config: "./src/tests/data/.chglog/config.yml --next-tag 0.1.0"
+          configFile: "./src/tests/data/.chglog/config.yml --next-tag 0.1.0"
           outputFile: "./src/tests/data/CHANGELOG.md"
 
 workflows:
