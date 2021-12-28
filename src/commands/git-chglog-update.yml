@@ -5,14 +5,11 @@ parameters:
     description: Location to output/update the CHANGELOG file.
     type: string
     default: "CHANGELOG.md"
-  config:
+  configFile:
     description: Location of a git-chglog configuration file.
     type: string
     default: ".chglog/config.yml"
 steps:
   - run:
       name: Updating the CHANGLOG.md
-      command: |
-        wd=$(pwd)
-        printf "working directory: ${wd}\n"
-        git-chglog --output <<parameters.outputFile>> -c <<parameters.config>>
+      command: <<include(scripts/git-chglog-update.sh)>>
