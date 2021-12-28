@@ -1,10 +1,11 @@
 version: 2.1
 
 description: >
-  Provides updating (or initialiaing) a CHANGLELOG.md based on commit messages.
-  Auto publish your release to getup based on semantic versioning
+  Provides updating (or initializing) a CHANGLELOG.md based on commit messages, and produce a release tag based on semantic versioning.
+  Add to your CI pipeline to automate this process.
 
 # This information will be displayed in the orb registry and is not mandatory.
 display:
-  home_url: "https://www.website.com/docs"
-  source_url: "https://www.github.com/EXAMPLE_ORG/EXAMPLE_PROJECT"
+  home_url: "https://github.com/kohirens/version-release-orb/README
+md"
+  source_url: "https://github.com/kohirens/version-release-orb"
