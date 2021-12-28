@@ -1,6 +1,6 @@
 GitChglogUpdate() {
     wd=$(pwd)
-    printf "working directory: %s\n" "${wd}"
+    printf "updating %s using config file %s\n" "${wd}/${PARAM_OUTPUTFILE}" "${PARAM_CONFIGFILE}"
     git-chglog --output "${PARAM_OUTPUTFILE}" -c "${PARAM_CONFIGFILE}"
 }
 
