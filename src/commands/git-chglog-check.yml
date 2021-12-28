@@ -1,11 +1,11 @@
 description: >
-  Update the CHANGELOG.md file.
+  Check for a git-chglog configuration file.
 parameters:
   configFile:
     type: string
     default: ".chglog/config.yml"
-    description: "The location of git-chglog configuration file in your repository."
+    description: Location of a git-chglog configuration file.
 steps:
   - run:
-      name: Updating the CHANGLOG.md
+      name: Check for config
       command: <<include(scripts/git-chglog-check.sh)>>
