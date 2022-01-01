@@ -34,11 +34,7 @@ parameters:
 jobs:
   # Define one or more jobs which will utilize your orb's commands and parameters to validate your changes.
   integration-test-1:
-    docker:
-      - image: kohirens/git-tool-belt:0.3.0
-        auth:
-          username: ${DH_USER}
-          password: ${DH_PASS}
+    executor: vro/default
     steps:
       - checkout
       # Push new changes first, before adding new tests to your config.
@@ -48,23 +44,20 @@ jobs:
           outputFile: "CHANGELOG-4000.md"
 
 workflows:
-  # Prior to producing a development orb (which requires credentials) basic validation, linting, and even unit testing can be performed.
   # This workflow will run on every commit
   test-pack:
     unless: << pipeline.parameters.run-integration-tests >>
     jobs:
-      - orb-tools/lint # Lint Yaml files
-      - orb-tools/pack # Pack orb source
+      - orb-tools/lint
+      - orb-tools/pack
       - shellcheck/check:
           dir: ./src/scripts
           exclude: SC2148
-      # optional: Run BATS tests against your scripts
       - bats/run:
           path: ./src/tests
-      # Publish development version(s) of the orb.
       - orb-tools/publish-dev:
           orb-name: kohirens/version-release
-          context: orb-publishing # A restricted context containing your private publishing credentials. Will only execute if approved by an authorized user.
+          context: orb-publishing
           requires:
             - orb-tools/lint
             - orb-tools/pack
