@@ -42,6 +42,34 @@ jobs:
       - vro/git-chglog-update:
           configFile: "src/tests/data/.chglog/config.yml"
           outputFile: "CHANGELOG-4000.md"
+  get-commit-tag:
+    executor: vro/default
+    steps:
+      - checkout
+      - attach_workspace:
+          at: '.'
+      - run: git describe > git-tag.txt
+      - run: cat git-tag.txt
+      - persist_to_workspace:
+          root: '.'
+          paths:
+            - 'git-tag.txt'
+  debug_info:
+    executor: vro/default
+    steps:
+      - attach_workspace:
+          at: '.'
+      - run:
+          name: debug info
+          command: |
+            wd=$(pwd)
+            who=$(whoami)
+            printf "current directory: %s\n" "${wd}"
+            printf "current user: %s\n" "${who}"
+            echo "list current directory contents:"
+            ls -la .
+            echo "list workspace directory contents:"
+            ls -la ./workspace
 
 workflows:
   # This workflow will run on every commit
@@ -70,6 +98,10 @@ workflows:
           context: orb-publishing
           requires:
             - orb-tools/publish-dev
+      - get-commit-tag:
+          requires: [ orb-tools/pack ]
+      - debug_info:
+          requires: [ orb-tools/pack ]
 
   # This `integration-test_deploy` workflow will only run
   # when the run-integration-tests pipeline parameter is set to true.
@@ -93,10 +125,24 @@ workflows:
           add-pr-comment: false
           fail-if-semver-not-indicated: true
           publish-version-tag: true
-          ssh-fingerprints: ${SSH_FINGER}
+          ssh-fingerprints: "${SSH_FINGER}"
           requires:
             - integration-test-1
           filters:
             branches:
               only:
                 - main
+      - orb-tools/publish:
+          pre-steps:
+            - run:
+                command: echo "hi"
+          attach-workspace: true
+          checkout: false
+          context: orb-publishing
+          filters:
+            tags:
+              only:
+                - /^v?\d+\.\d+\.\d+$/
+          orb-ref: kohirens/version-release@0.3.0
+          requires:
+            - integration-test-1
