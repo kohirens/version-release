@@ -12,7 +12,7 @@ orbs:
   # However, the whole CI config is compiled before building your latest dev orb (with its latest features). So any
   # calls to those features will throw errors and the pipeline will fail.
   vro: kohirens/version-release@<<pipeline.parameters.dev-orb-version>> # We are calling our orb before we build the latest dev version!
-  orb-tools: circleci/orb-tools@10.0
+  orb-tools: circleci/orb-tools@10.1.0
   bats: circleci/bats@1.0
   shellcheck: circleci/shellcheck@2.0
 
@@ -68,8 +68,6 @@ jobs:
             printf "current user: %s\n" "${who}"
             echo "list current directory contents:"
             ls -la .
-            echo "list workspace directory contents:"
-            ls -la ./workspace
 
 workflows:
   # This workflow will run on every commit
@@ -98,8 +96,8 @@ workflows:
           context: orb-publishing
           requires:
             - orb-tools/publish-dev
-      - get-commit-tag:
-          requires: [ orb-tools/pack ]
+#      - get-commit-tag:
+#          requires: [ orb-tools/pack ]
       - debug_info:
           requires: [ orb-tools/pack ]
 
@@ -135,14 +133,16 @@ workflows:
       - orb-tools/publish:
           pre-steps:
             - run:
-                command: echo "hi"
+                name: "Get Git tag"
+                command: git describe > git-tag.txt && cat git-tag.txt
           attach-workspace: true
           checkout: false
           context: orb-publishing
           filters:
             tags:
-              only:
-                - /^v?\d+\.\d+\.\d+$/
+              only: /^v?\d+\.\d+\.\d+$/
+            branches:
+              ignore: /.*/
           orb-ref: kohirens/version-release@0.3.0
           requires:
             - integration-test-1
