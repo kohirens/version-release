@@ -2,15 +2,16 @@ version: 2.1
 
 orbs:
   # Chicken-Egg/Catch-22 scenario
-  # So when the "test-pack" pipeline runs "dev-orb-version" will be "dev:alpha", the previous build.
+  # So when the "test-pack" pipeline runs "dev-orb-version" will be "dev:alpha" from any previous publish.
   # Only after a successful run of "test-pack" does a new version of your orb exist with the latest features.
-  # This means you cannot use new features in the integration test pipeline until afterward. Make the process as follows:
+  # This means you cannot use new features in the integration test pipeline until afterward.
+  # Updating integration test requires the following process:
   # 1. Push out new features/breaking changes without updating the integration pipeline.
   # 2. Make sure the pipeline succeeds.
   # 3. Update your integration pipeline to test the new features/breaking changes.
-  # Further: When the "integration-test_deploy" pipeline runs it will use the latest dev image set to the latest hash.
+  # Again when the "integration-test_deploy" pipeline runs it will use the latest dev image set to the latest hash.
   # However, the whole CI config is compiled before building your latest dev orb (with its latest features). So any
-  # calls to those features will throw errors and the pipeline will fail.
+  # calls to those features will throw errors and the pipeline will fail. SO the process above MUST be followed.
   vro: kohirens/version-release@<<pipeline.parameters.dev-orb-version>> # We are calling our orb before we build the latest dev version!
   orb-tools: circleci/orb-tools@10.1.0
   bats: circleci/bats@1.0
@@ -37,7 +38,6 @@ jobs:
     executor: vro/default
     steps:
       - checkout
-      # Push new changes first, before adding new tests to your config.
       - run: echo "<<pipeline.parameters.dev-orb-version>>"
       - vro/git-chglog-update:
           configFile: "src/tests/data/.chglog/config.yml"
