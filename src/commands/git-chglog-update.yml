@@ -11,8 +11,8 @@ parameters:
     default: ".chglog/config.yml"
 steps:
   - run:
+      environment:
+        PARAM_CONFIGFILE: "<< parameters.configFile >>"
+        PARAM_OUTPUTFILE: "<< parameters.outputFile >>"
       name: Updating the CHANGLOG.md
-      command: |
-        export PARAM_CONFIGFILE="<<parameters.configFile>>"
-        export PARAM_OUTPUTFILE="<<parameters.outputFile>>"
-        source src/scripts/git-chglog-update.sh
+      command: << include(scripts/git-chglog-update.sh) >>
