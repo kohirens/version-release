@@ -39,7 +39,6 @@ jobs:
     executor: vro/default
     steps:
       - checkout
-      - run: echo "<<pipeline.parameters.dev-orb-version>>"
       - vro/git-chglog-update:
           configFile: "src/tests/data/.chglog/config.yml"
           outputFile: "CHANGELOG-4000.md"
