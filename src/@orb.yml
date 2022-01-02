@@ -1,7 +1,7 @@
 version: 2.1
 
 description: >
-  Provides updating (or initializing) a CHANGLELOG.md based on commit messages, and produce a release tag based on
+  Provides updating (or initializing) a CHANGELOG.md based on commit messages, and produce a release tag based on
   semantic versioning. Add to your CI pipeline to automate this process.
 
 # This information will be displayed in the orb registry and is not mandatory.
