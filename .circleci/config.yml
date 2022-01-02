@@ -75,11 +75,14 @@ jobs:
             ls -la .
 
 workflows:
-  # This workflow will run on every commit
+  # This workflow will run on every commit except main
   test-pack:
     unless: << pipeline.parameters.run-integration-tests >>
     jobs:
-      - orb-tools/lint
+      - orb-tools/lint:
+          filters:
+            branches:
+              ignore: main
       - orb-tools/pack
       - shellcheck/check:
           dir: ./src/scripts
