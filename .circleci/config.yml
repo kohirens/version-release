@@ -159,6 +159,7 @@ workflows:
 #            - integration-test-1
   tag-release:
     jobs:
+      - orb-tools/pack
       - orb-publish:
           context: orb-publishing
           filters:
@@ -166,3 +167,4 @@ workflows:
               only: /^v?\d+\.\d+\.\d+$/
             branches:
               ignore: /.*/
+          requires: [ orb-tools/pack ]
