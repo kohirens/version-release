@@ -73,6 +73,33 @@ jobs:
             printf "current user: %s\n" "${who}"
             echo "list current directory contents:"
             ls -la .
+  tag-and-release:
+    executor: vro/default
+    steps:
+      - add_ssh_keys:
+          fingerprints:
+            - "0a:16:aa:bf:a7:8b:2a:68:aa:62:28:63:20:11:62:4a"
+      - checkout
+      - vro/git-chglog-update
+      - run: cat CHANGELOG.md
+      - run:
+          name: "Commit the changelog updates"
+          command: |
+            chglogUpdated=$(git diff --name-only -- CHANGELOG.md)
+            if [ -z "${chglogUpdated}" ]; then
+              echo "no changes detected in the CHANGELOG.md file"
+              exit 1
+            fi
+            git add CHANGELOG.md
+            git config --global user.name "${CIRCLE_USERNAME}"
+            git config --global user.email "${CIRCLE_USERNAME}@users.noreply.github.com"
+            git checkout -b update-chglog-${CIRCLE_SHA1:0:7}
+            git commit -m "Updated the CHANGELOG.md\n[ci skip]"
+            git push origin update-chglog-${CIRCLE_SHA1:0:7}
+            echo "${GH_TOKE}" > really-i-need-a-file.txt
+            gh auth login --with-token < really-i-need-a-file.txt
+            gh pr create --base main --head update-chglog-${CIRCLE_SHA1:0:7} --fill
+            gh auth logout -h github.com
 
 workflows:
   # This workflow will run on every commit except main
@@ -132,3 +159,24 @@ workflows:
               only: /^v?\d+\.\d+\.\d+$/
             branches:
               ignore: /.*/
+  # Only run on the main branch
+  # 1. Checkout code.
+  # 2. Run the changelog update command.
+  # 3. If any, commit the changelog changes, ensure you use the CI [skip] tag to prevent a running CI from CI.
+  # 4. Optionally add an approval gate here, this is to try and prevent merge collision, never approve more than one of these at a time as they will collide when trying to update main.
+  # 5. Verify that main has not changed:
+  #      a. If it has, then stop and fail with a message that main has change since this workflow began.
+  #      b. If not, then proceed.
+  # 6. Make a branch.
+  #     a. push the branch.
+  #     b. make a PR.
+  #     c. merge the PR.
+  # 5. Perform a fetch and rebase. Tag the latest main.
+  # 6.
+  tag-and-release-flow:
+    jobs:
+      - tag-and-release:
+          context: orb-publishing
+#          filters:
+#            branches:
+#              only: main
