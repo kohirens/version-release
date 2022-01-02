@@ -1,18 +1,25 @@
 description: >
-  Update the CHANGELOG.md file.
-parameters:
-  outputFile:
-    description: Location to output/update the CHANGELOG file.
-    type: string
-    default: "CHANGELOG.md"
-  configFile:
-    description: Location of a git-chglog configuration file.
-    type: string
-    default: ".chglog/config.yml"
-steps:
-  - run:
-      environment:
-        PARAM_CONFIGFILE: "<< parameters.configFile >>"
-        PARAM_OUTPUTFILE: "<< parameters.outputFile >>"
-      name: Updating the CHANGLOG.md
-      command: << include(scripts/git-chglog-update.sh) >>
+  Update the CHANGELOG.md using only specifically formatted Git commit messages, for example:
+  ```
+  add: Awesome new feature
+  rmv: Obsolete features
+
+  BREAKING CHANGE
+  ```
+usage:
+  version: 2.1
+  orbs:
+    vro: kohirens/version-release@0.3.5
+  workflows:
+    use-my-orb:
+      jobs:
+        - checkout
+        - update-the-chglog:
+            requires: [ checkout ]
+jobs:
+  update-the-chglog:
+    executor: vro/default
+    steps:
+      - vro/git-chglog-update:
+          configFile: ".chglog/config.yml"
+          outputFile: "CHANGELOG.md"
