@@ -8,4 +8,4 @@ parameters:
 steps:
   - run:
       name: Check for config
-      command: <<include(scripts/git-chglog-check.sh)>>
+      command: << include(scripts/git-chglog-check.sh) >>
