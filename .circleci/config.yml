@@ -157,8 +157,9 @@ workflows:
 #          orb-ref: "kohirens/version-release@0.3.0"
 #          requires:
 #            - integration-test-1
+  tag-release:
+    jobs:
       - orb-publish:
-          requires: [ integration-test-1 ]
           context: orb-publishing
           filters:
             tags:
