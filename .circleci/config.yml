@@ -16,6 +16,7 @@ orbs:
   orb-tools: circleci/orb-tools@10.1.0
   bats: circleci/bats@1.0
   shellcheck: circleci/shellcheck@2.0
+  cli: circleci/circleci-cli@0.1.8
 
 # Pipeline Parameters
 ## These parameters are used internally by orb-tools. Skip to the Jobs section.
@@ -42,18 +43,23 @@ jobs:
       - vro/git-chglog-update:
           configFile: "src/tests/data/.chglog/config.yml"
           outputFile: "CHANGELOG-4000.md"
-  get-commit-tag:
-    executor: vro/default
+  orb-publish:
+    executor: cli/default
     steps:
       - checkout
       - attach_workspace:
           at: '.'
-      - run: git describe > git-tag.txt
-      - run: cat git-tag.txt
-      - persist_to_workspace:
-          root: '.'
-          paths:
-            - 'git-tag.txt'
+      - run:
+          name: "Publish orb at kohirens/version-release"
+          command: |
+            GIT_TAG=$(git tag --points-at HEAD)
+            if [ -z "${GIT_TAG}" ]; then
+              echo "no tag found in order to publish Orb"
+              exit 1
+            fi
+            circleci orb --skip-update-check validate orb.yml
+            circleci orb publish --skip-update-check orb.yml kohirens/version-release@${GIT_TAG} --token ${CIRCLE_TOKEN}
+
   debug_info:
     executor: vro/default
     steps:
@@ -96,8 +102,6 @@ workflows:
           context: orb-publishing
           requires:
             - orb-tools/publish-dev
-#      - get-commit-tag:
-#          requires: [ orb-tools/pack ]
       - debug_info:
           requires: [ orb-tools/pack ]
 
@@ -117,32 +121,44 @@ workflows:
       # be skipped.
       # e.g. [semver:patch] will cause a patch version to be published.
       # uses CircleCI Kohirens SSH key/fingerprint
-      - orb-tools/dev-promote-prod-from-commit-subject:
-          orb-name: kohirens/version-release
-          context: orb-publishing
-          add-pr-comment: false
-          fail-if-semver-not-indicated: true
-          publish-version-tag: true
-          ssh-fingerprints: "${SSH_FINGER}"
-          requires:
-            - integration-test-1
-          filters:
-            branches:
-              only:
-                - main
-      - orb-tools/publish:
-          pre-steps:
-            - run:
-                name: "Get Git tag"
-                command: git describe > git-tag.txt && cat git-tag.txt
-          attach-workspace: true
-          checkout: false
+#      - orb-tools/dev-promote-prod-from-commit-subject:
+#          orb-name: kohirens/version-release
+#          context: orb-publishing
+#          add-pr-comment: false
+#          fail-if-semver-not-indicated: true
+#          publish-version-tag: true
+#          ssh-fingerprints: "${SSH_FINGER}"
+#          requires:
+#            - integration-test-1
+#          filters:
+#            branches:
+#              only:
+#                - main
+#      - orb-tools/publish:
+#          pre-steps:
+#            - run:
+#                name: "Get Git tag"
+#                command: export GIT_TAG=$(git tag --points-at HEAD)
+#          post-steps:
+#            - run:
+#                name: "Show Git tag"
+#                command: echo "GIT_TAG=${GIT_TAG}"
+#          attach-workspace: true
+#          checkout: false
+#          context: orb-publishing
+#          filters:
+#            tags:
+#              only: /^v?\d+\.\d+\.\d+$/
+#            branches:
+#              ignore: /.*/
+#          orb-ref: "kohirens/version-release@0.3.0"
+#          requires:
+#            - integration-test-1
+      - orb-publish:
+          requires: [ integration-test-1 ]
           context: orb-publishing
           filters:
             tags:
               only: /^v?\d+\.\d+\.\d+$/
             branches:
               ignore: /.*/
-          orb-ref: kohirens/version-release@0.3.0
-          requires:
-            - integration-test-1
