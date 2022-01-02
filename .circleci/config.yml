@@ -11,7 +11,7 @@ orbs:
   # Further: When the "integration-test_deploy" pipeline runs it will use the latest dev image set to the latest hash.
   # However, the whole CI config is compiled before building your latest dev orb (with its latest features). So any
   # calls to those features will throw errors and the pipeline will fail.
-  version-release: kohirens/version-release@<<pipeline.parameters.dev-orb-version>> # We are calling our orb before we build the latest dev version!
+  vro: kohirens/version-release@<<pipeline.parameters.dev-orb-version>> # We are calling our orb before we build the latest dev version!
   orb-tools: circleci/orb-tools@10.0
   bats: circleci/bats@1.0
   shellcheck: circleci/shellcheck@2.0
@@ -39,7 +39,7 @@ jobs:
       - checkout
       # Push new changes first, before adding new tests to your config.
       - run: echo "<<pipeline.parameters.dev-orb-version>>"
-      - version-release/git-chglog-update:
+      - vro/git-chglog-update:
           configFile: "src/tests/data/.chglog/config.yml"
           outputFile: "CHANGELOG-4000.md"
 
