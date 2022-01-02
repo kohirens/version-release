@@ -114,46 +114,6 @@ workflows:
     jobs:
       # Run any integration tests defined within the `jobs` key.
       - integration-test-1
-      # Publish a semver version of the orb. relies on
-      # the commit subject containing the text "[semver:patch|minor|major|skip]"
-      # as that will determine whether a patch, minor or major
-      # version will be published or if publishing should
-      # be skipped.
-      # e.g. [semver:patch] will cause a patch version to be published.
-      # uses CircleCI Kohirens SSH key/fingerprint
-#      - orb-tools/dev-promote-prod-from-commit-subject:
-#          orb-name: kohirens/version-release
-#          context: orb-publishing
-#          add-pr-comment: false
-#          fail-if-semver-not-indicated: true
-#          publish-version-tag: true
-#          ssh-fingerprints: "${SSH_FINGER}"
-#          requires:
-#            - integration-test-1
-#          filters:
-#            branches:
-#              only:
-#                - main
-#      - orb-tools/publish:
-#          pre-steps:
-#            - run:
-#                name: "Get Git tag"
-#                command: export GIT_TAG=$(git tag --points-at HEAD)
-#          post-steps:
-#            - run:
-#                name: "Show Git tag"
-#                command: echo "GIT_TAG=${GIT_TAG}"
-#          attach-workspace: true
-#          checkout: false
-#          context: orb-publishing
-#          filters:
-#            tags:
-#              only: /^v?\d+\.\d+\.\d+$/
-#            branches:
-#              ignore: /.*/
-#          orb-ref: "kohirens/version-release@0.3.0"
-#          requires:
-#            - integration-test-1
   tag-release:
     jobs:
       - orb-tools/pack:
