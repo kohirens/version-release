@@ -165,3 +165,8 @@ workflows:
       - orb-publish:
           context: orb-publishing
           requires: [ orb-tools/pack ]
+          filters:
+            tags:
+              only: /^v?\d+\.\d+\.\d+$/
+            branches:
+              ignore: /.*/
