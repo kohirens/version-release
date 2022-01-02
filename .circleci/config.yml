@@ -163,5 +163,5 @@ workflows:
             branches:
               ignore: /.*/
       - orb-publish:
-          context: orb-publishing]
+          context: orb-publishing
           requires: [ orb-tools/pack ]
