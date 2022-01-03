@@ -1,9 +1,45 @@
-<a name="0.3.0"></a>
-## 0.3.0 - 2021-12-28
+<a name="unreleased"></a>
+## [Unreleased]
 
+
+<a name="0.3.6"></a>
+## [0.3.6] - 2022-01-02
 ### Added
+- Updated CHANGELOG command example.
+
+
+<a name="0.3.5"></a>
+## [0.3.5] - 2022-01-02
+
+<a name="0.3.4"></a>
+## [0.3.4] - 2022-01-02
+
+<a name="0.3.3"></a>
+## [0.3.3] - 2022-01-02
+### Fixed
+- Dupe CI runs.
+- CI auto Orb publish after tagging.
+
+
+<a name="0.3.1"></a>
+## [0.3.1] - 2022-01-02
+
+<a name="0.3.2"></a>
+## [0.3.2] - 2022-01-02
+### Changed
+- Allow tags to be run in CI deploy workflow.
+
+
+<a name="0.3.0"></a>
+## [0.3.0] - 2022-01-02
+### Added
+- Publish on making a new tag.
 - Check for tags before updating CHANGELOG.md.
 - SSH fingerprint to CI config.
+
+### Fixed
+- Type in default executor.
+
 
 <a name="0.2.0"></a>
 ## 0.2.0 - 2021-12-26
@@ -24,4 +60,12 @@
 ### Removed
 - Sample command and job.
 
-[Unreleased]: https://github.com/kohirens/version-release-orb/compare/0.2.0...HEAD
+
+[Unreleased]: https://github.com/kohirens/version-release-orb/compare/0.3.6...HEAD
+[0.3.6]: https://github.com/kohirens/version-release-orb/compare/0.3.5...0.3.6
+[0.3.5]: https://github.com/kohirens/version-release-orb/compare/0.3.4...0.3.5
+[0.3.4]: https://github.com/kohirens/version-release-orb/compare/0.3.3...0.3.4
+[0.3.3]: https://github.com/kohirens/version-release-orb/compare/0.3.1...0.3.3
+[0.3.1]: https://github.com/kohirens/version-release-orb/compare/0.3.2...0.3.1
+[0.3.2]: https://github.com/kohirens/version-release-orb/compare/0.3.0...0.3.2
+[0.3.0]: https://github.com/kohirens/version-release-orb/compare/0.2.0...0.3.0
