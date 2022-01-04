@@ -179,4 +179,4 @@ workflows:
           context: orb-publishing
           filters:
             branches:
-              only: update-tag-and-release
+              only: main
