@@ -180,7 +180,7 @@ workflows:
   tag-and-release-flow:
     unless: << pipeline.parameters.run-integration-tests >>
     jobs:
-      - vro/commit-and-merge-changelog:
+      - vro/update-and-merge-changelog:
           context: orb-publishing
           filters:
             branches:
