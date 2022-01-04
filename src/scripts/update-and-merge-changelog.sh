@@ -19,6 +19,10 @@ UpdateAndMergeChangelog() {
         gh pr create --base "${PARAM_BRANCH}" --head "${GEN_BRANCH_NAME}" --fill
         sleep 10
         gh pr merge --auto "${PARAM_MERGE_TYPE}"
+        sleep 5
+        nextVersion=$(jq .nextVersion < build-version.json)
+        releaseDay=$(date +"%Y-%m-%d")
+        gh release create "${nextVersion}" --target "${PARAM_BRANCH}" --title "[${nextVersion}] - ${releaseDay}"
     fi
 }
 
