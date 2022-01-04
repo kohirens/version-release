@@ -1,8 +1,18 @@
 <a name="unreleased"></a>
 ## [Unreleased]
 
+
+<a name=""0.3.7""></a>
+## ["0.3.7"] - 2022-01-04
 ### Changed
+- Updated changelog command to use git-tool-belt.
+- Upgrade default executor image.
+- Renamed job to update-and-merge-changelog.
+- Only run tag-and-release-flow on main branch.
 - Refactor tag-and-release job and workflow.
+
+### Fixed
+- commit-and-merge-changelog job.
 
 
 <a name="0.3.6"></a>
@@ -64,7 +74,8 @@
 - Sample command and job.
 
 
-[Unreleased]: https://github.com/kohirens/version-release-orb/compare/0.3.6...HEAD
+[Unreleased]: https://github.com/kohirens/version-release-orb/compare/"0.3.7"...HEAD
+["0.3.7"]: https://github.com/kohirens/version-release-orb/compare/0.3.6..."0.3.7"
 [0.3.6]: https://github.com/kohirens/version-release-orb/compare/0.3.5...0.3.6
 [0.3.5]: https://github.com/kohirens/version-release-orb/compare/0.3.4...0.3.5
 [0.3.4]: https://github.com/kohirens/version-release-orb/compare/0.3.3...0.3.4
