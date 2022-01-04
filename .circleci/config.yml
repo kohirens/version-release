@@ -162,7 +162,7 @@ workflows:
           context: orb-publishing
           filters:
             branches:
-              only: main
+              only: /main|refactor-ci/
           pre-steps:
             - checkout
             - attach_workspace:
