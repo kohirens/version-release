@@ -1,4 +1,4 @@
-CommitAndMergeChangelog() {
+UpdateAndMergeChangelog() {
     changelogUpdated=$(git diff --name-only -- "${PARAM_CHANGELOG_FILE}")
     if [ -z "${changelogUpdated}" ]; then
         echo "no changes detected in the ${PARAM_CHANGELOG_FILE} file"
@@ -27,5 +27,5 @@ CommitAndMergeChangelog() {
 # View src/tests for more information.
 ORB_TEST_ENV="bats-core"
 if [ "${0#*$ORB_TEST_ENV}" == "$0" ]; then
-    CommitAndMergeChangelog
+    UpdateAndMergeChangelog
 fi
