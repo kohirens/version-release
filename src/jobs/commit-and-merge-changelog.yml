@@ -1,0 +1,41 @@
+description: |2
+  Commit changes to the changelog and merge into a remote branch using the process:
+
+  1. Configure Git to allow a commit.
+  2. Making a new branch.
+  3. Detect and commit the changes to the CHANGELOG, if none, then exit.
+  4. Pushing the branch back to remote GitHub.
+  5. Use the GitHub CLI to make a PR.
+  6. Then immediately merge the changes in the desired branch.
+
+  We use a PR instead of a push in case the branch is protected from direct pushes.
+parameters:
+  changelogFile:
+    description: Location of the CHANGELOG file.
+    type: string
+    default: "CHANGELOG.md"
+  branch:
+    description: Name of the branch to merge into.
+    type: string
+    default: "main"
+  mergeType:
+    description: Type of merge to perform, choose between merge|squash|rebase.
+    type: enum
+    enum: [ "merge", "rebase", "squash" ]
+    default: "rebase"
+  ssh_finger:
+    description: Name of the branch to merge into.
+    type: string
+job:
+  executor: default
+  steps:
+    - add_ssh_keys:
+        fingerprints:
+          - << parameters.ssh_finger >>
+    - run:
+        environment:
+          PARAM_CHANGELOG_FILE: << parameters.changelogFile >>
+          PARAM_BRANCH: << parameters.branch >>
+          PARAM_MERGE_TYPE: << parameters.mergeType >>
+        name: Commit and merge the CHANGELOG updates
+        command: << include(scripts/commit-and-merge-changelog.sh) >>
