@@ -1,18 +1,7 @@
 version: 2.1
 
 orbs:
-  # Chicken-Egg/Catch-22 scenario
-  # So when the "test-pack" pipeline runs "dev-orb-version" will be "dev:alpha" from any previous publish.
-  # Only after a successful run of "test-pack" does a new version of your orb exist with the latest features.
-  # This means you cannot use new features in the integration test pipeline until afterward.
-  # Updating integration test requires the following process:
-  # 1. Push out new features/breaking changes without updating the integration pipeline.
-  # 2. Make sure the pipeline succeeds.
-  # 3. Update your integration pipeline to test the new features/breaking changes.
-  # Again when the "integration-test_deploy" pipeline runs it will use the latest dev image set to the latest hash.
-  # However, the whole CI config is compiled before building your latest dev orb (with its latest features). So any
-  # calls to those features will throw errors and the pipeline will fail. SO the process above MUST be followed.
-  vro: kohirens/version-release@<<pipeline.parameters.dev-orb-version>> # We are calling our orb before we build the latest dev version!
+  vro: kohirens/version-release@<<pipeline.parameters.dev-orb-version>>
   orb-tools: circleci/orb-tools@10.1.0
   bats: circleci/bats@1.0
   shellcheck: circleci/shellcheck@2.0
@@ -163,20 +152,9 @@ workflows:
               only: /^v?\d+\.\d+\.\d+$/
             branches:
               ignore: /.*/
-  # Only run on the main branch
-  # 1. Checkout code.
-  # 2. Run the changelog update command.
-  # 3. If any, commit the changelog changes, ensure you use the CI [skip] tag to prevent a running CI from CI.
-  # 4. Optionally add an approval gate here, this is to try and prevent merge collision, never approve more than one of these at a time as they will collide when trying to update main.
-  # 5. Verify that main has not changed:
-  #      a. If it has, then stop and fail with a message that main has change since this workflow began.
-  #      b. If not, then proceed.
-  # 6. Make a branch.
-  #     a. push the branch.
-  #     b. make a PR.
-  #     c. merge the PR.
-  # 5. Perform a fetch and rebase. Tag the latest main.
-  # 6.
+  # 1. Update the changelog.
+  # 2. Merge the changelog to main.
+  # 3. Publish a release tag.
   tag-and-release-flow:
     unless: << pipeline.parameters.run-integration-tests >>
     jobs:
