@@ -1,6 +1,9 @@
 <a name="unreleased"></a>
 ## [Unreleased]
 
+### Changed
+- Refactor tag-and-release job and workflow.
+
 
 <a name="0.3.6"></a>
 ## [0.3.6] - 2022-01-02
