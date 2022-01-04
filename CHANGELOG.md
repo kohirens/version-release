@@ -2,7 +2,12 @@
 ## [Unreleased]
 
 ### Changed
+- Renamed job to update-and-merge-changelog.
+- Only run tag-and-release-flow on main branch.
 - Refactor tag-and-release job and workflow.
+
+### Fixed
+- commit-and-merge-changelog job.
 
 
 <a name="0.3.6"></a>
