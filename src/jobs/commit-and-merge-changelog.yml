@@ -23,19 +23,23 @@ parameters:
     type: enum
     enum: [ "merge", "rebase", "squash" ]
     default: "rebase"
-  ssh_finger:
+  sshFinger:
     description: Name of the branch to merge into.
     type: string
-job:
-  executor: default
-  steps:
-    - add_ssh_keys:
-        fingerprints:
-          - << parameters.ssh_finger >>
-    - run:
-        environment:
-          PARAM_CHANGELOG_FILE: << parameters.changelogFile >>
-          PARAM_BRANCH: << parameters.branch >>
-          PARAM_MERGE_TYPE: << parameters.mergeType >>
-        name: Commit and merge the CHANGELOG updates
-        command: << include(scripts/commit-and-rebase-changelog.sh) >>
+  ghToken:
+    description: Name of the environment variable holding the GitHub API token.
+    type: env_var_name
+    default: GH_TOKE
+executor: default
+steps:
+  - add_ssh_keys:
+      fingerprints:
+        - << parameters.sshFinger >>
+  - git-chglog-update
+  - run:
+      environment:
+        PARAM_CHANGELOG_FILE: << parameters.changelogFile >>
+        PARAM_BRANCH: << parameters.branch >>
+        PARAM_MERGE_TYPE: << parameters.mergeType >>
+      name: Commit and merge the CHANGELOG updates
+      command: << include(scripts/commit-and-merge-changelog.sh) >>
