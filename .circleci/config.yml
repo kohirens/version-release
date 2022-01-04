@@ -155,7 +155,7 @@ workflows:
   # 1. Update the changelog.
   # 2. Merge the changelog to main.
   # 3. Publish a release tag.
-  tag-and-release-flow:
+  auto-release:
     unless: << pipeline.parameters.run-integration-tests >>
     jobs:
       - vro/update-and-merge-changelog:
