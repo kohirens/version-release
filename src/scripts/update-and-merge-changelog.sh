@@ -18,8 +18,7 @@ UpdateAndMergeChangelog() {
         gh auth login --with-token < really-i-need-a-file.txt
         gh pr create --base "${PARAM_BRANCH}" --head "${GEN_BRANCH_NAME}" --fill
         sleep 10
-        #gh pr merge --auto "${PARAM_MERGE_TYPE}"
-        echo "PR merge command goes here"
+        gh pr merge --auto "${PARAM_MERGE_TYPE}"
     fi
 }
 
