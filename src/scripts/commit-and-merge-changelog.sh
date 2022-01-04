@@ -4,7 +4,8 @@ CommitAndMergeChangelog() {
         echo "no changes detected in the ${PARAM_CHANGELOG_FILE} file"
         exit 1
     fi
-    GEN_BRANCH_NAME="update-chglog-${CIRCLE_SHA1:0:7}"
+    #GEN_BRANCH_NAME="update-chglog-${CIRCLE_SHA1:0:7}"
+    GEN_BRANCH_NAME="updated-changelog-from-${CIRCLE_BRANCH}"
     git add CHANGELOG.md
     git config --global user.name "${CIRCLE_USERNAME}"
     git config --global user.email "${CIRCLE_USERNAME}@users.noreply.github.com"
