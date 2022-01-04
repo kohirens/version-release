@@ -1,0 +1,13 @@
+description: >
+  Commit changes to the changelog and merge into a remote branch.
+usage:
+  version: 2.1
+  orbs:
+    vro: kohirens/version-release@0.3.6
+  workflows:
+    tag-and-release:
+      jobs:
+        - checkout
+        - commit-and-merge-changelog:
+            requires: [ checkout ]
+            ssh_finger: "AB:CD:EF:GH:12:34:56:78"
