@@ -32,6 +32,10 @@ parameters:
       A "dev:alpha" version must exist for the initial pipeline run.
     type: string
     default: "dev:alpha"
+  ssh-finger:
+    description: SSH fingerprint.
+    type: string
+    default: "0a:16:aa:bf:a7:8b:2a:68:aa:62:28:63:20:11:62:4a"
 
 jobs:
   # Define one or more jobs which will utilize your orb's commands and parameters to validate your changes.
@@ -174,9 +178,15 @@ workflows:
   # 5. Perform a fetch and rebase. Tag the latest main.
   # 6.
   tag-and-release-flow:
+    unless: << pipeline.parameters.run-integration-tests >>
     jobs:
-      - tag-and-release:
+      - vro/commit-and-merge-changelog:
           context: orb-publishing
           filters:
             branches:
-              only: main
+              only: /refactor-ci|main/
+          pre-steps:
+            - checkout
+            - attach_workspace:
+                at: '.'
+          sshFinger: << pipeline.parameters.ssh-finger >>
