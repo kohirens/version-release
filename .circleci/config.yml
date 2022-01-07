@@ -148,6 +148,7 @@ workflows:
           context: orb-publishing
           requires:
             - vro/update-and-merge-changelog
+          pre-steps: [ checkout, attach_workspace: { at: '.' } ]
   publish-orb:
     jobs:
       - orb-tools/pack:
