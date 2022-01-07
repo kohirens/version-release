@@ -2,8 +2,11 @@
 ## [Unreleased]
 
 
-<a name=""0.4.7""></a>
-## ["0.4.7"] - 2022-01-07
+<a name=""0.4.8""></a>
+## ["0.4.8"] - 2022-01-07
+
+<a name="0.4.7"></a>
+## [0.4.7] - 2022-01-07
 
 <a name="0.4.6"></a>
 ## [0.4.6] - 2022-01-07
@@ -89,8 +92,9 @@
 - Sample command and job.
 
 
-[Unreleased]: https://github.com/kohirens/version-release-orb/compare/"0.4.7"...HEAD
-["0.4.7"]: https://github.com/kohirens/version-release-orb/compare/0.4.6..."0.4.7"
+[Unreleased]: https://github.com/kohirens/version-release-orb/compare/"0.4.8"...HEAD
+["0.4.8"]: https://github.com/kohirens/version-release-orb/compare/0.4.7..."0.4.8"
+[0.4.7]: https://github.com/kohirens/version-release-orb/compare/0.4.6...0.4.7
 [0.4.6]: https://github.com/kohirens/version-release-orb/compare/0.3.6...0.4.6
 [0.3.6]: https://github.com/kohirens/version-release-orb/compare/0.3.5...0.3.6
 [0.3.5]: https://github.com/kohirens/version-release-orb/compare/0.3.4...0.3.5
