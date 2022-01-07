@@ -72,15 +72,18 @@ workflows:
     unless: << pipeline.parameters.run-integration-tests >>
     jobs:
       - orb-tools/lint:
-          filters:
+          filters: &main-and-skip
             branches:
               ignore: /main|updated-changelog-skip-ci/
       - orb-tools/pack
+          filters: *main-and-skip
       - shellcheck/check:
           dir: ./src/scripts
           exclude: SC2148
+          filters: *main-and-skip
       - bats/run:
           path: ./src/tests
+          filters: *main-and-skip
       - orb-tools/publish-dev:
           orb-name: kohirens/version-release
           context: orb-publishing
@@ -89,6 +92,7 @@ workflows:
             - orb-tools/pack
             - bats/run
             - shellcheck/check
+          filters: *main-and-skip
       # Trigger an integration workflow to test the
       # dev:${CIRCLE_SHA1:0:7} version of your orb
       - orb-tools/trigger-integration-tests-workflow:
@@ -96,8 +100,10 @@ workflows:
           context: orb-publishing
           requires:
             - orb-tools/publish-dev
+          filters: *main-and-skip
       - debug_info:
           requires: [ orb-tools/pack ]
+          filters: *main-and-skip
 
   # This `integration-test-deploy` workflow will only run
   # when the run-integration-tests pipeline parameter is set to true.
