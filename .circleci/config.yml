@@ -112,6 +112,7 @@ workflows:
               ignore: /updated-changelog-skip-ci/
   # 1. Update the changelog.
   # 2. Merge the changelog to main.
+  # 3. Publish a release tag.
   update-changelog:
     unless: << pipeline.parameters.run-integration-tests >>
     jobs:
@@ -122,8 +123,7 @@ workflows:
               only: main
           pre-steps: [ checkout, attach_workspace: { at: '.' } ]
           sshFinger: << pipeline.parameters.ssh-finger >>
-  # 3. Publish a release tag.
-  tag-release:
+  publish-orb:
     jobs:
       - orb-tools/pack:
           filters:
