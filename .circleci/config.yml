@@ -145,6 +145,7 @@ workflows:
           pre-steps: [ checkout, attach_workspace: { at: '.' } ]
           sshFinger: << pipeline.parameters.ssh-finger >>
       - vro/tag-and-release:
+          context: orb-publishing
           requires:
             - vro/update-and-merge-changelog
   publish-orb:
