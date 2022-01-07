@@ -5,9 +5,12 @@
 <a name=""0.4.6""></a>
 ## ["0.4.6"] - 2022-01-07
 ### Added
+- Flag to auto generate title and notes changelog merge.
 - Tag auto release with title.
 
 ### Changed
+- Fetch the latest main branch to tag after merging the changelog.
+- Reduced time to merge changelog updates.
 - Turn auto merge of changelog update back on.
 - Updated changelog command to use git-tool-belt.
 - Upgrade default executor image.
@@ -18,6 +21,10 @@
 ### Fixed
 - Passing merge type to update and merge changelog command.
 - commit-and-merge-changelog job.
+
+### Removed
+- Double quotes from the release tag.
+- Skip CI tag in commit message for changelog update.
 
 
 <a name="0.3.6"></a>
