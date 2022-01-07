@@ -4,8 +4,7 @@ TriggerTagAndRelease() {
         echo "no changes detected in the ${PARAM_CHANGELOG_FILE} file"
         exit 0
     fi
-    VCS_TYPE="github"
-    echo "{\"branch\": \"${CIRCLE_BRANCH}\", \"parameters\": ${PARAM_MAP}}" > pipelineparams.json
+    echo "{\"branch\": \"${PARAM_BRANCH}\", \"parameters\": ${PARAM_MAP}}" > pipelineparams.json
     cat pipelineparams.json
     DoCurl
     Result
@@ -14,7 +13,7 @@ TriggerTagAndRelease() {
 
 DoCurl() {
     curl -u "${CIRCLE_TOKEN}": -X POST --header "Content-Type: application/json" -d @pipelineparams.json \
-      "${CIRCLECI_API_HOST}/api/v2/project/${VCS_TYPE}/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/pipeline" -o /tmp/curl-result.txt
+      "${CIRCLECI_API_HOST}/api/v2/project/${PARAM_VCS_TYPE}/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/pipeline" -o /tmp/curl-result.txt
 }
 
 Result() {
@@ -24,7 +23,7 @@ Result() {
         exit 1
     else
         echo "Pipeline triggered!"
-        echo "${CIRCLECI_APP_HOST}/jobs/${VCS_TYPE}/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/$(jq -r .number < /tmp/curl-result.txt)"
+        echo "${CIRCLECI_APP_HOST}/jobs/${PARAM_VCS_TYPE}/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/$(jq -r .number < /tmp/curl-result.txt)"
     fi
 }
 
