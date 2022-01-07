@@ -1,4 +1,4 @@
 description: >
   version release executor with git-tool-belt.
 docker:
-  - image: 'kohirens/git-tool-belt:0.6.0'
+  - image: 'kohirens/git-tool-belt:0.6.1'
