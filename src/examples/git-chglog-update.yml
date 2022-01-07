@@ -1,11 +1,10 @@
-description: >
+description: |2
   Update the CHANGELOG.md using only specifically formatted Git commit messages, for example:
-  ```
-  add: Awesome new feature
-  rmv: Obsolete features
 
-  BREAKING CHANGE
-  ```
+    add: Awesome new feature
+    rmv: Obsolete features
+    BREAKING CHANGE
+
 usage:
   version: 2.1
   orbs:
