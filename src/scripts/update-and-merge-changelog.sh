@@ -21,7 +21,7 @@ UpdateAndMergeChangelog() {
         sleep 5
         nextVersion=$(jq .nextVersion < build-version.json)
         releaseDay=$(date +"%Y-%m-%d")
-        gh release create "${nextVersion}" --target "${PARAM_BRANCH}" --title "[${nextVersion}] - ${releaseDay}"
+        gh release create "${nextVersion}" --generate-notes --target "${PARAM_BRANCH}" --title "[${nextVersion}] - ${releaseDay}"
     fi
 }
 
