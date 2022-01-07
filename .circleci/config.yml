@@ -75,7 +75,7 @@ workflows:
           filters: &main-and-skip
             branches:
               ignore: /main|updated-changelog-skip-ci/
-      - orb-tools/pack
+      - orb-tools/pack:
           filters: *main-and-skip
       - shellcheck/check:
           dir: ./src/scripts
