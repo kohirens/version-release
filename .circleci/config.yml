@@ -125,6 +125,7 @@ workflows:
     unless: << pipeline.parameters.run-tag-and-release >>
     jobs:
       - vro/trigger-tag-and-release: # Only triggers when there are changes in the CHANGELOG file.
+          pre-steps: [ checkout, attach_workspace: { at: '.' } ]
           filters:
             branches:
               only: main
