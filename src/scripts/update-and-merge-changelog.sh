@@ -10,7 +10,7 @@ UpdateAndMergeChangelog() {
     git config --global user.name "${CIRCLE_USERNAME}"
     git config --global user.email "${CIRCLE_USERNAME}@users.noreply.github.com"
     git checkout -b "${GEN_BRANCH_NAME}"
-    git commit -m "[skip ci] Updated the ${PARAM_CHANGELOG_FILE}"
+    git commit -m "Updated the ${PARAM_CHANGELOG_FILE}"
     # Do not run when sourced for bats-core
     if [ "${0#*$ORB_TEST_ENV}" == "$0" ]; then
         git push origin "${GEN_BRANCH_NAME}"
