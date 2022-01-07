@@ -12,6 +12,7 @@
 - Split changelog update and tagging.
 
 ### Fixed
+- Missing checkout step in tag-and-release job.
 - Minor and patch version not resetting.
 - Setting TOKEN to auth trigger.
 - Example documentation.
