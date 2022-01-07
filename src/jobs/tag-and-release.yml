@@ -1,0 +1,24 @@
+description: |2
+  Trigger a job to tag and release a spcified branch.
+parameters:
+  branch:
+    description: Name of the branch to tag.
+    type: string
+    default: "main"
+  ghToken:
+    description: Name of the environment variable holding the GitHub API token.
+    type: env_var_name
+    default: GH_TOKE
+executor: default
+steps:
+  - run:
+      environment:
+        PARAM_BRANCH: << parameters.branch >>
+      name: Make A New Release
+      command: |
+        git-tool-belt version
+        nextVersion=$(jq -r .nextVersion < build-version.json)
+        releaseDay=$(date +"%Y-%m-%d")
+        echo "${GH_TOKE}" > really-i-need-a-file.txt
+        gh auth login --with-token < really-i-need-a-file.txt
+        gh release create "${nextVersion}" --generate-notes --target "<< parameters.branch >>" --title "[${nextVersion}] - ${releaseDay}"
