@@ -18,7 +18,7 @@ UpdateAndMergeChangelog() {
         gh auth login --with-token < really-i-need-a-file.txt
         gh pr create --base "${PARAM_BRANCH}" --head "${GEN_BRANCH_NAME}" --fill
         sleep 10
-        gh pr merge --auto "${PARAM_MERGE_TYPE}"
+        gh pr merge --auto "--${PARAM_MERGE_TYPE}"
         sleep 5
         nextVersion=$(jq .nextVersion < build-version.json)
         releaseDay=$(date +"%Y-%m-%d")
