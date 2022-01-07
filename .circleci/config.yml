@@ -26,7 +26,7 @@ parameters:
     type: string
     default: "0a:16:aa:bf:a7:8b:2a:68:aa:62:28:63:20:11:62:4a"
   run-tag-and-release:
-    description: SSH fingerprint.
+    description: Run tag and release workflow.
     type: boolean
     default: false
 
