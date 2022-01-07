@@ -126,6 +126,7 @@ workflows:
     jobs:
       - vro/trigger-tag-and-release: # Only triggers when there are changes in the CHANGELOG file.
           pre-steps: [ checkout, attach_workspace: { at: '.' } ]
+          context: orb-publishing
           filters:
             branches:
               only: main

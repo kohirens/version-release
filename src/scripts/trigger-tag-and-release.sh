@@ -12,7 +12,8 @@ TriggerTagAndRelease() {
 }
 
 DoCurl() {
-    curl -u "${CIRCLE_TOKEN}": -X POST --header "Content-Type: application/json" -d @pipelineparams.json \
+    T=$(eval echo "$TOKEN")
+    curl -u "${T}": -X POST --header "Content-Type: application/json" -d @pipelineparams.json \
       "${CIRCLECI_API_HOST}/api/v2/project/${VCS_TYPE}/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/pipeline" -o /tmp/curl-result.txt
 }
 
