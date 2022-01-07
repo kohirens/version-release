@@ -19,7 +19,7 @@ UpdateAndMergeChangelog() {
         sleep 5
         gh pr merge --auto "--${PARAM_MERGE_TYPE}"
         sleep 5
-        nextVersion=$(jq .nextVersion < build-version.json)
+        nextVersion=$(jq -r .nextVersion < build-version.json)
         releaseDay=$(date +"%Y-%m-%d")
         git fetch --all -p
         gh release create "${nextVersion}" --generate-notes --target "${PARAM_BRANCH}" --title "[${nextVersion}] - ${releaseDay}"
