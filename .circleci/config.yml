@@ -25,6 +25,10 @@ parameters:
     description: SSH fingerprint.
     type: string
     default: "0a:16:aa:bf:a7:8b:2a:68:aa:62:28:63:20:11:62:4a"
+  run-tag-and-release:
+    description: SSH fingerprint.
+    type: boolean
+    default: false
 
 jobs:
   # Define one or more jobs which will utilize your orb's commands and parameters to validate your changes.
@@ -115,12 +119,21 @@ workflows:
       - integration-test-1:
           filters:
             branches:
-              ignore: /updated-changelog-skip-ci/
+              ignore: /main|updated-changelog-skip-ci/
+  # Only run when branch is main and run-tag-and-release=false
+  ready-for-tagging:
+    unless: << pipeline.parameters.run-tag-and-release >>
+    jobs:
+      - vro/trigger-tag-and-release: # Only triggers when there are changes in the CHANGELOG file.
+          filters:
+            branches:
+              only: main
+  # Only run when the branch is main and run-tag-and-release=true
   # 1. Update the changelog.
   # 2. Merge the changelog to main.
   # 3. Publish a release tag.
-  update-changelog:
-    unless: << pipeline.parameters.run-integration-tests >>
+  tag-and-release:
+    when: << pipeline.parameters.run-tag-and-release >>
     jobs:
       - vro/update-and-merge-changelog:
           context: orb-publishing
@@ -129,6 +142,9 @@ workflows:
               only: main
           pre-steps: [ checkout, attach_workspace: { at: '.' } ]
           sshFinger: << pipeline.parameters.ssh-finger >>
+      - vro/tag-and-release:
+          requires:
+            - vro/update-and-merge-changelog
   publish-orb:
     jobs:
       - orb-tools/pack:
