@@ -24,7 +24,7 @@ parameters:
     enum: [ "merge", "rebase", "squash" ]
     default: "rebase"
   sshFinger:
-    description: Name of the branch to merge into.
+    description: Fingerprint of an SSH key that can be used to perform a merge into a branch.
     type: string
   ghToken:
     description: Name of the environment variable holding the GitHub API token.
