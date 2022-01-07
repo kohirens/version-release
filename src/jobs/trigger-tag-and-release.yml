@@ -25,7 +25,7 @@ parameters:
     default: GH_TOKE
   pipeline-param-map:
     type: string
-    default: '{"tag-and-publish": true}'
+    default: '{"run-tag-and-release": true}'
     description: >
       Map of pipeline parameters that the new pipeline will be invoked with.
       Make use of this to target the integration workflow that should be triggered
