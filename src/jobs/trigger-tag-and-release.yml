@@ -1,0 +1,46 @@
+description: >
+  Trigger a job to tag and release a branch.
+parameters:
+  branch:
+    description: Name of the branch to tag.
+    type: string
+    default: "main"
+  changelogFile:
+    description: Location of the CHANGELOG file.
+    type: string
+    default: "CHANGELOG.md"
+  circleci-api-host:
+    type: string
+    default: https://circleci.com
+    description: >
+      Host URL of CircleCI API
+  circleci-app-host:
+    type: string
+    default: https://app.circleci.com
+    description: >
+      Host URL of CircleCI Web UI
+  ghToken:
+    description: Name of the environment variable holding the GitHub API token.
+    type: env_var_name
+    default: GH_TOKE
+  pipeline-param-map:
+    type: string
+    default: '{"tag-and-publish": true}'
+    description: >
+      Map of pipeline parameters that the new pipeline will be invoked with.
+      Make use of this to target the integration workflow that should be triggered
+      and exclude other workflows from being triggered.
+  token-variable:
+    type: env_var_name
+    default: CIRCLE_TOKEN
+    description: >
+      Name of environment variable containing your personal CircleCI API token
+executor: default
+steps:
+  - git-chglog-update
+  - run:
+      environment:
+        PARAM_BRANCH: << parameters.branch >>
+        PARAM_CHANGELOG_FILE: << parameters.changelogFile >>
+      name: Triiger CI Tagging Workflow
+      command: << include(scripts/trigger-tag-and-release.sh) >>
