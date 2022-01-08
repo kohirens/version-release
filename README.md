@@ -2,30 +2,14 @@
 
 [![CircleCI Build Status](https://circleci.com/gh/kohirens/version-release-orb.svg?style=shield "CircleCI Build Status")](https://circleci.com/gh/kohirens/version-release-orb) [![CircleCI Orb Version](https://badges.circleci.com/orbs/kohirens/version-release.svg)](https://circleci.com/orbs/registry/orb/kohirens/version-release) [![GitHub License](https://img.shields.io/badge/license-MIT-lightgrey.svg)](https://raw.githubusercontent.com/kohirens/version-release-orb/master/LICENSE) [![CircleCI Community](https://img.shields.io/badge/community-CircleCI%20Discuss-343434.svg)](https://discuss.circleci.com/c/ecosystem/orbs)
 
-Provide commands to automate updating the CHANGELOG and publishing a git-tag for the release of software.
+By adding jobs to your workflow, this Orb provides features to automate version releases. Features that:
+
+1. Update the changelog
+2. Merge changelog into the main trunk
+3. Publish a Release in GitHub
 
 ## Resources
 
-[CircleCI Orb Registry Page](https://circleci.com/orbs/registry/orb/kohirens/version-release-orb) - The official registry page of this orb for all versions, executors, commands, and jobs described.
-[CircleCI Orb Docs](https://circleci.com/docs/2.0/orb-intro/#section=configuration) - Docs for using and creating CircleCI Orbs.
+See the [Version Release Orb](https://circleci.com/developer/orbs/orb/kohirens/version-release#usage-git-chglog-update) for examples.
 
-### How to Publish
-
-In order to have a new version of this orb published, perform the following:
-
-* Create and push a branch with your new features.
-* When ready to publish a new production version, create a Pull Request from _feature branch_ to `main`.
-* The first line of the commit message, which some have dubbed the __commit subject__, must contain a special semver
-  tag: `[semver:<segment>]` where `<segment>` is replaced by one of the following values.
-
-| Increment | Description |
-| ----------| ------------|
-| major     | Issue a 1.0.0 incremented release |
-| minor     | Issue a x.1.0 incremented release |
-| patch     | Issue a x.x.1 incremented release |
-| skip      | Do not issue a release |
-
-Example: `[semver:major] this is the official first stable release`
-
-* Merge the PR however you wish, but ensure the semver tag is preserved and entered as a part of the commit message.
-* After merging, the orb will automatically be published to the Orb Registry.
+Or the [Docs](/docs/index.md) for development details.
