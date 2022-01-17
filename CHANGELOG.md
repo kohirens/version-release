@@ -9,6 +9,9 @@
 - Moved tag-and-release to script for linting.
 - Updated Executore image to 0.7.0.
 
+### Fixed
+- Tag and release checks.
+
 
 <a name="0.5.4"></a>
 ## [0.5.4] - 2022-01-08
