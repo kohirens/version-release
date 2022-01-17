@@ -8,7 +8,7 @@ services:
                 REPO: '${REPO}'
             dockerfile: '.docker/Dockerfile'
             context: '..'
-        image: 'kohirens/version-release-orb:0.1.0'
+        image: 'kohirens/version-release-orb:dev'
         volumes:
             - '../:/home/${USER_NAME}/src/${REPO}'
             - '~/.ssh/known_hosts:/home/${USER_NAME}/.ssh/known_hosts'
