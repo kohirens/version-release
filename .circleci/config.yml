@@ -133,12 +133,12 @@ workflows:
               only: main
           pre-steps: [ checkout, attach_workspace: { at: '.' } ]
           sshFinger: << pipeline.parameters.ssh-finger >>
-      - vro/trigger-tag-and-release: # Only triggers when there are changes in the CHANGELOG file.
-          pre-steps: [ checkout, attach_workspace: { at: '.' } ]
-          context: orb-publishing
-          filters:
-            branches:
-              only: main
+#      - vro/trigger-tag-and-release: # Only triggers when there are changes in the CHANGELOG file.
+#          pre-steps: [ checkout, attach_workspace: { at: '.' } ]
+#          context: orb-publishing
+#          filters:
+#            branches:
+#              only: main
   # Only run when the branch is main and run-tag-and-release=true
   # 1. Update the changelog.
   # 2. Merge the changelog to main.
@@ -147,9 +147,10 @@ workflows:
     when: << pipeline.parameters.run-tag-and-release >>
     jobs:
       - vro/tag-and-release:
+          filters:
+            branches:
+              only: main
           context: orb-publishing
-          requires:
-            - vro/update-and-merge-changelog
           pre-steps: [ checkout, attach_workspace: { at: '.' } ]
   publish-orb:
     jobs:

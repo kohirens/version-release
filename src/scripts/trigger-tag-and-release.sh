@@ -1,9 +1,18 @@
 TriggerTagAndRelease() {
     changelogUpdated=$(git diff --name-only -- "${PARAM_CHANGELOG_FILE}")
-    if [ -z "${changelogUpdated}" ]; then
-        echo "no changes detected in the ${PARAM_CHANGELOG_FILE} file"
+    # Skip if there are changes in the changelog that have not been merged.
+    if [ -n "${changelogUpdated}" ]; then
+        echo "exiting, changes detected in the ${PARAM_CHANGELOG_FILE} file"
         exit 0
     fi
+
+    hasTag=$(git show-ref --tags | grep "${CIRCLE_SHA1}" | grep "refs/tags/v\\?\\d\\.\\d\\.\\d")
+    # Skip if this commit is already tagged.
+    if [ -n "${hasTag}" ]; then
+        echo "exiting, commit is already tagged: ${hasTag}"
+        exit 0
+    fi
+
     VCS_TYPE=$(echo "${CIRCLE_BUILD_URL}" | cut -d '/' -f 4)
     echo "{\"branch\": \"${PARAM_BRANCH}\", \"parameters\": ${PARAM_MAP}}" > pipelineparams.json
     cat pipelineparams.json
