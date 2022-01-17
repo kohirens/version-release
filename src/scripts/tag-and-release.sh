@@ -6,9 +6,9 @@ TagAndRelease() {
         exit 0
     fi
 
-    hasTag=$(git show-ref --tags | grep "${CIRCLE_SHA1}" | grep "refs/tags/v\\?\\d\\.\\d\\.\\d")
+    hasTag=$(git show-ref --tags | grep "${CIRCLE_SHA1}" | grep "refs/tags/v\\?\\d\\.\\d\\.\\d" || echo "not found")
     # Skip if this commit is already tagged.
-    if [ -n "${hasTag}" ]; then
+    if [ "${hasTag}" != "not found" ]; then
         echo "exiting, commit is already tagged: ${hasTag}"
         exit 0
     fi
@@ -19,9 +19,9 @@ TagAndRelease() {
     releaseDay=$(date +"%Y-%m-%d")
 
     isTaggable=$(git-tool-belt taggable "${prevVersion}..HEAD")
-    echo "${prevVersion}..HEAD isTaggable = ${isTaggable}"
+    echo "commit range from ${prevVersion} to HEAD tag ability is \"${isTaggable}\""
     # Skip if there are no notable commits to tag.
-    if [ "${isTaggable}" = "true" ]; then
+    if [ "${isTaggable}" = "false" ]; then
         echo "exiting, no notable commits to tag"
         exit 0
     fi
