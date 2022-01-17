@@ -20,7 +20,7 @@ DoCurl() {
 Result() {
     CURL_RESULT=$(cat /tmp/curl-result.txt)
     if [[ $(echo "$CURL_RESULT" | jq -r .message) == "Not Found" || $(echo "$CURL_RESULT" | jq -r .message) == "Permission denied" || $(echo "$CURL_RESULT" | jq -r .message) == "Project not found" ]]; then
-        echo "Was unable to trigger integration test workflow. API response: $(jq -r .message < /tmp/curl-result.txt)"
+        echo "Was unable to trigger tag-and-release workflow. API response: $(jq -r .message < /tmp/curl-result.txt)"
         exit 1
     else
         echo "Pipeline triggered!"
