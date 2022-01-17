@@ -144,7 +144,7 @@ workflows:
   # 2. Merge the changelog to main.
   # 3. Publish a release tag.
   tag-and-release:
-    when: << pipeline.parameters.run-tag-and-release >>
+#    when: << pipeline.parameters.run-tag-and-release >>
     jobs:
       - vro/tag-and-release:
           filters:
