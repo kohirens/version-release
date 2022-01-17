@@ -121,9 +121,18 @@ workflows:
             branches:
               ignore: /main|updated-changelog-skip-ci/
   # Only run when branch is main and run-tag-and-release=false
-  ready-for-tagging:
+  # 1. Verify there are taggable changes
+  # 2. There is no tagging in process for the commit hash.
+  publish-changelog:
     unless: << pipeline.parameters.run-tag-and-release >>
     jobs:
+      - vro/update-and-merge-changelog:
+          context: orb-publishing
+          filters:
+            branches:
+              only: main
+          pre-steps: [ checkout, attach_workspace: { at: '.' } ]
+          sshFinger: << pipeline.parameters.ssh-finger >>
       - vro/trigger-tag-and-release: # Only triggers when there are changes in the CHANGELOG file.
           pre-steps: [ checkout, attach_workspace: { at: '.' } ]
           context: orb-publishing
@@ -137,13 +146,6 @@ workflows:
   tag-and-release:
     when: << pipeline.parameters.run-tag-and-release >>
     jobs:
-      - vro/update-and-merge-changelog:
-          context: orb-publishing
-          filters:
-            branches:
-              only: main
-          pre-steps: [ checkout, attach_workspace: { at: '.' } ]
-          sshFinger: << pipeline.parameters.ssh-finger >>
       - vro/tag-and-release:
           context: orb-publishing
           requires:
