@@ -2,7 +2,7 @@ UpdateAndMergeChangelog() {
     changelogUpdated=$(git diff --name-only -- "${PARAM_CHANGELOG_FILE}")
     if [ -z "${changelogUpdated}" ]; then
         echo "no changes detected in the ${PARAM_CHANGELOG_FILE} file"
-        exit 1
+        exit 0
     fi
     GEN_BRANCH_NAME="updated-changelog-skip-ci"
     git add CHANGELOG.md
