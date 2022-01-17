@@ -23,6 +23,9 @@ TagAndRelease() {
     # Skip if there are no notable commits to tag.
     if [ "${isTaggable}" = "false" ]; then
         echo "exiting, no notable commits to tag"
+        rangeLogs=$(git log "${prevVersion}..HEAD")
+        echo "here are the logs:"
+        echo "${rangeLogs}"
         exit 0
     fi
 
