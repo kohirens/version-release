@@ -9,16 +9,50 @@ parameters:
     description: Name of the environment variable holding the GitHub API token.
     type: env_var_name
     default: GH_TOKE
+  changelogFile:
+    description: Location to output/update the CHANGELOG file.
+    type: string
+    default: "CHANGELOG.md"
+  configFile:
+    description: Location of a git-chglog configuration file.
+    type: string
+    default: ".chglog/config.yml"
 executor: default
 steps:
+  - git-chglog-update:
+      configFile: "<< parameters.configFile >>"
+      outputFile: "<< parameters.changelogFile >>"
   - run:
-      environment:
-        PARAM_BRANCH: << parameters.branch >>
       name: Make A New Release
       command: |
+        changelogUpdated=$(git diff --name-only -- "<< parameters.changelogFile >>")
+        # Skip if there are changes in the changelog that have not been merged.
+        if [ -n "${changelogUpdated}" ]; then
+            echo "exiting, changes detected in the << parameters.changelogFile >> file"
+            exit 0
+        fi
+
+        hasTag=$(git show-ref --tags | grep "${CIRCLE_SHA1}" | grep "refs/tags/v\\?\\d\\.\\d\\.\\d")
+        # Skip if this commit is already tagged.
+        if [ -n "${hasTag}" ]; then
+            echo "exiting, commit is already tagged: ${hasTag}"
+            exit 0
+        fi
+
         git-tool-belt version
         nextVersion=$(jq -r .nextVersion < build-version.json)
+        prevVersion=$(jq -r .currentVersion < build-version.json)
         releaseDay=$(date +"%Y-%m-%d")
+
+        isTaggable=$(git-tool-belt taggable "${prevVersion}..HEAD")
+        echo "${prevVersion}..HEAD isTaggable = ${isTaggable}"
+        # Skip if there are no notable commits to tag.
+        if [ "${isTaggable}" = "true" ]; then
+            echo "exiting, no notable commits to tag"
+            exit 0
+        fi
+
+        echo "tagging commit hash ${CIRCLE_SHA1} with ${nextVersion}"
         echo "${GH_TOKE}" > really-i-need-a-file.txt
         gh auth login --with-token < really-i-need-a-file.txt
         gh release create "${nextVersion}" --generate-notes --target "<< parameters.branch >>" --title "[${nextVersion}] - ${releaseDay}"
