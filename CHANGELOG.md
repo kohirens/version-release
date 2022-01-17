@@ -2,8 +2,12 @@
 ## [Unreleased]
 
 
-<a name=""0.5.5""></a>
-## ["0.5.5"] - 0001-01-01
+<a name="0.6.0"></a>
+## [0.6.0] - 2022-01-17
+### Changed
+- Moved tag-and-release to script for linting.
+- Updated Executore image to 0.7.0.
+
 
 <a name="0.5.4"></a>
 ## [0.5.4] - 2022-01-08
@@ -120,8 +124,8 @@
 - Sample command and job.
 
 
-[Unreleased]: https://github.com/kohirens/version-release-orb/compare/"0.5.5"...HEAD
-["0.5.5"]: https://github.com/kohirens/version-release-orb/compare/0.5.4..."0.5.5"
+[Unreleased]: https://github.com/kohirens/version-release-orb/compare/0.6.0...HEAD
+[0.6.0]: https://github.com/kohirens/version-release-orb/compare/0.5.4...0.6.0
 [0.5.4]: https://github.com/kohirens/version-release-orb/compare/0.5.3...0.5.4
 [0.5.3]: https://github.com/kohirens/version-release-orb/compare/0.5.2...0.5.3
 [0.5.2]: https://github.com/kohirens/version-release-orb/compare/0.5.1...0.5.2
