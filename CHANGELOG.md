@@ -5,6 +5,7 @@
 <a name="0.6.0"></a>
 ## [0.6.0] - 2022-01-17
 ### Changed
+- More logging in Tag and Release checks.
 - Exit normal when no change in the changelog.
 - Moved tag-and-release to script for linting.
 - Updated Executore image to 0.7.0.
