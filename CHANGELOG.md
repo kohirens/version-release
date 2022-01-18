@@ -3,7 +3,7 @@
 
 
 <a name="0.6.0"></a>
-## [0.6.0] - 2022-01-17
+## [0.6.0] - 2022-01-18
 ### Changed
 - More logging in Tag and Release checks.
 - Exit normal when no change in the changelog.
@@ -11,6 +11,7 @@
 - Updated Executore image to 0.7.0.
 
 ### Fixed
+- Fetch all refs before isTaggable check.
 - Tag and release checks.
 
 
