@@ -18,6 +18,8 @@ TagAndRelease() {
     prevVersion=$(jq -r .currentVersion < build-version.json)
     releaseDay=$(date +"%Y-%m-%d")
 
+    # Fetch all the refs
+    git fetch --all -p
     isTaggable=$(git-tool-belt taggable "${prevVersion}..HEAD")
     echo "commit range from ${prevVersion} to HEAD tag ability is \"${isTaggable}\""
     # Skip if there are no notable commits to tag.
