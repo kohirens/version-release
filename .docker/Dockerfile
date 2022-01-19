@@ -4,7 +4,7 @@ ARG USER_GID='1000'
 ARG USER_GROUP='app_users'
 ARG REPO='github.com/kohirens/version-release-orb'
 
-FROM kohirens/git-tool-belt:0.7.0 AS dev
+FROM kohirens/git-tool-belt:0.8.0 AS dev
 
 ARG USER_NAME
 ARG USER_UID
