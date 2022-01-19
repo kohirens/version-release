@@ -6,7 +6,15 @@ TagAndRelease() {
         exit 0
     fi
 
+  # Obsolete
     hasTag=$(git show-ref --tags | grep "${CIRCLE_SHA1}" | grep "refs/tags/v\\?\\d\\.\\d\\.\\d" || echo "not found")
+    # Skip if this commit is already tagged.
+    if [ "${hasTag}" != "not found" ]; then
+        echo "exiting, commit is already tagged: ${hasTag}"
+        exit 0
+    fi
+
+    hasTag=$(git show-ref "${CIRCLE_SHA1}" || echo "not found")
     # Skip if this commit is already tagged.
     if [ "${hasTag}" != "not found" ]; then
         echo "exiting, commit is already tagged: ${hasTag}"
@@ -25,9 +33,6 @@ TagAndRelease() {
     # Skip if there are no notable commits to tag.
     if [ "${isTaggable}" = "false" ]; then
         echo "exiting, no notable commits to tag"
-        rangeLogs=$(git log "${prevVersion}..HEAD")
-        echo "here are the logs:"
-        echo "${rangeLogs}"
         exit 0
     fi
 

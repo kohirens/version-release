@@ -6,9 +6,9 @@ TriggerTagAndRelease() {
         exit 0
     fi
 
-    hasTag=$(git show-ref --tags | grep "${CIRCLE_SHA1}" | grep "refs/tags/v\\?\\d\\.\\d\\.\\d")
+    hasTag=$(git show-ref "${CIRCLE_SHA1}" || echo "not found")
     # Skip if this commit is already tagged.
-    if [ -n "${hasTag}" ]; then
+    if [ "${hasTag}" != "not found" ]; then
         echo "exiting, commit is already tagged: ${hasTag}"
         exit 0
     fi
