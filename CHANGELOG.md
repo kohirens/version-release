@@ -2,6 +2,12 @@
 ## [Unreleased]
 
 
+<a name="0.6.1"></a>
+## [0.6.1] - 2022-01-19
+### Fixed
+- Setting revision range for tag-and-release job.
+
+
 <a name="0.6.0"></a>
 ## [0.6.0] - 2022-01-19
 ### Changed
@@ -133,7 +139,8 @@
 - Sample command and job.
 
 
-[Unreleased]: https://github.com/kohirens/version-release-orb/compare/0.6.0...HEAD
+[Unreleased]: https://github.com/kohirens/version-release-orb/compare/0.6.1...HEAD
+[0.6.1]: https://github.com/kohirens/version-release-orb/compare/0.6.0...0.6.1
 [0.6.0]: https://github.com/kohirens/version-release-orb/compare/0.5.4...0.6.0
 [0.5.4]: https://github.com/kohirens/version-release-orb/compare/0.5.3...0.5.4
 [0.5.3]: https://github.com/kohirens/version-release-orb/compare/0.5.2...0.5.3
