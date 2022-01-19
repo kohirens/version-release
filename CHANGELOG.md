@@ -3,8 +3,10 @@
 
 
 <a name="0.6.0"></a>
-## [0.6.0] - 2022-01-18
+## [0.6.0] - 2022-01-19
 ### Changed
+- Default Executor image to 0.8.0.
+- Upgraded executor image.
 - More logging in Tag and Release checks.
 - Exit normal when no change in the changelog.
 - Moved tag-and-release to script for linting.
