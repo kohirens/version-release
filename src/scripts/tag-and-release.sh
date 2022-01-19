@@ -28,7 +28,7 @@ TagAndRelease() {
 
     # Fetch all the refs
     git fetch --all -p
-    isTaggable=$(git-tool-belt taggable "${prevVersion}..HEAD")
+    isTaggable=$(git-tool-belt taggable --verbose "${prevVersion}..HEAD")
     echo "commit range from ${prevVersion} to HEAD tag ability is \"${isTaggable}\""
     # Skip if there are no notable commits to tag.
     if [ "${isTaggable}" = "false" ]; then
