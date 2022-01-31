@@ -25,10 +25,6 @@ parameters:
     description: SSH fingerprint.
     type: string
     default: "0a:16:aa:bf:a7:8b:2a:68:aa:62:28:63:20:11:62:4a"
-  run-tag-and-release:
-    description: Run tag and release workflow.
-    type: boolean
-    default: false
 
 jobs:
   # Define one or more jobs which will utilize your orb's commands and parameters to validate your changes.
@@ -120,24 +116,23 @@ workflows:
           filters:
             branches:
               ignore: /main|updated-changelog-skip-ci/
-  # Only run when branch is main and run-tag-and-release=false
-  # 1. Verify there are taggable changes
-  # 2. There is no tagging in process for the commit hash.
-  publish-changelog:
+  # Only run when branch is main
+  # 1. Update the changelog.
+  # 2. Merge the changelog to main, causing tag-and-release to run.
+  auto-release:
     jobs:
-      - vro/update-and-merge-changelog:
+      - vro/update-and-merge-changelog: #publish-changelog
           context: orb-publishing
           filters:
             branches:
               only: main
           pre-steps: [ checkout, attach_workspace: { at: '.' } ]
           sshFinger: << pipeline.parameters.ssh-finger >>
-  # Only run when the branch is main and run-tag-and-release=true
-  # 1. Update the changelog.
-  # 2. Merge the changelog to main.
-  # 3. Publish a release tag.
-  tag-and-release:
-    jobs:
+  # Only run when the branch is main
+  # 1. Verify there are taggable changes
+  # 2. Publish a release tag.
+#  tag-and-release:
+#    jobs:
       - vro/tag-and-release:
           filters:
             branches:

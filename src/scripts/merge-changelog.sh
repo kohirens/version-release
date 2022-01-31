@@ -1,4 +1,4 @@
-UpdateAndMergeChangelog() {
+MergeChangelog() {
     changelogUpdated=$(git diff --name-only -- "${PARAM_CHANGELOG_FILE}")
     echo "BEGIN DEBUG"
     ls -la .
@@ -14,7 +14,7 @@ UpdateAndMergeChangelog() {
     git config --global user.name "${CIRCLE_USERNAME}"
     git config --global user.email "${CIRCLE_USERNAME}@users.noreply.github.com"
     git checkout -b "${GEN_BRANCH_NAME}"
-    git commit -m "Updated the ${PARAM_CHANGELOG_FILE}"
+    git commit -m "Updated the ${PARAM_CHANGELOG_FILE}\n\n[skip ci]"
     # Do not run when sourced for bats-core
     if [ "${0#*$ORB_TEST_ENV}" == "$0" ]; then
         git push origin "${GEN_BRANCH_NAME}"
@@ -30,5 +30,5 @@ UpdateAndMergeChangelog() {
 # View src/tests for more information.
 ORB_TEST_ENV="bats-core"
 if [ "${0#*$ORB_TEST_ENV}" == "$0" ]; then
-    UpdateAndMergeChangelog
+    MergeChangelog
 fi
