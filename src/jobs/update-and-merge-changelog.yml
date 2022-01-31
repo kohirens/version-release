@@ -42,4 +42,4 @@ steps:
         PARAM_BRANCH: << parameters.branch >>
         PARAM_MERGE_TYPE: << parameters.mergeType >>
       name: Commit and merge the CHANGELOG updates
-      command: << include(scripts/update-and-merge-changelog.sh) >>
+      command: << include(scripts/merge-changelog.sh) >>
