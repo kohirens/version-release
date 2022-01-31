@@ -1,5 +1,10 @@
 UpdateAndMergeChangelog() {
     changelogUpdated=$(git diff --name-only -- "${PARAM_CHANGELOG_FILE}")
+    echo "BEGIN DEBUG"
+    ls -la .
+    git status
+    echo "END DEBUG"
+
     if [ -z "${changelogUpdated}" ]; then
         echo "no changes detected in the ${PARAM_CHANGELOG_FILE} file"
         exit 0
