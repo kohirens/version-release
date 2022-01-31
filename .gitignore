@@ -4,4 +4,6 @@
 
 # Files
 # -----
+/build-version.json
+/really-i-need-a-file.txt
 orb.yml
