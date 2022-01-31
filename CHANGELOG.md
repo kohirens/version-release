@@ -2,6 +2,12 @@
 ## [Unreleased]
 
 
+<a name="0.6.3"></a>
+## [0.6.3] - 2022-01-31
+### Changed
+- Placed required checkout step in jobs.
+
+
 <a name="0.6.2"></a>
 ## [0.6.2] - 2022-01-31
 ### Changed
@@ -146,7 +152,8 @@
 - Sample command and job.
 
 
-[Unreleased]: https://github.com/kohirens/version-release-orb/compare/0.6.2...HEAD
+[Unreleased]: https://github.com/kohirens/version-release-orb/compare/0.6.3...HEAD
+[0.6.3]: https://github.com/kohirens/version-release-orb/compare/0.6.2...0.6.3
 [0.6.2]: https://github.com/kohirens/version-release-orb/compare/0.6.1...0.6.2
 [0.6.1]: https://github.com/kohirens/version-release-orb/compare/0.6.0...0.6.1
 [0.6.0]: https://github.com/kohirens/version-release-orb/compare/0.5.4...0.6.0
