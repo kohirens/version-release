@@ -128,12 +128,10 @@ workflows:
           filters:
             branches:
               only: main
-          pre-steps: [ checkout, attach_workspace: { at: '.' } ]
           sshFinger: << pipeline.parameters.ssh-finger >>
       - vro/tag-and-release:
           requires: [ vro/update-and-merge-changelog ]
           context: orb-publishing
-          pre-steps: [ checkout, attach_workspace: { at: '.' } ]
   publish-orb:
     jobs:
       - orb-tools/pack:
