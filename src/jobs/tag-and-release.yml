@@ -19,6 +19,9 @@ parameters:
     default: ".chglog/config.yml"
 executor: default
 steps:
+  - checkout
+  - attach_workspace:
+      at: '.'
   - git-chglog-update:
       configFile: "<< parameters.configFile >>"
       outputFile: "<< parameters.changelogFile >>"

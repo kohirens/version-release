@@ -32,6 +32,9 @@ parameters:
     default: GH_TOKE
 executor: default
 steps:
+  - checkout
+  - attach_workspace:
+      at: '.'
   - add_ssh_keys:
       fingerprints:
         - << parameters.sshFinger >>
