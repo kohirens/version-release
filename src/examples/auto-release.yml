@@ -1,0 +1,38 @@
+description: >
+  Commit changes to the changelog and merge into a remote branch.
+usage:
+  version: 2.1
+
+  orbs:
+    vro: kohirens/version-release@0.6.2
+
+  parameters:
+    ssh-finger:
+      description: Fingerprint of an SSH key to allow writing back to the repo.
+      type: string
+      default: "AB:CD:EF:GH:12:34:56:78"
+
+    github-token-var: # Need a Github token stored in the environment.
+      description: Name of the environment varable that contains the GitHub personal access token.
+      type: string
+      default: "GH_TOKE"
+
+  workflows:
+    # Only run when branch is main
+    # 1. Update the changelog.
+    # 2. Merge the changelog to main, causing tag-and-release to run.
+    # 3. Verify there are taggable changes.
+    # 4. Publish a release tag.
+    auto-release:
+      jobs:
+        - vro/update-and-merge-changelog: #publish-changelog
+            context: orb-publishing
+            filters:
+              branches:
+                only: main
+            ghToken: << pipeline.parameters.github-token-var >>
+            sshFinger: << pipeline.parameters.ssh-finger >>
+        - vro/tag-and-release: #publish-a-release
+            context: orb-publishing
+            ghToken: << pipeline.parameters.github-token-var >>
+            requires: [ vro/update-and-merge-changelog ]
