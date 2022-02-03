@@ -2,9 +2,15 @@
 ## [Unreleased]
 
 
-<a name="0.6.3"></a>
-## [0.6.3] - 2022-01-31
+<a name="0.7.0"></a>
+## [0.7.0] - 2022-02-03
+### Added
+- Check that merging changelog has completed.
+- Auto release workflow example.
+
 ### Changed
+- Removed failed attempt at newlines in commmit message.
+- Updated merge changelog output for user feedback.
 - Placed required checkout step in jobs.
 
 
@@ -152,8 +158,8 @@
 - Sample command and job.
 
 
-[Unreleased]: https://github.com/kohirens/version-release-orb/compare/0.6.3...HEAD
-[0.6.3]: https://github.com/kohirens/version-release-orb/compare/0.6.2...0.6.3
+[Unreleased]: https://github.com/kohirens/version-release-orb/compare/0.7.0...HEAD
+[0.7.0]: https://github.com/kohirens/version-release-orb/compare/0.6.2...0.7.0
 [0.6.2]: https://github.com/kohirens/version-release-orb/compare/0.6.1...0.6.2
 [0.6.1]: https://github.com/kohirens/version-release-orb/compare/0.6.0...0.6.1
 [0.6.0]: https://github.com/kohirens/version-release-orb/compare/0.5.4...0.6.0
