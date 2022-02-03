@@ -14,7 +14,7 @@ MergeChangelog() {
     git config --global user.name "${CIRCLE_USERNAME}"
     git config --global user.email "${CIRCLE_USERNAME}@users.noreply.github.com"
     git checkout -b "${GEN_BRANCH_NAME}"
-    gentBranchCommitMsg="Updated the ${PARAM_CHANGELOG_FILE} [skip ci]"
+    gentBranchCommitMsg=$(printf "Updated the %s\n\n[skip ci]" "${PARAM_CHANGELOG_FILE}")
     git commit -m "${gentBranchCommitMsg}"
     # Do not run when sourced for bats-core
     if [ "${0#*$ORB_TEST_ENV}" == "$0" ]; then
