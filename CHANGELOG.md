@@ -9,6 +9,7 @@
 - Auto release workflow example.
 
 ### Changed
+- Refactored merge-changelog.sh.
 - Add a newline in the changelog commit message.
 - Removed failed attempt at newlines in commmit message.
 - Updated merge changelog output for user feedback.
