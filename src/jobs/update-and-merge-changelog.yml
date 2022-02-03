@@ -30,11 +30,13 @@ parameters:
     description: Name of the environment variable holding the GitHub API token.
     type: env_var_name
     default: GH_TOKE
+  commitFile:
+    description: Name of the file to set the commit hash to tag.
+    type: string
+    default: "commit-to-tag.txt"
 executor: default
 steps:
   - checkout
-  - attach_workspace:
-      at: '.'
   - add_ssh_keys:
       fingerprints:
         - << parameters.sshFinger >>
@@ -44,5 +46,9 @@ steps:
         PARAM_CHANGELOG_FILE: << parameters.changelogFile >>
         PARAM_BRANCH: << parameters.branch >>
         PARAM_MERGE_TYPE: << parameters.mergeType >>
+        PARAM_COMMIT_FILE: << parameters.commitFile >>
       name: Commit and merge the CHANGELOG updates
       command: << include(scripts/merge-changelog.sh) >>
+  - persist_to_workspace:
+      root: "."
+      paths: [ << parameters.commitFile >> ]
