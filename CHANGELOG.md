@@ -14,6 +14,7 @@
 - Placed required checkout step in jobs.
 
 ### Fixed
+- typo in command.
 - No auto tagging.
 
 
