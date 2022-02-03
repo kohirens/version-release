@@ -9,11 +9,13 @@
 - Auto release workflow example.
 
 ### Changed
+- Add a newline in the changelog commit message.
 - Removed failed attempt at newlines in commmit message.
 - Updated merge changelog output for user feedback.
 - Placed required checkout step in jobs.
 
 ### Fixed
+- Error when missing commit-to-tag.txt file.
 - tag-and-release job.
 - typo in command.
 - No auto tagging.
