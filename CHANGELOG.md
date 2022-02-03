@@ -13,6 +13,9 @@
 - Updated merge changelog output for user feedback.
 - Placed required checkout step in jobs.
 
+### Fixed
+- No auto tagging.
+
 
 <a name="0.6.2"></a>
 ## [0.6.2] - 2022-01-31
