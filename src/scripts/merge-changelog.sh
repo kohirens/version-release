@@ -49,7 +49,7 @@ waitForPrToMerge() {
             currCommitMsg=$(git show-branch --no-name "${currCommit}")
             if [ "${currCommitMsg}" = "${gentBranchCommitMsg}" ]; then
                 echo "merge has completed successfully"
-                ehco "${currCommitMsg}" > "${PARAM_COMMIT_FILE}"
+                echo "${currCommitMsg}" > "${PARAM_COMMIT_FILE}"
                 ls -la .
             fi
         else
