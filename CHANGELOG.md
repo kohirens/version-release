@@ -14,6 +14,7 @@
 - Placed required checkout step in jobs.
 
 ### Fixed
+- tag-and-release job.
 - typo in command.
 - No auto tagging.
 
