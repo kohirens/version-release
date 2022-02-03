@@ -1,8 +1,9 @@
 TagAndRelease() {
     ls -la .
     git fetch --all -p
-    cat "${PARAM_COMMIT_FILE}"
-    git reset --hard "${PARAM_COMMIT_FILE}"
+    currCommit=$(cat "${PARAM_COMMIT_FILE}")
+    git reset --hard "${currCommit}"
+
     changelogUpdated=$(git diff --name-only -- "${PARAM_CHANGELOG_FILE}")
     # Skip if there are changes in the changelog that have not been merged.
     if [ -n "${changelogUpdated}" ]; then
