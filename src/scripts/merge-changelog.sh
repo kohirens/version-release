@@ -1,5 +1,7 @@
 MergeChangelog() {
     prevCommit=$(git rev-parse origin/"${PARAM_BRANCH}")
+    # make the file so that the persist step does not fail.
+    echo "" > "${PARAM_COMMIT_FILE}"
 
     changelogUpdated=$(git diff --name-only -- "${PARAM_CHANGELOG_FILE}")
 
@@ -49,8 +51,9 @@ waitForPrToMerge() {
             currCommitMsg=$(git show-branch --no-name "${currCommit}")
             if [ "${currCommitMsg}" = "${gentBranchCommitMsg}" ]; then
                 echo "merge has completed successfully"
-                echo "${currCommitMsg}" > "${PARAM_COMMIT_FILE}"
-                ls -la .
+                echo "${currCommit}" > "${PARAM_COMMIT_FILE}"
+                cm=$(cat "${PARAM_COMMIT_FILE}")
+                printf "cm = %s"$'\n' "${cm}"
             fi
         else
             printf "."
