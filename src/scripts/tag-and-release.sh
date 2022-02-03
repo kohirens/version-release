@@ -1,4 +1,8 @@
 TagAndRelease() {
+    ls -la .
+    git fetch --all -p
+    cat "${PARAM_COMMIT_FILE}"
+    git reset --hard "${PARAM_COMMIT_FILE}"
     changelogUpdated=$(git diff --name-only -- "${PARAM_CHANGELOG_FILE}")
     # Skip if there are changes in the changelog that have not been merged.
     if [ -n "${changelogUpdated}" ]; then
@@ -27,7 +31,6 @@ TagAndRelease() {
     releaseDay=$(date +"%Y-%m-%d")
 
     # Fetch all the refs
-    git fetch --all -p
     isTaggable=$(git-tool-belt taggable --commitRange "${prevVersion}..HEAD")
     echo "commit range from ${prevVersion} to HEAD tag ability is \"${isTaggable}\""
     # Skip if there are no notable commits to tag.
@@ -40,7 +43,6 @@ TagAndRelease() {
     echo "${GH_TOKE}" > really-i-need-a-file.txt
     gh auth login --with-token < really-i-need-a-file.txt
     gh release create "${nextVersion}" --generate-notes --target "${PARAM_BRANCH}" --title "[${nextVersion}] - ${releaseDay}"
-
 }
 
 # Will not run if sourced for bats-core tests.

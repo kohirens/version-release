@@ -17,6 +17,10 @@ parameters:
     description: Location of a git-chglog configuration file.
     type: string
     default: ".chglog/config.yml"
+  commitFile:
+    description: Name of the file holding the commit hash to tag.
+    type: string
+    default: "commit-to-tag.txt"
 executor: default
 steps:
   - checkout
@@ -29,5 +33,6 @@ steps:
       environment:
         PARAM_BRANCH: << parameters.branch >>
         PARAM_CHANGELOG_FILE: << parameters.changelogFile >>
+        PARAM_COMMIT_FILE: << parameters.commitFile >>
       name: Make A New Release
       command: << include(scripts/tag-and-release.sh) >>

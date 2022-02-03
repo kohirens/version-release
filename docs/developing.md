@@ -84,3 +84,17 @@ config.
 
 NOTE: When the major number is incremented then the minor and patch numbers will reset to zero. Likewise, when the
 minor number is incremented, then only the patch number will reset to zero.
+
+
+## How to Publish Locally
+
+In order to validate the config you'll need the latest changes sometimes. This
+is very true when things go wrong. Which is expected in development.
+To get to a working state fix the src files. Then publish so that you can
+validate the orb, CI config, and get the CI pipeline working as expected.
+
+```shell
+circleci orb pack .\src\ > orb.yml
+circleci.exe orb publish .\orb.yml  kohirens/version-release@dev:alpha
+circleci config validate
+```
