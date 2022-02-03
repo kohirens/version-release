@@ -1,5 +1,4 @@
 TagAndRelease() {
-    ls -la .
     git fetch --all -p
     if [ -f "${PARAM_COMMIT_FILE}" ]; then
         currCommit=$(cat "${PARAM_COMMIT_FILE}")
