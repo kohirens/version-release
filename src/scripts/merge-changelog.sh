@@ -17,6 +17,7 @@ MergeChangelog() {
     gentBranchCommitMsg=$(printf "Updated the %s\n\n[skip ci]" "${PARAM_CHANGELOG_FILE}")
     git commit -m "${gentBranchCommitMsg}"
     # Do not run when sourced for bats-core
+    # TODO: This can be tested if you mock the gh, git, and setup a dummy repo at test time.
     if [ "${0#*$ORB_TEST_ENV}" == "$0" ]; then
         git push origin "${GEN_BRANCH_NAME}"
         echo "${GH_TOKE}" > really-i-need-a-file.txt
