@@ -17,7 +17,7 @@ Updating integration test requires the following process:
 2. Make sure the pipeline succeeds.
 3. Update your integration pipeline to test the new features/breaking changes.
 
-Again when the "integration-test_deploy" pipeline runs it will use the latest dev image set to the latest hash.
+Again when the "integration-test" pipeline runs it will use the latest dev image set to the latest hash.
 However, the whole CI config is compiled before building your latest dev orb (with its latest features). So any calls
 to those features will throw errors and the pipeline will fail. So the process above MUST be followed.
 
