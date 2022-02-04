@@ -9,6 +9,6 @@ Provides the following features:
 
 ## Resources
 
-See the [Version Release Orb](https://circleci.com/developer/orbs/orb/kohirens/version-release#usage-git-chglog-update) for examples.
+See the [Version Release Orb](https://circleci.com/developer/orbs/orb/kohirens/version-release#usage-examples) for examples.
 
 Visit the [Docs](/docs/index.md) for development details.
