@@ -2,4 +2,5 @@
 
 ## TOC
 
-1. [Developing](/docs/developing.md)
+1. [How to Release](/docs/how-to-release.md)
+2. [Developing](/docs/developing.md)
