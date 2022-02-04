@@ -28,7 +28,7 @@ parameters:
 
 jobs:
   # Define one or more jobs which will utilize your orb's commands and parameters to validate your changes.
-  integration-test-1:
+  integration-test:
     executor: vro/default
     steps:
       - checkout
@@ -112,7 +112,7 @@ workflows:
   integration-test:
     when: << pipeline.parameters.run-integration-tests >>
     jobs:
-      - integration-test-1:
+      - integration-test:
           filters:
             branches:
               ignore: /main|updated-changelog-skip-ci/
