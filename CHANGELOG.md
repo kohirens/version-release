@@ -3,7 +3,13 @@
 
 
 <a name="0.7.1"></a>
-## [0.7.1] - 2022-02-04
+## [0.7.1] - 2022-02-09
+### Changed
+- Continue CHANGELOG merge when new and not in the repo.
+
+### Fixed
+- Processing empty commit txt file.
+
 
 <a name="0.7.0"></a>
 ## [0.7.0] - 2022-02-03
