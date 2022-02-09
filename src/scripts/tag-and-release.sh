@@ -10,6 +10,7 @@ TagAndRelease() {
     fi
 
     changelogUpdated=$(git diff --name-only -- "${PARAM_CHANGELOG_FILE}")
+    echo "changelogUpdated=${changelogUpdated}"
     # Skip if there are changes in the changelog that have not been merged.
     if [ -n "${changelogUpdated}" ]; then
         echo "exiting, changes detected in the ${PARAM_CHANGELOG_FILE} file"
@@ -18,6 +19,7 @@ TagAndRelease() {
 
   # Obsolete
     hasTag=$(git show-ref --tags | grep "${CIRCLE_SHA1}" | grep "refs/tags/v\\?\\d\\.\\d\\.\\d" || echo "not found")
+    echo "hasTag=${hasTag}"
     # Skip if this commit is already tagged.
     if [ "${hasTag}" != "not found" ]; then
         echo "exiting, commit is already tagged: ${hasTag}"
@@ -25,6 +27,7 @@ TagAndRelease() {
     fi
 
     hasTag=$(git show-ref "${CIRCLE_SHA1}" || echo "not found")
+    echo "hasTag=${hasTag}"
     # Skip if this commit is already tagged.
     if [ "${hasTag}" != "not found" ]; then
         echo "exiting, commit is already tagged: ${hasTag}"
