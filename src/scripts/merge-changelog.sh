@@ -14,6 +14,15 @@ MergeChangelog() {
         exit 0
     fi
 
+    # Exit if branch exist remotely already.
+    branchExistRemotely=$(git ls-remote --heads "${CIRCLE_REPOSITORY_URL}" "${GEN_BRANCH_NAME}" | wc -l)
+    echo "branchExistRemotely = ${branchExistRemotely}"
+    # Exit if branch exist remotely already.
+    if [ "${branchExistRemotely}" = "1"  ]; then
+        echo "the branch '${GEN_BRANCH_NAME}' exists on ${CIRCLE_REPOSITORY_URL}, please remove it manually so this job can complete successfully; exiting with code 1"
+        exit 1
+    fi
+
     GEN_BRANCH_NAME="updated-changelog-skip-ci"
     git add CHANGELOG.md
     git config --global user.name "${CIRCLE_USERNAME}"
