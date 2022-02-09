@@ -2,5 +2,6 @@
 
 ## TOC
 
-1. [How to Release](/docs/how-to-release.md)
-2. [Developing](/docs/developing.md)
+1. [Setup SSH Keys](/docs/setup-ssh-keys.md)
+2. [How to Release](/docs/how-to-release.md)
+3. [Developing](/docs/developing.md)
