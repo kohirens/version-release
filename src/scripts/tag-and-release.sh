@@ -1,9 +1,12 @@
 TagAndRelease() {
     git fetch --all -p
+
     if [ -f "${PARAM_COMMIT_FILE}" ]; then
         currCommit=$(cat "${PARAM_COMMIT_FILE}")
-        echo "resetting to commit ${currCommit}"
-        git reset --hard "${currCommit}"
+        if [ "${currCommit}" = "" ]; then
+          echo "resetting to commit ${currCommit}"
+          git reset --hard "${currCommit}"
+        fi
     fi
 
     changelogUpdated=$(git diff --name-only -- "${PARAM_CHANGELOG_FILE}")
