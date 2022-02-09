@@ -1,14 +1,19 @@
 MergeChangelog() {
     prevCommit=$(git rev-parse origin/"${PARAM_BRANCH}")
+
     # make the file so that the persist step does not fail.
     echo "" > "${PARAM_COMMIT_FILE}"
 
     changelogUpdated=$(git diff --name-only -- "${PARAM_CHANGELOG_FILE}")
-
-    if [ -z "${changelogUpdated}" ]; then
+    changelogUntracked=$(git st | grep "${PARAM_CHANGELOG_FILE}" || echo "")
+    if [ "${changelogUntracked}" != "" ]; then
+        # TODO: Test with a repo with tags but no CHANGELOG.md
+        echo "added new ${PARAM_CHANGELOG_FILE} file"
+    elif [ -z "${changelogUpdated}" ]; then
         echo "no changes detected in the ${PARAM_CHANGELOG_FILE} file"
         exit 0
     fi
+
     GEN_BRANCH_NAME="updated-changelog-skip-ci"
     git add CHANGELOG.md
     git config --global user.name "${CIRCLE_USERNAME}"
