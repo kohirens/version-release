@@ -5,9 +5,11 @@
 <a name="0.7.1"></a>
 ## [0.7.1] - 2022-02-09
 ### Changed
+- tag-and-release.sh verbosity.
 - Continue CHANGELOG merge when new and not in the repo.
 
 ### Fixed
+- tag-and-release not resetting to correct commit.
 - Processing empty commit txt file.
 
 
