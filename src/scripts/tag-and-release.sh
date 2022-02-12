@@ -42,7 +42,7 @@ TagAndRelease() {
     echo "tagging commit hash ${CIRCLE_SHA1} with ${nextVersion}"
     echo "${GH_TOKE}" > really-i-need-a-file.txt
     gh auth login --with-token < really-i-need-a-file.txt
-    gh release create "${nextVersion}" --generate-notes --target "${PARAM_BRANCH}" --title "[${nextVersion}] - ${releaseDay}"
+    gh release create "${nextVersion}" --generate-notes --target "${PARAM_BRANCH}" --title "${nextVersion} - ${releaseDay}"
 }
 
 # Will not run if sourced for bats-core tests.
