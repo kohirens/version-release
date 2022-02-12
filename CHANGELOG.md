@@ -2,8 +2,17 @@
 ## [Unreleased]
 
 
+<a name="0.7.3"></a>
+## [0.7.3] - 2022-02-12
+### Changed
+- Removed obsolite code.
+
+### Removed
+- Square brackets from GitHub release tags.
+
+
 <a name="0.7.2"></a>
-## [0.7.2] - 2022-02-09
+## [0.7.2] - 2022-02-11
 ### Changed
 - merge-changelog scritp to exit when gen branch exist remotely.
 
@@ -183,7 +192,8 @@
 - Sample command and job.
 
 
-[Unreleased]: https://github.com/kohirens/version-release-orb/compare/0.7.2...HEAD
+[Unreleased]: https://github.com/kohirens/version-release-orb/compare/0.7.3...HEAD
+[0.7.3]: https://github.com/kohirens/version-release-orb/compare/0.7.2...0.7.3
 [0.7.2]: https://github.com/kohirens/version-release-orb/compare/0.7.1...0.7.2
 [0.7.1]: https://github.com/kohirens/version-release-orb/compare/0.7.0...0.7.1
 [0.7.0]: https://github.com/kohirens/version-release-orb/compare/0.6.2...0.7.0
