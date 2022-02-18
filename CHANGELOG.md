@@ -2,6 +2,12 @@
 ## [Unreleased]
 
 
+<a name="0.7.4"></a>
+## [0.7.4] - 2022-02-18
+### Fixed
+- Use of git alias not defined.
+
+
 <a name="0.7.3"></a>
 ## [0.7.3] - 2022-02-12
 ### Changed
@@ -192,7 +198,8 @@
 - Sample command and job.
 
 
-[Unreleased]: https://github.com/kohirens/version-release-orb/compare/0.7.3...HEAD
+[Unreleased]: https://github.com/kohirens/version-release-orb/compare/0.7.4...HEAD
+[0.7.4]: https://github.com/kohirens/version-release-orb/compare/0.7.3...0.7.4
 [0.7.3]: https://github.com/kohirens/version-release-orb/compare/0.7.2...0.7.3
 [0.7.2]: https://github.com/kohirens/version-release-orb/compare/0.7.1...0.7.2
 [0.7.1]: https://github.com/kohirens/version-release-orb/compare/0.7.0...0.7.1
