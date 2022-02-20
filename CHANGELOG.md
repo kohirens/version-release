@@ -2,6 +2,12 @@
 ## [Unreleased]
 
 
+<a name="0.7.5"></a>
+## [0.7.5] - 2022-02-20
+### Fixed
+- Allow tagging repos with no tags.
+
+
 <a name="0.7.4"></a>
 ## [0.7.4] - 2022-02-18
 ### Fixed
@@ -198,7 +204,8 @@
 - Sample command and job.
 
 
-[Unreleased]: https://github.com/kohirens/version-release-orb/compare/0.7.4...HEAD
+[Unreleased]: https://github.com/kohirens/version-release-orb/compare/0.7.5...HEAD
+[0.7.5]: https://github.com/kohirens/version-release-orb/compare/0.7.4...0.7.5
 [0.7.4]: https://github.com/kohirens/version-release-orb/compare/0.7.3...0.7.4
 [0.7.3]: https://github.com/kohirens/version-release-orb/compare/0.7.2...0.7.3
 [0.7.2]: https://github.com/kohirens/version-release-orb/compare/0.7.1...0.7.2
