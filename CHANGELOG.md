@@ -2,6 +2,12 @@
 ## [Unreleased]
 
 
+<a name="0.7.6"></a>
+## [0.7.6] - 2022-02-20
+### Changed
+- Upgraded git-tool-belt to version 0.9.0.
+
+
 <a name="0.7.5"></a>
 ## [0.7.5] - 2022-02-20
 ### Fixed
@@ -204,7 +210,8 @@
 - Sample command and job.
 
 
-[Unreleased]: https://github.com/kohirens/version-release-orb/compare/0.7.5...HEAD
+[Unreleased]: https://github.com/kohirens/version-release-orb/compare/0.7.6...HEAD
+[0.7.6]: https://github.com/kohirens/version-release-orb/compare/0.7.5...0.7.6
 [0.7.5]: https://github.com/kohirens/version-release-orb/compare/0.7.4...0.7.5
 [0.7.4]: https://github.com/kohirens/version-release-orb/compare/0.7.3...0.7.4
 [0.7.3]: https://github.com/kohirens/version-release-orb/compare/0.7.2...0.7.3
