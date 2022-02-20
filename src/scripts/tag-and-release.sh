@@ -27,12 +27,17 @@ TagAndRelease() {
 
     git-tool-belt version
     nextVersion=$(jq -r .nextVersion < build-version.json)
-    prevVersion=$(jq -r .currentVersion < build-version.json)
+    currVersion=$(jq -r .currentVersion < build-version.json)
     releaseDay=$(date +"%Y-%m-%d")
+    revRange="${currVersion}"
+    # currVersion defaults to "HEAD" if it cannot find a tag, grabbing and tagging the whole history up to this point
+    if [ "${currVersion}" != "HEAD" ]; then
+        revRange="${currVersion}..HEAD"
+    fi
 
     # Fetch all the refs
-    isTaggable=$(git-tool-belt taggable --commitRange "${prevVersion}..HEAD")
-    echo "commit range from ${prevVersion} to HEAD tag ability is \"${isTaggable}\""
+    isTaggable=$(git-tool-belt taggable --commitRange "${revRange}")
+    echo "commit range ${revRange} tag ability is \"${isTaggable}\""
     # Skip if there are no notable commits to tag.
     if [ "${isTaggable}" = "false" ]; then
         echo "exiting, no notable commits to tag"
