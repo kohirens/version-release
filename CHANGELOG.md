@@ -2,6 +2,12 @@
 ## [Unreleased]
 
 
+<a name="0.8.0"></a>
+## [0.8.0] - 2022-02-22
+### Added
+- File to export the release tag.
+
+
 <a name="0.7.6"></a>
 ## [0.7.6] - 2022-02-20
 ### Changed
@@ -210,7 +216,8 @@
 - Sample command and job.
 
 
-[Unreleased]: https://github.com/kohirens/version-release-orb/compare/0.7.6...HEAD
+[Unreleased]: https://github.com/kohirens/version-release-orb/compare/0.8.0...HEAD
+[0.8.0]: https://github.com/kohirens/version-release-orb/compare/0.7.6...0.8.0
 [0.7.6]: https://github.com/kohirens/version-release-orb/compare/0.7.5...0.7.6
 [0.7.5]: https://github.com/kohirens/version-release-orb/compare/0.7.4...0.7.5
 [0.7.4]: https://github.com/kohirens/version-release-orb/compare/0.7.3...0.7.4
