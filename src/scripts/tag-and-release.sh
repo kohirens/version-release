@@ -48,6 +48,7 @@ TagAndRelease() {
     echo "${GH_TOKE}" > really-i-need-a-file.txt
     gh auth login --with-token < really-i-need-a-file.txt
     gh release create "${nextVersion}" --generate-notes --target "${PARAM_BRANCH}" --title "${nextVersion} - ${releaseDay}"
+    echo "${nextVersion}" > "${PARAM_TAG_FILE}"
 }
 
 # Will not run if sourced for bats-core tests.
