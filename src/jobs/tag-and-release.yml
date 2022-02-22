@@ -21,6 +21,10 @@ parameters:
     description: Name of the file holding the commit hash to tag.
     type: string
     default: "commit-to-tag.txt"
+  taggedFile:
+    description: File to store the semanitc version that was used to tag the release.
+    type: string
+    default: "tagged.txt"
 executor: default
 steps:
   - checkout
@@ -34,5 +38,10 @@ steps:
         PARAM_BRANCH: << parameters.branch >>
         PARAM_CHANGELOG_FILE: << parameters.changelogFile >>
         PARAM_COMMIT_FILE: << parameters.commitFile >>
+        PARAM_TAG_FILE: << parameters.taggedFile >>
       name: Make A New Release
       command: << include(scripts/tag-and-release.sh) >>
+  - persist_to_workspace:
+      root: '.'
+      paths:
+        - "<< parameters.taggedFile >>"
