@@ -5,7 +5,7 @@ GitChglogUpdate() {
         echo "no tags found"
         git-chglog --output "${PARAM_OUTPUTFILE}" -c "${PARAM_CONFIGFILE}" --next-tag=0.1.0
     elif [ -f "/usr/local/bin/git-tool-belt" ]; then
-        git-tool-belt version
+        git-tool-belt semver -save build-version.json
         nextVersion=$(jq -r .nextVersion < build-version.json)
         echo "nextVersion = ${nextVersion}"
         git-chglog --output "${PARAM_OUTPUTFILE}" -c "${PARAM_CONFIGFILE}" --next-tag="${nextVersion}"
