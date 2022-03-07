@@ -25,7 +25,7 @@ TagAndRelease() {
         exit 0
     fi
 
-    git-tool-belt version
+    git-tool-belt semver -save build-version.json
     nextVersion=$(jq -r .nextVersion < build-version.json)
     currVersion=$(jq -r .currentVersion < build-version.json)
     releaseDay=$(date +"%Y-%m-%d")
