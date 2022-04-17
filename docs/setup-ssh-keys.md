@@ -35,9 +35,9 @@ have to do this for each repo you want to use these features.
 # Setup A personal access token on GitHub
 
 Unlike the SSH keys which are per repository. You will only need to make 1
-token for CirlceCI to use across all the projects the token gives access to
-for an Org. It can be risky to generate multiple keys that give access to the
-Org. So one should be enough in this case.
+token for CircleCI to use across all the projects, as the token gives access to
+an Org. It can be risky to manage multiple keys that give access to the
+Org. So one should be enough in most cases.
 
 This is used to push branches, for updating the CHANGELOG, and then merging it
 to your main branch by making a pull request. It is also used to publish a
@@ -63,4 +63,5 @@ release.
         read:org
    ```
 
-NOTE: Without these certain parts of the jobs may fail.
+NOTE: Without these certain parts of the jobs may fail. Also `write:packages` is
+not available for Circle CI Server at this time of writing.
