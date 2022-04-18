@@ -40,6 +40,7 @@ steps:
   - add_ssh_keys:
       fingerprints:
         - << parameters.sshFinger >>
+  - add-missing-chglog-config
   - git-chglog-update
   - run:
       environment:
