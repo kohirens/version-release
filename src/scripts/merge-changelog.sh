@@ -47,7 +47,7 @@ MergeChangelog() {
 waitForPrToMerge() {
     # Wait until the branch is fully merged. and the merge branch has been updated.
     # This will help make sure that operations started in this job complete before moving on.
-    printf "merging pr is "
+    printf "%s" "merging pr is "
     # 1. Loop for so many seconds
     counter=0
     while [ $counter -lt 10 ]; do
