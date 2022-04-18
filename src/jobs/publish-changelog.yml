@@ -48,16 +48,17 @@ steps:
   - add_ssh_keys:
       fingerprints:
         - << parameters.sshFinger >>
-  - add-missing-chglog-config
-  - git-chglog-update
+  - add-missing-chglog-config:
+      configFile: "<< parameters.configFile >>"
+  - git-chglog-update:
+      configFile: "<< parameters.configFile >>"
+      outputFile: "<< parameters.outputFile >>"
   - run:
       environment:
         PARAM_CHANGELOG_FILE: "<< parameters.changelogFile >>"
         PARAM_BRANCH: "<< parameters.branch >>"
         PARAM_MERGE_TYPE: "<< parameters.mergeType >>"
         PARAM_COMMIT_FILE: "<< parameters.commitFile >>"
-        PARAM_CONFIGFILE: "<< parameters.configFile >>"
-        PARAM_OUTPUTFILE: "<< parameters.outputFile >>"
       name: Commit and merge the CHANGELOG updates
       command: << include(scripts/merge-changelog.sh) >>
   - persist_to_workspace:
