@@ -1,15 +1,15 @@
 # Runs prior to every test
 setup() {
     # Load our script file.
-    source ./src/scripts/git-chglog-check.sh
+    source ./src/scripts/add-missing-chglog-config.sh
 }
 
 @test '1: Check for git-chglog config' {
     # Mock environment variables or functions by exporting them (after the script has been sourced)
     export PARAM_CONFIGFILE="./test/.chglog/config.yml"
+    export CIRCLE_REPOSITORY_URL="1234"
     # Run the function
-    GitChglogConfigCheck
+    AddMissingChgLogConfig
     # Capture the return value of the function
-    result=$returnVal
-    [ "${result}" == "1" ]
+    [ -f "${PARAM_CONFIGFILE}" ];
 }
