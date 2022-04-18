@@ -1,5 +1,5 @@
 description: >
-  Check for a git-chglog configuration file.
+  Check for a git-chglog configuration file, and add if missing.
 parameters:
   configFile:
     type: string

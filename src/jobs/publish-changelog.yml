@@ -10,14 +10,26 @@ description: |2
 
   We use a PR instead of a push in case the branch is protected from direct pushes.
 parameters:
-  changelogFile:
-    description: Location of the CHANGELOG file.
-    type: string
-    default: "CHANGELOG.md"
   branch:
     description: Name of the branch to merge into.
     type: string
     default: "main"
+  changelogFile:
+    description: Location of the CHANGELOG file.
+    type: string
+    default: "CHANGELOG.md"
+  commitFile:
+    description: Name of the file to set the commit hash to tag.
+    type: string
+    default: "commit-to-tag.txt"
+  configFile:
+    type: string
+    default: ".chglog/config.yml"
+    description: Location of a git-chglog configuration file.
+  ghToken:
+    description: Name of the environment variable holding the GitHub API token.
+    type: env_var_name
+    default: GH_TOKEN # Setting this to GITHUB_TOKEN seems to cause problems.
   mergeType:
     description: Type of merge to perform, choose between merge|squash|rebase.
     type: enum
@@ -26,14 +38,10 @@ parameters:
   sshFinger:
     description: Fingerprint of an SSH key that can be used to perform a merge into a branch.
     type: string
-  ghToken:
-    description: Name of the environment variable holding the GitHub API token.
-    type: env_var_name
-    default: GH_TOKE
-  commitFile:
-    description: Name of the file to set the commit hash to tag.
+  outputFile:
+    description: Location to output/update the CHANGELOG file.
     type: string
-    default: "commit-to-tag.txt"
+    default: "CHANGELOG.md"
 executor: default
 steps:
   - checkout
@@ -44,10 +52,12 @@ steps:
   - git-chglog-update
   - run:
       environment:
-        PARAM_CHANGELOG_FILE: << parameters.changelogFile >>
-        PARAM_BRANCH: << parameters.branch >>
-        PARAM_MERGE_TYPE: << parameters.mergeType >>
-        PARAM_COMMIT_FILE: << parameters.commitFile >>
+        PARAM_CHANGELOG_FILE: "<< parameters.changelogFile >>"
+        PARAM_BRANCH: "<< parameters.branch >>"
+        PARAM_MERGE_TYPE: "<< parameters.mergeType >>"
+        PARAM_COMMIT_FILE: "<< parameters.commitFile >>"
+        PARAM_CONFIGFILE: "<< parameters.configFile >>"
+        PARAM_OUTPUTFILE: "<< parameters.outputFile >>"
       name: Commit and merge the CHANGELOG updates
       command: << include(scripts/merge-changelog.sh) >>
   - persist_to_workspace:
