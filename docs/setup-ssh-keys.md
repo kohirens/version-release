@@ -11,7 +11,7 @@ for the follow features.
 
 This key will be used to give CircleCI the access it needs to your repository.
 
-These keys are on a per repository basis, a requirement of GitHub. So you'll
+These keys are on a per-repository basis, a requirement of GitHub. So you'll
 have to do this for each repo you want to use these features.
 
 1. Generate the SSH key by running this in a terminal:

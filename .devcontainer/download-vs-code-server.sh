@@ -29,7 +29,7 @@ get_latest_release() {
         sha=$(echo "${combo_sha}" | sed -E "s/${sha}//" | xargs)
     fi
 
-    printf "${sha}"
+    printf "%s" "${sha}"
 }
 
 archive="vscode-server-linux-x64.tar.gz"
