@@ -123,14 +123,14 @@ workflows:
   # 4. Publish a release tag.
   auto-release:
     jobs:
-      - vro/update-and-merge-changelog: #publish-changelog
+      - vro/publish-changelog: #publish-changelog
           context: orb-publishing
           filters:
             branches:
               only: main
           sshFinger: << pipeline.parameters.ssh-finger >>
       - vro/tag-and-release:
-          requires: [ vro/update-and-merge-changelog ]
+          requires: [ vro/publish-changelog ]
           context: orb-publishing
   publish-orb:
     jobs:
