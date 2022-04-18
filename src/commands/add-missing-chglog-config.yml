@@ -7,5 +7,7 @@ parameters:
     description: Location of a git-chglog configuration file.
 steps:
   - run:
+      environment:
+        PARAM_CONFIGFILE: "<< parameters.configFile >>"
       name: Check for config
       command: << include(scripts/add-missing-chglog-config.sh) >>
