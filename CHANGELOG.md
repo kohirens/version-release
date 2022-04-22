@@ -2,6 +2,12 @@
 ## [Unreleased]
 
 
+<a name="1.0.3"></a>
+## [1.0.3] - 2022-04-22
+### Changed
+- Use GITHUB_TOKEN environment variable in to login to GitHub to make a PR.
+
+
 <a name="1.0.2"></a>
 ## [1.0.2] - 2022-04-22
 
@@ -228,7 +234,8 @@
 - Sample command and job.
 
 
-[Unreleased]: https://github.com/kohirens/version-release-orb/compare/1.0.2...HEAD
+[Unreleased]: https://github.com/kohirens/version-release-orb/compare/1.0.3...HEAD
+[1.0.3]: https://github.com/kohirens/version-release-orb/compare/1.0.2...1.0.3
 [1.0.2]: https://github.com/kohirens/version-release-orb/compare/1.0.1...1.0.2
 [1.0.1]: https://github.com/kohirens/version-release-orb/compare/1.0.0...1.0.1
 [1.0.0]: https://github.com/kohirens/version-release-orb/compare/0.8.1...1.0.0
