@@ -2,6 +2,9 @@
 ## [Unreleased]
 
 
+<a name="1.0.2"></a>
+## [1.0.2] - 2022-04-22
+
 <a name="1.0.1"></a>
 ## [1.0.1] - 2022-04-21
 
@@ -225,7 +228,8 @@
 - Sample command and job.
 
 
-[Unreleased]: https://github.com/kohirens/version-release-orb/compare/1.0.1...HEAD
+[Unreleased]: https://github.com/kohirens/version-release-orb/compare/1.0.2...HEAD
+[1.0.2]: https://github.com/kohirens/version-release-orb/compare/1.0.1...1.0.2
 [1.0.1]: https://github.com/kohirens/version-release-orb/compare/1.0.0...1.0.1
 [1.0.0]: https://github.com/kohirens/version-release-orb/compare/0.8.1...1.0.0
 [0.8.1]: https://github.com/kohirens/version-release-orb/compare/0.8.0...0.8.1
