@@ -59,6 +59,7 @@ steps:
         PARAM_BRANCH: "<< parameters.branch >>"
         PARAM_MERGE_TYPE: "<< parameters.mergeType >>"
         PARAM_COMMIT_FILE: "<< parameters.commitFile >>"
+        PARAM_CONFIGFILE: "<< parameters.configFile >>"
       name: Commit and merge the CHANGELOG updates
       command: << include(scripts/publish-changelog.sh) >>
   - persist_to_workspace:
