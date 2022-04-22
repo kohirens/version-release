@@ -45,8 +45,11 @@ TagAndRelease() {
     fi
 
     echo "tagging commit hash ${CIRCLE_SHA1} with ${nextVersion}"
-    echo "${GH_TOKEN}" > really-i-need-a-file.txt
-    gh auth login --with-token < really-i-need-a-file.txt
+    # Switch to SSH to use the token stored in the environment.
+    gh config set git_protocol ssh --host github.com
+    gh auth status --hostname github.com
+    #echo "${GH_TOKEN}" > really-i-need-a-file.txt
+    #gh auth login --with-token < really-i-need-a-file.txt
     gh release create "${nextVersion}" --generate-notes --target "${PARAM_BRANCH}" --title "${nextVersion} - ${releaseDay}"
     echo "${nextVersion}" > "${PARAM_TAG_FILE}"
 }

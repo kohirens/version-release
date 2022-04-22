@@ -34,8 +34,10 @@ MergeChangelog() {
     # TODO: This can be tested if you mock the gh, git, and setup a dummy repo at test time.
     if [ "${0#*$ORB_TEST_ENV}" == "$0" ]; then
         git push origin "${GEN_BRANCH_NAME}"
+        # Switch to SSH to use the token stored in the environment.
         gh config set git_protocol ssh --host github.com
-        GITHUB_TOKEN="${GH_TOKEN}" gh auth status github.com
+        #GITHUB_TOKEN="${GH_TOKEN}"
+        gh auth status --hostname github.com
         #echo "${GH_TOKEN}" > really-i-need-a-file.txt
         #gh auth login --with-token < really-i-need-a-file.txt
         gh pr create --base "${PARAM_BRANCH}" --head "${GEN_BRANCH_NAME}" --fill
