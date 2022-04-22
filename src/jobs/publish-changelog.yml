@@ -60,7 +60,7 @@ steps:
         PARAM_MERGE_TYPE: "<< parameters.mergeType >>"
         PARAM_COMMIT_FILE: "<< parameters.commitFile >>"
       name: Commit and merge the CHANGELOG updates
-      command: << include(scripts/merge-changelog.sh) >>
+      command: << include(scripts/publish-changelog.sh) >>
   - persist_to_workspace:
       root: "."
       paths: [ << parameters.commitFile >> ]

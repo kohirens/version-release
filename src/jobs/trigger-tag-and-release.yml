@@ -22,7 +22,7 @@ parameters:
   ghToken:
     description: Name of the environment variable holding the GitHub API token.
     type: env_var_name
-    default: GH_TOKE
+    default: GH_TOKEN
   pipeline-param-map:
     type: string
     default: '{"run-tag-and-release": true}'

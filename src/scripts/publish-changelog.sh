@@ -34,7 +34,7 @@ MergeChangelog() {
     # TODO: This can be tested if you mock the gh, git, and setup a dummy repo at test time.
     if [ "${0#*$ORB_TEST_ENV}" == "$0" ]; then
         git push origin "${GEN_BRANCH_NAME}"
-        echo "${GH_TOKE}" > really-i-need-a-file.txt
+        echo "${GH_TOKEN}" > really-i-need-a-file.txt
         gh auth login --with-token < really-i-need-a-file.txt
         gh pr create --base "${PARAM_BRANCH}" --head "${GEN_BRANCH_NAME}" --fill
         sleep 5

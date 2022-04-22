@@ -45,7 +45,7 @@ TagAndRelease() {
     fi
 
     echo "tagging commit hash ${CIRCLE_SHA1} with ${nextVersion}"
-    echo "${GH_TOKE}" > really-i-need-a-file.txt
+    echo "${GH_TOKEN}" > really-i-need-a-file.txt
     gh auth login --with-token < really-i-need-a-file.txt
     gh release create "${nextVersion}" --generate-notes --target "${PARAM_BRANCH}" --title "${nextVersion} - ${releaseDay}"
     echo "${nextVersion}" > "${PARAM_TAG_FILE}"

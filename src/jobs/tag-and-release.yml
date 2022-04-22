@@ -8,7 +8,7 @@ parameters:
   ghToken:
     description: Name of the environment variable holding the GitHub API token.
     type: env_var_name
-    default: GH_TOKE
+    default: GH_TOKEN
   changelogFile:
     description: Location to output/update the CHANGELOG file.
     type: string
