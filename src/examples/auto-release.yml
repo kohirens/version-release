@@ -4,7 +4,7 @@ usage:
   version: 2.1
 
   orbs:
-    vro: kohirens/version-release@0.6.2
+    vro: kohirens/version-release@latest
 
   parameters:
     ssh-finger:
@@ -12,27 +12,22 @@ usage:
       type: string
       default: "AB:CD:EF:GH:12:34:56:78"
 
-    github-token-var: # Need a Github token stored in the environment.
-      description: Name of the environment varable that contains the GitHub personal access token.
-      type: string
-      default: "GH_TOKE"
-
   workflows:
     # Only run when branch is main
     # 1. Update the changelog.
     # 2. Merge the changelog to main, causing tag-and-release to run.
-    # 3. Verify there are taggable changes.
-    # 4. Publish a release tag.
+    # 3. Verify there are changes worth making a release tag for.
+    #    a. If so, then publish a release tag.
     auto-release:
       jobs:
-        - vro/update-and-merge-changelog: #publish-changelog
+        - vro/publish-changelog:
             context: orb-publishing
             filters:
               branches:
                 only: main
-            ghToken: << pipeline.parameters.github-token-var >>
+            ghToken: "GH_TOKEN" # Name of the environment variable that contains a GitHub personal access token to write back to a repo.
             sshFinger: << pipeline.parameters.ssh-finger >>
-        - vro/tag-and-release: #publish-a-release
+        - vro/tag-and-release:
             context: orb-publishing
-            ghToken: << pipeline.parameters.github-token-var >>
-            requires: [ vro/update-and-merge-changelog ]
+            ghToken: "GH_TOKEN"
+            requires: [ vro/publish-changelog ]

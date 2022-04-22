@@ -62,6 +62,8 @@ release.
     admin:org
         read:org
    ```
+6. Go to CircleCI and go to your Org Context and save in the context as
+   `GH_TOKEN`.
 
 NOTE: Without these certain parts of the jobs may fail. Also `write:packages` is
 not available for Circle CI Server at this time of writing.
