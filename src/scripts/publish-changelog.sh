@@ -24,7 +24,11 @@ MergeChangelog() {
     fi
 
     GEN_BRANCH_NAME="updated-changelog-skip-ci"
-    git add CHANGELOG.md
+    # Piggy-back: The previous step comand may have added the Git-ChgLog configuration. Lets commit
+    # here to reduce duplicating the commit code there.
+    gitChgLogConfigDir=$(dirname "${PARAM_CONFIGFILE}")
+    git add CHANGELOG.md "${gitChgLogConfigDir}"
+    git status
     git config --global user.name "${CIRCLE_USERNAME}"
     git config --global user.email "${CIRCLE_USERNAME}@users.noreply.github.com"
     git checkout -b "${GEN_BRANCH_NAME}"
