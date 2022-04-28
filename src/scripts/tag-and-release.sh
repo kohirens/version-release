@@ -14,6 +14,8 @@ TagAndRelease() {
     # Skip if there are changes in the changelog that have not been merged.
     if [ -n "${changelogUpdated}" ]; then
         echo "exiting, changes detected in the ${PARAM_CHANGELOG_FILE} file"
+        # ensure this file exist so persist does not fail.
+        echo "" > "${PARAM_TAG_FILE}"
         exit 0
     fi
 
@@ -22,6 +24,8 @@ TagAndRelease() {
     # Skip if this commit is already tagged.
     if [ "${hasTag}" != "not found" ]; then
         echo "exiting, commit is already tagged: ${hasTag}"
+        # ensure this file exist so persist does not fail.
+        echo "" > "${PARAM_TAG_FILE}"
         exit 0
     fi
 
@@ -41,6 +45,8 @@ TagAndRelease() {
     # Skip if there are no notable commits to tag.
     if [ "${isTaggable}" = "false" ]; then
         echo "exiting, no notable commits to tag"
+        # ensure this file exist so persist does not fail.
+        echo "" > "${PARAM_TAG_FILE}"
         exit 0
     fi
 
