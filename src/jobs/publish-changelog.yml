@@ -42,6 +42,10 @@ parameters:
     description: Location to output/update the CHANGELOG file.
     type: string
     default: "CHANGELOG.md"
+  chglogConfDir:
+    description: Location to output/update the CHANGELOG file.
+    type: string
+    default: ".chglog"
 executor: default
 steps:
   - checkout
@@ -64,4 +68,4 @@ steps:
       command: << include(scripts/publish-changelog.sh) >>
   - persist_to_workspace:
       root: "."
-      paths: [ << parameters.commitFile >> ]
+      paths: [ "<< parameters.commitFile >>", "<< parameters.chglogConfDir >>"]
