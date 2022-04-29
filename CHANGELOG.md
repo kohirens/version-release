@@ -2,6 +2,13 @@
 ## [Unreleased]
 
 
+<a name="1.0.5"></a>
+## [1.0.5] - 2022-04-28
+### Fixed
+- Error on persist when no taggable changes.
+- Commiting a new Git-ChgLog config.
+
+
 <a name="1.0.4"></a>
 ## [1.0.4] - 2022-04-22
 ### Fixed
@@ -240,7 +247,8 @@
 - Sample command and job.
 
 
-[Unreleased]: https://github.com/kohirens/version-release-orb/compare/1.0.4...HEAD
+[Unreleased]: https://github.com/kohirens/version-release-orb/compare/1.0.5...HEAD
+[1.0.5]: https://github.com/kohirens/version-release-orb/compare/1.0.4...1.0.5
 [1.0.4]: https://github.com/kohirens/version-release-orb/compare/1.0.3...1.0.4
 [1.0.3]: https://github.com/kohirens/version-release-orb/compare/1.0.2...1.0.3
 [1.0.2]: https://github.com/kohirens/version-release-orb/compare/1.0.1...1.0.2
