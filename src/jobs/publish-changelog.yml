@@ -37,7 +37,7 @@ parameters:
   ghToken:
     description: Name of the environment variable holding the GitHub API token.
     type: env_var_name
-    default: GH_TOKEN # Setting this to GITHUB_TOKEN seems to cause problems.
+    default: GH_TOKEN
   mergeType:
     description: Type of merge to perform, choose between merge|squash|rebase.
     type: enum
