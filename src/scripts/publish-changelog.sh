@@ -7,7 +7,6 @@ MergeChangelog() {
     changelogUpdated=$(git diff --name-only -- "${PARAM_CHANGELOG_FILE}")
     changelogUntracked=$(git status | grep "${PARAM_CHANGELOG_FILE}" || echo "")
     if [ "${changelogUntracked}" != "" ]; then
-        # TODO: Test with a repo with tags but no CHANGELOG.md
         echo "added new ${PARAM_CHANGELOG_FILE} file"
     elif [ -z "${changelogUpdated}" ]; then
         echo "no changes detected in the ${PARAM_CHANGELOG_FILE} file"
