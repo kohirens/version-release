@@ -49,7 +49,7 @@ steps:
         PARAM_CHANGELOG_FILE: << parameters.changelogFile >>
         PARAM_MAP: << parameters.pipeline-param-map >>
         CIRCLECI_API_HOST: << parameters.circleci-api-host >>
-        PARAM_VCS_TYPE: << parameters.circleci-api-host >>
+        PARAM_VCS_TYPE: << parameters.vcs-type >>
         CIRCLECI_APP_HOST: << parameters.circleci-app-host >>
         TOKEN: "$<<parameters.token-variable>>"
       name: Trigger CI Tagging Workflow
