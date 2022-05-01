@@ -18,6 +18,10 @@ parameters:
     description: Location of the CHANGELOG file.
     type: string
     default: "CHANGELOG.md"
+  chglogConfDir:
+    description: Location to output/update the CHANGELOG file.
+    type: string
+    default: ".chglog"
   commitFile:
     description: Name of the file to set the commit hash to tag.
     type: string
@@ -26,6 +30,10 @@ parameters:
     type: string
     default: ".chglog/config.yml"
     description: Location of a git-chglog configuration file.
+  do_checkout:
+    description: In case you need to customize.
+    type: boolean
+    default: true
   ghToken:
     description: Name of the environment variable holding the GitHub API token.
     type: env_var_name
@@ -35,25 +43,17 @@ parameters:
     type: enum
     enum: [ "merge", "rebase", "squash" ]
     default: "rebase"
-  sshFinger:
-    description: Fingerprint of an SSH key that can be used to perform a merge into a branch.
-    type: string
   outputFile:
     description: Location to output/update the CHANGELOG file.
     type: string
     default: "CHANGELOG.md"
-  chglogConfDir:
-    description: Location to output/update the CHANGELOG file.
+  sshFinger:
+    description: Fingerprint of an SSH key that can be used to perform a merge into a branch.
     type: string
-    default: ".chglog"
   working_directory:
     description: In case you need to customize.
     type: string
     default: "~/project"
-  do_checkout:
-    description: In case you need to customize.
-    type: boolean
-    default: true
 
 executor: default
 working_directory: "<< parameters.working_directory >>"
