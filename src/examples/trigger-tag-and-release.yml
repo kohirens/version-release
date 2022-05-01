@@ -1,0 +1,28 @@
+description: >
+  Trigger a workflow to publish a tag to make a new release in the version control system.
+parameters:
+  vcs-type:
+    type: enum
+    default: "github"
+    enum: [ "github" ]
+    description: VCS type, only "github" is currently supported.
+usage:
+  version: 2.1
+  orbs:
+    vro: kohirens/version-release@latest
+  workflows:
+    use-my-orb:
+      jobs:
+        - publish-release-tag: # Run ONLY on the main branch, and parameter trigger-tagging is true, and when kicked-off by the webhook or api.
+            when:
+              and: # run when branch is main, the trigger source is [webhook or api
+                - equal: [main, << pipeline.git.branch >>]
+                - << pipeline.parameters.trigger-tagging >>
+                - matches:
+                    pattern: "^api|webhook$"
+                    value: << pipeline.trigger_source >>
+            jobs:
+              - vro/trigger-tag-and-release:
+                  context: orb-publishing
+                  filters: { branches: { only: main } } # This is redundant.
+                  requires: [ vro/publish-changelog ]
