@@ -6,7 +6,6 @@ TriggerTagAndRelease() {
         exit 0
     fi
 
-    VCS_TYPE=$(echo "${CIRCLE_BUILD_URL}" | cut -d '/' -f 4)
     echo "{\"branch\": \"${PARAM_BRANCH}\", \"parameters\": ${PARAM_MAP}}" > pipelineparams.json
     cat pipelineparams.json
     DoCurl
@@ -16,7 +15,7 @@ TriggerTagAndRelease() {
 DoCurl() {
     T=$(eval echo "$TOKEN")
     curl -u "${T}": -X POST --header "Content-Type: application/json" -d @pipelineparams.json \
-      "${CIRCLECI_API_HOST}/api/v2/project/${VCS_TYPE}/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/pipeline" -o /tmp/curl-result.txt
+      "${CIRCLECI_API_HOST}/api/v2/project/${PARAM_VCS_TYPE}/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/pipeline" -o /tmp/curl-result.txt
 }
 
 Result() {
@@ -26,7 +25,7 @@ Result() {
         exit 1
     else
         echo "Pipeline triggered!"
-        echo "${CIRCLECI_APP_HOST}/jobs/${VCS_TYPE}/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/$(jq -r .number < /tmp/curl-result.txt)"
+        echo "${CIRCLECI_APP_HOST}/jobs/${PARAM_VCS_TYPE}/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/$(jq -r .number < /tmp/curl-result.txt)"
     fi
 }
 
