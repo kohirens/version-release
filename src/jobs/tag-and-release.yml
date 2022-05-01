@@ -1,14 +1,18 @@
 description: |2
   Trigger a job to tag and release a spcified branch.
 parameters:
+  attach_workspace:
+    description: Set to `false` to skip attaching the workspace.
+    type: boolean
+    default: true
+  attach_workspace_path:
+    description: Set where to attach the workspace.
+    type: string
+    default: "."
   branch:
     description: Name of the branch to tag.
     type: string
     default: "main"
-  ghToken:
-    description: Name of the environment variable holding the GitHub API token.
-    type: env_var_name
-    default: GH_TOKEN
   changelogFile:
     description: Location to output/update the CHANGELOG file.
     type: string
@@ -21,6 +25,14 @@ parameters:
     description: Name of the file holding the commit hash to tag.
     type: string
     default: "commit-to-tag.txt"
+  do_checkout:
+    description: Set to `false` to skip performing a checkout.
+    type: boolean
+    default: true
+  ghToken:
+    description: Name of the environment variable holding the GitHub API token.
+    type: env_var_name
+    default: GH_TOKEN
   taggedFile:
     description: File to store the semantic version that was used to tag the release.
     type: string
@@ -33,9 +45,15 @@ parameters:
 executor: default
 working_directory: "<< parameters.working_directory >>"
 steps:
-  - checkout
-  - attach_workspace:
-      at: '.'
+  - when:
+      condition: << parameters.do_checkout >>
+      steps:
+        - checkout
+  - when:
+      condition: << parameters.attach_workspace >>
+      steps:
+        - attach_workspace:
+            at: "<< parameters.attach_workspace_path >>"
   - git-chglog-update:
       configFile: "<< parameters.configFile >>"
       outputFile: "<< parameters.changelogFile >>"
