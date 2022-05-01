@@ -22,7 +22,7 @@ parameters:
     type: string
     default: "commit-to-tag.txt"
   taggedFile:
-    description: File to store the semanitc version that was used to tag the release.
+    description: File to store the semantic version that was used to tag the release.
     type: string
     default: "tagged.txt"
 executor: default
