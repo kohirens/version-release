@@ -1,5 +1,5 @@
 description: |2
-  Trigger a job to tag and release a spcified branch.
+  Publish a tag on a specified branch.
 parameters:
   attach_workspace:
     description: Set to `false` to skip attaching the workspace.
