@@ -8,11 +8,14 @@ TriggerTagAndRelease() {
 
     echo "{\"branch\": \"${PARAM_BRANCH}\", \"parameters\": ${PARAM_MAP}}" > pipelineparams.json
     cat pipelineparams.json
-    DoCurl
+    TriggerPipeline
     Result
 }
 
-DoCurl() {
+# Example API URL: https://circleci.com/api/v2/project/vcs-slug/org-name/repo-name/pipeline
+# Note: keep in mind that you have to use a personal API token; project tokens are currently not supported on CircleCI API (v2) at this time.
+# see: https://circleci.com/docs/api/v2/#operation/triggerPipeline
+TriggerPipeline() {
     T=$(eval echo "$TOKEN")
     curl -u "${T}": -X POST --header "Content-Type: application/json" -d @pipelineparams.json \
       "${CIRCLECI_API_HOST}/api/v2/project/${PARAM_VCS_TYPE}/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/pipeline" -o /tmp/curl-result.txt
