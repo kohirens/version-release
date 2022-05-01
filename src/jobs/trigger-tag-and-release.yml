@@ -41,7 +41,13 @@ parameters:
     enum: ["github"]
     description: >
       VCS type.
+  working_directory:
+    description: In case you need to customize.
+    type: string
+    default: "~/project"
+
 executor: default
+working_directory: "<< parameters.working_directory >>"
 steps:
   - run:
       environment:

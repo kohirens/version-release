@@ -25,7 +25,13 @@ parameters:
     description: File to store the semantic version that was used to tag the release.
     type: string
     default: "tagged.txt"
+  working_directory:
+    description: In case you need to customize.
+    type: string
+    default: "~/project"
+
 executor: default
+working_directory: "<< parameters.working_directory >>"
 steps:
   - checkout
   - attach_workspace:
