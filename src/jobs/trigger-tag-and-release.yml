@@ -43,7 +43,6 @@ parameters:
       VCS type.
 executor: default
 steps:
-  - git-chglog-update
   - run:
       environment:
         PARAM_BRANCH: << parameters.branch >>
