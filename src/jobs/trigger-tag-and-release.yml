@@ -45,12 +45,12 @@ executor: default
 steps:
   - run:
       environment:
-        PARAM_BRANCH: << parameters.branch >>
-        PARAM_CHANGELOG_FILE: << parameters.changelogFile >>
-        PARAM_MAP: << parameters.pipeline-param-map >>
-        CIRCLECI_API_HOST: << parameters.circleci-api-host >>
-        PARAM_VCS_TYPE: << parameters.vcs-type >>
-        CIRCLECI_APP_HOST: << parameters.circleci-app-host >>
+        PARAM_BRANCH: "<< parameters.branch >>"
+        PARAM_CHANGELOG_FILE: "<< parameters.changelogFile >>"
+        PARAM_MAP: "<< parameters.pipeline-param-map >>"
+        CIRCLECI_API_HOST: "<< parameters.circleci-api-host >>"
+        PARAM_VCS_TYPE: "<< parameters.vcs-type >>"
+        CIRCLECI_APP_HOST: "<< parameters.circleci-app-host >>"
         TOKEN: "$<<parameters.token-variable>>"
       name: Trigger CI Tagging Workflow
       command: << include(scripts/trigger-tag-and-release.sh) >>

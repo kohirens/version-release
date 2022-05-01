@@ -35,10 +35,10 @@ steps:
       outputFile: "<< parameters.changelogFile >>"
   - run:
       environment:
-        PARAM_BRANCH: << parameters.branch >>
-        PARAM_CHANGELOG_FILE: << parameters.changelogFile >>
-        PARAM_COMMIT_FILE: << parameters.commitFile >>
-        PARAM_TAG_FILE: << parameters.taggedFile >>
+        PARAM_BRANCH: "<< parameters.branch >>"
+        PARAM_CHANGELOG_FILE: "<< parameters.changelogFile >>"
+        PARAM_COMMIT_FILE: "<< parameters.commitFile >>"
+        PARAM_TAG_FILE: "<< parameters.taggedFile >>"
       name: Make A New Release
       command: << include(scripts/tag-and-release.sh) >>
   - persist_to_workspace:
