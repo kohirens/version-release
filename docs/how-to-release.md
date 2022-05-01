@@ -31,12 +31,18 @@ last tag, or the beginning if there are no tags.
 Prefix any of the keywords in the Descriptions below, an in any commit message,
 to increment the version number accordingly.
 
-| Increment | Description                                                                       |
-|-----------|-----------------------------------------------------------------------------------|
-| major     | Adding the words `BREAKING CHANGE` on a line by itself.                           |
-| minor     | Use the `add: ` tag at the beginning of any line.                                 |
-| patch     | Use the `chg: ` or `rmv: ` or `fix` or `dep: ` tags at the beginning of any line. |
-| skip      | Just make regular commit messages with no tags or the words `BREAKING CHANGE`     |
+| Increment | Description                                                                        |
+|-----------|------------------------------------------------------------------------------------|
+| major     | Adding the words `BREAKING CHANGE` on a line by itself.                            |
+| minor     | Use the `add: ` tag at the beginning of any line.                                  |
+| patch     | Use the `chg: ` or `rmv: ` or `fix:` or `dep: ` tags at the beginning of any line. |
+| skip      | Just make regular commit messages with no tags or the words `BREAKING CHANGE`      |
+
+**Precedence**
+
+| Manual       |     | Major           |     | Minor  |     | Patch                             |
+|--------------|-----|-----------------|-----|--------|-----|-----------------------------------|
+| rel: [x.x.x] | \>  | BREAKING CHANGE | \>  | `add:` | \>  | `chg:` or `dep:` `fix:` or `rmv:` |
 
 ## Incrementing the Major
 
