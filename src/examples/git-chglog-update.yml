@@ -1,5 +1,5 @@
 description: |2
-  Update the CHANGELOG.md using only specifically formatted Git commit messages, for example:
+  Auto update the CHANGELOG.md using specifically formatted Git commit messages, for example:
 
     add: Awesome new feature
     rmv: Obsolete features
@@ -8,7 +8,7 @@ description: |2
 usage:
   version: 2.1
   orbs:
-    vro: kohirens/version-release@0.3.5
+    vro: kohirens/version-release@latest
   workflows:
     use-my-orb:
       jobs:
@@ -19,6 +19,4 @@ jobs:
   update-the-chglog:
     executor: vro/default
     steps:
-      - vro/git-chglog-update:
-          configFile: ".chglog/config.yml"
-          outputFile: "CHANGELOG.md"
+      - vro/git-chglog-update

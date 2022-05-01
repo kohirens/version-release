@@ -3,11 +3,11 @@ description: >
 usage:
   version: 2.1
   orbs:
-    vro: kohirens/version-release@0.3.6
+    vro: kohirens/version-release@latest
   workflows:
     tag-and-release:
       jobs:
         - checkout
-        - commit-and-merge-changelog:
+        - publish-changelog:
             requires: [ checkout ]
             ssh_finger: "AB:CD:EF:GH:12:34:56:78"

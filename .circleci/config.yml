@@ -8,7 +8,7 @@ orbs:
   cli: circleci/circleci-cli@0.1.8
 
 # Pipeline Parameters
-## These parameters are used internally by orb-tools. Skip to the Jobs section.
+# also see: https://circleci.com/docs/2.0/pipeline-variables/
 parameters:
   run-integration-tests:
     description: An internal flag to prevent integration test from running before a development version has been created.
