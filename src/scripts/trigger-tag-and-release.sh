@@ -1,11 +1,4 @@
 TriggerTagAndRelease() {
-    changelogUpdated=$(git diff --name-only -- "${PARAM_CHANGELOG_FILE}")
-    # Skip if there are changes in the changelog that have not been merged.
-    if [ -n "${changelogUpdated}" ]; then
-        echo "exiting, changes detected in the ${PARAM_CHANGELOG_FILE} file"
-        exit 0
-    fi
-
     hasTag=$(git show-ref "${CIRCLE_SHA1}" || echo "not found")
     # Skip if this commit is already tagged.
     if [ "${hasTag}" != "not found" ]; then
