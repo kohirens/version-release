@@ -2,8 +2,8 @@ TriggerTagAndRelease() {
     hasTag=$(git show-ref "${CIRCLE_SHA1}" || echo "not found")
     # Skip if this commit is already tagged.
     if [ "${hasTag}" != "not found" ]; then
-        echo "exiting, commit is already tagged: ${hasTag}"
-        exit 0
+        echo "exiting, commit ${CIRCLE_SHA1} is already tagged: ${hasTag}"
+        exit 1
     fi
 
     echo "{\"branch\": \"${PARAM_BRANCH}\", \"parameters\": ${PARAM_MAP}}" > pipelineparams.json
