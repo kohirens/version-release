@@ -2,8 +2,21 @@
 ## [Unreleased]
 
 
+<a name="1.0.6"></a>
+## [1.0.6] - 2022-05-01
+### Changed
+- Updated error message in trigger-tag-and-release job.
+
+### Fixed
+- Typo in tag-and-release job.
+- Passing VCS type to trigger-tag-and-release job.
+
+### Removed
+- Checking CHANGLOG in the trigger-tag-and-release job.
+
+
 <a name="1.0.5"></a>
-## [1.0.5] - 2022-04-28
+## [1.0.5] - 2022-04-29
 ### Fixed
 - Error on persist when no taggable changes.
 - Commiting a new Git-ChgLog config.
@@ -247,7 +260,8 @@
 - Sample command and job.
 
 
-[Unreleased]: https://github.com/kohirens/version-release-orb/compare/1.0.5...HEAD
+[Unreleased]: https://github.com/kohirens/version-release-orb/compare/1.0.6...HEAD
+[1.0.6]: https://github.com/kohirens/version-release-orb/compare/1.0.5...1.0.6
 [1.0.5]: https://github.com/kohirens/version-release-orb/compare/1.0.4...1.0.5
 [1.0.4]: https://github.com/kohirens/version-release-orb/compare/1.0.3...1.0.4
 [1.0.3]: https://github.com/kohirens/version-release-orb/compare/1.0.2...1.0.3
