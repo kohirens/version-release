@@ -2,6 +2,7 @@ description: >
   Commit changes to the changelog and merge into a remote branch.
 usage:
   version: 2.1
+
   orbs:
     vro: kohirens/version-release@latest
 

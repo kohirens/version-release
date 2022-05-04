@@ -7,14 +7,17 @@ description: |2
 
 usage:
   version: 2.1
+
   orbs:
     vro: kohirens/version-release@latest
+
   workflows:
     use-my-orb:
       jobs:
         - checkout
         - update-the-chglog:
             requires: [ checkout ]
+
 jobs:
   update-the-chglog:
     executor: vro/default
