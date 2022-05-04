@@ -22,8 +22,8 @@ MergeChangelog() {
         exit 1
     fi
 
-    GEN_BRANCH_NAME="updated-changelog-skip-ci"
-    # Piggy-back: The previous step comand may have added the Git-ChgLog configuration. Lets commit
+    GEN_BRANCH_NAME="auto-update-changelog"
+    # Piggy-back: The previous step command may have added the Git-ChgLog configuration. Lets commit
     # here to reduce duplicating the commit code there.
     gitChgLogConfigDir=$(dirname "${PARAM_CONFIGFILE}")
     git add CHANGELOG.md "${gitChgLogConfigDir}"
@@ -32,7 +32,7 @@ MergeChangelog() {
     git config --global user.email "${CIRCLE_USERNAME}@users.noreply.github.com"
     git checkout -b "${GEN_BRANCH_NAME}"
     mergeBranchCommitMsg="Updated the ${PARAM_CHANGELOG_FILE}"
-    git commit -m "${mergeBranchCommitMsg}" -m "[skip ci]"
+    git commit -m "${mergeBranchCommitMsg}" -m "automated update of ${PARAM_CHANGELOG_FILE}"
     # Do not run when sourced for bats-core
     # TODO: This can be tested if you mock the gh, git, and setup a dummy repo at test time.
     if [ "${0#*$ORB_TEST_ENV}" == "$0" ]; then
