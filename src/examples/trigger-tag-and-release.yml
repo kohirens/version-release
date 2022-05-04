@@ -1,15 +1,14 @@
 description: >
   Trigger a workflow to publish a tag to make a new release in the version control system.
+
 usage:
   version: 2.1
 
   orbs:
     vro: kohirens/version-release@latest
 
-  workflows:
-    version: 2
-    kick-off-publish-release-tag:
-      jobs:
-        - vro/trigger-tag-and-release:
-            context: orb-publishing
-            filters: { branches: { only: main } }
+  jobs:
+    trigger:
+      executor: vro/default
+      steps:
+        - vro/trigger-tag-and-release

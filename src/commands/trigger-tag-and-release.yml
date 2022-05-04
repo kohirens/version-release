@@ -1,0 +1,39 @@
+description: >
+  Trigger a pipeline to publish a tag to make a new release in the version control system.
+parameters:
+  branch:
+    description: Name of the branch to tag.
+    type: string
+    default: "main"
+  circleci_api_host:
+    type: string
+    default: "https://circleci.com"
+    description: >
+      Host URL of CircleCI API
+  circleci_app_host:
+    type: string
+    default: "https://app.circleci.com"
+    description: >
+      Host URL of CircleCI Web UI
+  token_variable:
+    type: env_var_name
+    default: CIRCLE_TOKEN
+    description: >
+      Name of environment variable containing your personal CircleCI API token
+  vcs_type:
+    type: enum
+    default: "github"
+    enum: ["github"]
+    description: >
+      VCS type.
+steps:
+  - run:
+      environment:
+        PARAM_BRANCH: "<< parameters.branch >>"
+        PARAM_VCS_TYPE: "<< parameters.vcs_type >>"
+        CIRCLECI_API_HOST: "<< parameters.circleci_api_host >>"
+        CIRCLECI_APP_HOST: "<< parameters.circleci_app_host >>"
+        TOKEN: "$<<parameters.token_variable>>"
+        ORB_TRIGGER_NAME: "trigger-tag-and-release"
+      name: Trigger CI Tagging Workflow
+      command: << include(scripts/trigger-tag-and-release.sh) >>
