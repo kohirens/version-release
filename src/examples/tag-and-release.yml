@@ -1,0 +1,32 @@
+description: >
+  Trigger a workflow to publish a tag to make a new release in the version control system.
+parameters:
+  ssh-finger:
+    description: SSH fingerprint.
+    type: string
+    default: "3e:01:4a:ba:a7:78:bc:2c:e1:1b:01:71:d5:d7:78:87"
+  triggered-by-bot:
+    description: Trigger publishing a release tag workflow.
+    type: boolean
+    default: false
+usage:
+  version: 2.1
+  orbs:
+    vro: kohirens/version-release@latest
+  workflows:
+    version: 2
+    publish-release-tag:
+      jobs:
+        publish-release-tag: # Run ONLY on the main branch, and parameter triggered-by-bot is true, and when kicked-off by the webhook or api.
+          when:
+            and:
+              - equal: [main, << pipeline.git.branch >>]
+              - << pipeline.parameters.triggered-by-bot >>
+              - matches:
+                  pattern: "^api|webhook$"
+                  value: << pipeline.trigger_source >>
+          jobs:
+            - vro/tag-and-release:
+                context: orb-publishing
+                filters: { branches: { only: main } }
+                requires: [ vro/publish-changelog ]
