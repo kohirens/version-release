@@ -10,6 +10,6 @@ usage:
       jobs:
         kick-off-publish-release-tag:
           jobs:
-            - vro/trigger-tag-and-release.yml:
-                context: orb-publishing
-                filters: { branches: { only: main } }
+            vro/trigger-tag-and-release:
+              context: orb-publishing
+              filters: { branches: { only: main } }
