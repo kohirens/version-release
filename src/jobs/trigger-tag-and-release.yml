@@ -23,9 +23,9 @@ parameters:
     description: Name of the environment variable holding the GitHub API token.
     type: env_var_name
     default: GH_TOKEN
-  pipeline-param-map:
+  pipeline-param-map: # TODO: Remove this variable in next major release.
     type: string
-    default: '{"run-tag-and-release": true}'
+    default: '{"run-tag-and-release": true, "triggered-by-bot": true}'
     description: >
       Map of pipeline parameters that the new pipeline will be invoked with.
       Make use of this to target the integration workflow that should be triggered
