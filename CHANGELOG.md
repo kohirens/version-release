@@ -2,6 +2,28 @@
 ## [Unreleased]
 
 
+<a name="1.1.0"></a>
+## [1.1.0] - 2022-05-04
+### Added
+- Proper tag-and-release example.
+- Send API parameter 	riggered-by-bot from trigger-tag-and-release job.
+- Example for using trigger-tag-and-release job in a workflow.
+- Ability to set the working directory in each job.
+
+### Changed
+- Updated the auto-release example.
+- Updated publish-changelog example.
+- Renamed DoCurl to TriggerPipeline.
+- Make checkout and attach_workspace conditional on jobs that require them.
+- Make quoting environment variables in jobs consistent.
+
+### Fixed
+- Errors in examples.
+- Type in trigger-and-tag-release.
+- trigger-tag-and-release example.
+- Tag and Release job description.
+
+
 <a name="1.0.6"></a>
 ## [1.0.6] - 2022-05-01
 ### Changed
@@ -260,7 +282,8 @@
 - Sample command and job.
 
 
-[Unreleased]: https://github.com/kohirens/version-release-orb/compare/1.0.6...HEAD
+[Unreleased]: https://github.com/kohirens/version-release-orb/compare/1.1.0...HEAD
+[1.1.0]: https://github.com/kohirens/version-release-orb/compare/1.0.6...1.1.0
 [1.0.6]: https://github.com/kohirens/version-release-orb/compare/1.0.5...1.0.6
 [1.0.5]: https://github.com/kohirens/version-release-orb/compare/1.0.4...1.0.5
 [1.0.4]: https://github.com/kohirens/version-release-orb/compare/1.0.3...1.0.4
