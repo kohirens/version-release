@@ -9,7 +9,7 @@ description: |2
   6. Then immediately merge the changes in the desired branch.
 
   We use a PR instead of a push in case the branch is protected from direct pushes.
-parameters:
+parameters: # TODO: Change all params to use snake case in jobs and commands for consistenc.
   branch:
     description: Name of the branch to merge into.
     type: string
