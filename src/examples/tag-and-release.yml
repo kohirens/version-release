@@ -1,10 +1,6 @@
 description: >
   Trigger a workflow to publish a tag to make a new release in the version control system.
 parameters:
-  ssh-finger:
-    description: SSH fingerprint.
-    type: string
-    default: "3e:01:4a:ba:a7:78:bc:2c:e1:1b:01:71:d5:d7:78:87"
   triggered-by-bot:
     description: Trigger publishing a release tag workflow.
     type: boolean
