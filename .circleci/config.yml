@@ -37,8 +37,8 @@ jobs:
     steps:
       - checkout
       - vro/git-chglog-update:
-          configFile: "src/tests/data/.chglog/config.yml"
-          outputFile: "CHANGELOG-4000.md"
+          chglog_config_file: "src/tests/data/.chglog/config.yml"
+          changelog_file: "CHANGELOG-4000.md"
   orb-publish:
     executor: cli/default
     steps:
@@ -124,7 +124,7 @@ workflows:
           filters:
             branches:
               only: main
-          sshFinger: << pipeline.parameters.ssh-finger >>
+          ssh_finger: << pipeline.parameters.ssh-finger >>
       - vro/tag-and-release:
           requires: [ vro/publish-changelog ]
           context: orb-publishing

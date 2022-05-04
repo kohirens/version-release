@@ -1,7 +1,7 @@
 description: >
   Trigger a workflow to publish a tag to make a new release in the version control system.
 parameters:
-  triggered-by-bot:
+  triggered_by_bot:
     description: Trigger publishing a release tag workflow.
     type: boolean
     default: false
@@ -13,11 +13,11 @@ usage:
 
   workflows:
     version: 2
-    publish-release-tag: # Run ONLY on the main branch, and parameter triggered-by-bot is true, and when kicked-off by the webhook or api.
+    publish-release-tag: # Run ONLY on the main branch, and parameter triggered_by_bot is true, and when kicked-off by the webhook or api.
       when:
         and:
           - equal: [main, << pipeline.git.branch >>]
-          - << pipeline.parameters.triggered-by-bot >>
+          - << pipeline.parameters.triggered_by_bot >>
           - matches:
               pattern: "^api|webhook$"
               value: << pipeline.trigger_source >>

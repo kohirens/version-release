@@ -7,11 +7,11 @@ usage:
     vro: kohirens/version-release@latest
 
   parameters:
-    ssh-finger:
+    ssh_finger:
       description: Fingerprint of an SSH key to allow writing back to the repo.
       type: string
       default: "AB:CD:EF:GH:12:34:56:78"
-    triggered-by-bot:
+    triggered_by_bot:
       description: Trigger publishing a release tag workflow.
       type: boolean
       default: false
@@ -21,22 +21,22 @@ usage:
     # ...
 
     # Everything that should be done before a production release should precede this workflow.
-    publish-changelog: # Run ONLY on main and when triggered-by-bot is true.
+    publish-changelog: # Run ONLY on main and when triggered_by_bot is true.
       when:
         and:
           - equal: [main, << pipeline.git.branch >>]
-          - << pipeline.parameters.triggered-by-bot >>
+          - << pipeline.parameters.triggered_by_bot >>
       jobs:
         - vro/publish-changelog:
             context: orb-publishing
             filters: { branches: { only: main } }
-            sshFinger: << pipeline.parameters.ssh-finger >>
+            ssh_finger: << pipeline.parameters.ssh_finger >>
 
     publish-release-tag: # Run ONLY on main when kicked-off by publish-changelog workflow.
       when:
         and:
           - equal: [main, << pipeline.git.branch >>]
-          - << pipeline.parameters.triggered-by-bot >>
+          - << pipeline.parameters.triggered_by_bot >>
           - matches:
               pattern: "^api|webhook$"
               value: << pipeline.trigger_source >>

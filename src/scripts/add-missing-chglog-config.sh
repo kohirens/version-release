@@ -1,5 +1,5 @@
 AddMissingChgLogConfig() {
-    git-tool-belt checkConf -path "${PARAM_CONFIGFILE}" -repo "${CIRCLE_REPOSITORY_URL}"
+    git-tool-belt checkConf -path "${PARAM_CONFIG_FILE}" -repo "${CIRCLE_REPOSITORY_URL}"
 }
 
 # Will not run if sourced for bats-core tests.
