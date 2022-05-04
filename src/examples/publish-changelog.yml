@@ -7,22 +7,22 @@ usage:
     vro: kohirens/version-release@latest
 
   parameters:
-    ssh-finger:
+    ssh_finger:
       description: SSH fingerprint.
       type: string
       default: "aa:bb:cc:dd:12:34:56"
-    triggered-by-bot:
+    triggered_by_bot:
       description: Trigger publishing a release tag workflow.
       type: boolean
       default: false
 
   workflows:
     version: 2
-    auto-release: # Run ONLY on main and when triggered-by-bot is true via an API call.
+    auto-release: # Run ONLY on main and when triggered_by_bot is true via an API call.
       when:
         and:
           - equal: [main, << pipeline.git.branch >>]
-          - << pipeline.parameters.triggered-by-bot >>
+          - << pipeline.parameters.triggered_by_bot >>
       jobs:
         - vro/publish-changelog:
             context: orb-publishing
@@ -31,4 +31,4 @@ usage:
               - checkout
               - attach_workspace: { at: '.' }
               - run: echo "trigger source << pipeline.trigger_source >>"
-            sshFinger: << pipeline.parameters.ssh-finger >>
+            ssh_finger: << pipeline.parameters.ssh_finger >>

@@ -14,40 +14,36 @@ parameters: # TODO: Change all params to use snake case in jobs and commands for
     description: Name of the branch to merge into.
     type: string
     default: "main"
-  changelogFile:
-    description: Location of the CHANGELOG file.
+  changelog_file:
+    description: Location to output/update the CHANGELOG file.
     type: string
     default: "CHANGELOG.md"
-  chglogConfDir:
+  chglog_conf_dir:
     description: Location to output/update the CHANGELOG file.
     type: string
     default: ".chglog"
-  commitFile:
-    description: Name of the file to set the commit hash to tag.
-    type: string
-    default: "commit-to-tag.txt"
-  configFile:
+  chglog_config_file:
     type: string
     default: ".chglog/config.yml"
     description: Location of a git-chglog configuration file.
+  commit_file:
+    description: Name of the file to set the commit hash to tag.
+    type: string
+    default: "commit-to-tag.txt"
   do_checkout:
     description: In case you need to customize.
     type: boolean
     default: true
-  ghToken:
+  gh_token:
     description: Name of the environment variable holding the GitHub API token.
     type: env_var_name
     default: GH_TOKEN
-  mergeType:
+  merge_type:
     description: Type of merge to perform, choose between merge|squash|rebase.
     type: enum
     enum: [ "merge", "rebase", "squash" ]
     default: "rebase"
-  outputFile:
-    description: Location to output/update the CHANGELOG file.
-    type: string
-    default: "CHANGELOG.md"
-  sshFinger:
+  ssh_finger:
     description: Fingerprint of an SSH key that can be used to perform a merge into a branch.
     type: string
   working_directory:
@@ -64,22 +60,22 @@ steps:
         - checkout
   - add_ssh_keys:
       fingerprints:
-        - << parameters.sshFinger >>
+        - << parameters.ssh_finger >>
   - add-missing-chglog-config:
-      configFile: "<< parameters.configFile >>"
+      chglog_config_file: "<< parameters.chglog_config_file >>"
   - git-chglog-update:
-      configFile: "<< parameters.configFile >>"
-      outputFile: "<< parameters.outputFile >>"
+      chglog_config_file: "<< parameters.chglog_config_file >>"
+      changelog_file: "<< parameters.changelog_file >>"
   - run:
       environment:
-        PARAM_CHANGELOG_FILE: "<< parameters.changelogFile >>"
+        PARAM_CHANGELOG_FILE: "<< parameters.changelog_file >>"
         PARAM_BRANCH: "<< parameters.branch >>"
-        PARAM_MERGE_TYPE: "<< parameters.mergeType >>"
-        PARAM_COMMIT_FILE: "<< parameters.commitFile >>"
-        PARAM_CONFIGFILE: "<< parameters.configFile >>" # TODO: Rename in next release to PARAM_CONFIG_FILE
+        PARAM_MERGE_TYPE: "<< parameters.merge_type >>"
+        PARAM_COMMIT_FILE: "<< parameters.commit_file >>"
+        PARAM_CONFIG_FILE: "<< parameters.chglog_config_file >>"
       name: Commit and merge the CHANGELOG updates
       command: << include(scripts/publish-changelog.sh) >>
   - persist_to_workspace:
       root: "."
-      paths: [ "<< parameters.commitFile >>", "<< parameters.chglogConfDir >>"]
+      paths: [ "<< parameters.commit_file >>", "<< parameters.chglog_conf_dir >>"]
   - trigger-tag-and-release

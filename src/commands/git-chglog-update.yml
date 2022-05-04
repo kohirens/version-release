@@ -1,18 +1,18 @@
 description: >
   Update the CHANGELOG.md file.
 parameters:
-  configFile:
-    description: Location of a git-chglog configuration file.
-    type: string
-    default: ".chglog/config.yml"
-  outputFile:
+  changelog_file:
     description: Location to output/update the CHANGELOG file.
     type: string
     default: "CHANGELOG.md"
+  chglog_config_file:
+    description: Location of a git-chglog configuration file.
+    type: string
+    default: ".chglog/config.yml"
 steps:
   - run:
       environment:
-        PARAM_CONFIGFILE: "<< parameters.configFile >>"
-        PARAM_OUTPUTFILE: "<< parameters.outputFile >>"
+        PARAM_CONFIG_FILE: "<< parameters.chglog_config_file >>"
+        PARAM_OUTPUTFILE: "<< parameters.changelog_file >>"
       name: Updating the CHANGLOG.md
       command: << include(scripts/git-chglog-update.sh) >>

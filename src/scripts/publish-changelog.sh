@@ -25,7 +25,7 @@ MergeChangelog() {
     GEN_BRANCH_NAME="auto-update-changelog"
     # Piggy-back: The previous step command may have added the Git-ChgLog configuration. Lets commit
     # here to reduce duplicating the commit code there.
-    gitChgLogConfigDir=$(dirname "${PARAM_CONFIGFILE}")
+    gitChgLogConfigDir=$(dirname "${PARAM_CONFIG_FILE}")
     git add CHANGELOG.md "${gitChgLogConfigDir}"
     git status
     git config --global user.name "${CIRCLE_USERNAME}"
