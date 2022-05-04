@@ -6,6 +6,8 @@ TriggerTagAndRelease() {
         exit 1
     fi
 
+
+    PARAM_MAP="{\"run-tag-and-release\": true, \"triggered-by-bot\": true, \"trigger-by\": \"${ORB_TRIGGER_NAME}}\" }"
     echo "{\"branch\": \"${PARAM_BRANCH}\", \"parameters\": ${PARAM_MAP}}" > pipelineparams.json
     cat pipelineparams.json
     TriggerPipeline
