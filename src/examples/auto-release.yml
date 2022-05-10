@@ -25,7 +25,7 @@ usage:
       when:
         and:
           - equal: [main, << pipeline.git.branch >>]
-          - << pipeline.parameters.triggered_by_bot >>
+          - equal: [webhook, << pipeline.trigger_source >>]
       jobs:
         - vro/publish-changelog:
             context: orb-publishing
