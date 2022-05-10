@@ -1,11 +1,13 @@
 TriggerTagAndRelease() {
     ls -la .
+    # Do not trigger a release if there is nothing to tag.
     if [ ! -f "trigger.txt" ]; then
-        TRIGGER_TXT=$(cat trigger.txt)
-        if [ "${TRIGGER_TXT}" != "trigger-tag-and-release" ]; then
-            # Do not trigger a release is there is nothing to tag.
-            exit 0
-        fi
+        exit 0
+    fi
+    # Again, exit gracefully if this was not meant to be triggered.
+    TRIGGER_TXT=$(cat trigger.txt)
+    if [ "${TRIGGER_TXT}" != "trigger-tag-and-release" ]; then
+        exit 0
     fi
 
     hasTag=$(git show-ref "${CIRCLE_SHA1}" || echo "not found")
