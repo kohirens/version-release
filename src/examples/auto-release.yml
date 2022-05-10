@@ -44,7 +44,6 @@ usage:
         - vro/tag-and-release:
             context: orb-publishing
             filters: { branches: { only: main } }
-            requires: [ vro/publish-changelog ]
 
     # Everything that should go to production should proceed this workflow.
     on-tag-release: # The filter will cause this to ONLY run on a release tags.

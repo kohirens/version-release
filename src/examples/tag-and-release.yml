@@ -25,4 +25,3 @@ usage:
         - vro/tag-and-release:
             context: orb-publishing
             filters: { branches: { only: main } }
-            requires: [ vro/publish-changelog ]
