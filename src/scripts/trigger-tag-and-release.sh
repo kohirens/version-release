@@ -17,7 +17,6 @@ TriggerTagAndRelease() {
         exit 1
     fi
 
-
     PARAM_MAP="{\"triggered_by_bot\": true}"
     echo "{\"branch\": \"${PARAM_BRANCH}\", \"parameters\": ${PARAM_MAP}}" > pipelineparams.json
     cat pipelineparams.json
