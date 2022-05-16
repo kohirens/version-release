@@ -46,7 +46,7 @@ usage:
             filters: { branches: { only: main } }
 
     # Everything that should go to production should proceed this workflow.
-    on-tag-release: # The filter will cause this to ONLY run on a release tags.
+    on-tag-release: # The filter will cause this to ONLY run on release tags.
       jobs:
         - add-your-jobs-here:
             context: orb-publishing
