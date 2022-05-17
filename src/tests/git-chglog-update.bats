@@ -16,11 +16,11 @@ setup() {
 @test '1: Update CHANGELOG' {
     # Mock environment variables or functions by exporting them (after the script has been sourced)
     export PARAM_CONFIG_FILE="src/tests/data/.chglog/config.yml"
-    export PARAM_OUTPUTFILE="CHANGLOG-3000.md"
+    export PARAM_CHANGELOG_FILE="CHANGLOG-3000.md"
     # Run the function
     GitChglogUpdate
     # Check that the output file was produces.
-    [ -f "${PARAM_OUTPUTFILE}" ]
-    cat $PARAM_OUTPUTFILE
-    #rm $PARAM_OUTPUTFILE
+    [ -f "${PARAM_CHANGELOG_FILE}" ]
+    cat $PARAM_CHANGELOG_FILE
+    rm $PARAM_CHANGELOG_FILE
 }
