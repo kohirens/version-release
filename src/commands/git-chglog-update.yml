@@ -13,6 +13,6 @@ steps:
   - run:
       environment:
         PARAM_CONFIG_FILE: "<< parameters.chglog_config_file >>"
-        PARAM_OUTPUTFILE: "<< parameters.changelog_file >>"
+        PARAM_CHANGELOG_FILE: "<< parameters.changelog_file >>"
       name: Updating the CHANGLOG.md
       command: << include(scripts/git-chglog-update.sh) >>

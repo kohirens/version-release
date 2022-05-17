@@ -29,7 +29,6 @@ usage:
       jobs:
         - vro/publish-changelog:
             context: orb-publishing
-            filters: { branches: { only: main } }
             ssh_finger: << pipeline.parameters.ssh_finger >>
 
     publish-release-tag: # Run ONLY on main when kicked-off by publish-changelog workflow.
@@ -43,7 +42,6 @@ usage:
       jobs:
         - vro/tag-and-release:
             context: orb-publishing
-            filters: { branches: { only: main } }
 
     # Everything that should go to production should proceed this workflow.
     on-tag-release: # The filter will cause this to ONLY run on release tags.

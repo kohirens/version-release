@@ -3,16 +3,16 @@ GitChglogUpdate() {
 
     if [ -z "${hasTag}" ]; then
         echo "no tags found"
-        git-chglog --output "${PARAM_OUTPUTFILE}" -c "${PARAM_CONFIG_FILE}" --next-tag=0.1.0
+        git-chglog --output "${PARAM_CHANGELOG_FILE}" -c "${PARAM_CONFIG_FILE}" --next-tag=0.1.0
     elif [ -f "/usr/local/bin/git-tool-belt" ]; then
         git-tool-belt semver -save build-version.json
         nextVersion=$(jq -r .nextVersion < build-version.json)
         echo "nextVersion = ${nextVersion}"
-        git-chglog --output "${PARAM_OUTPUTFILE}" -c "${PARAM_CONFIG_FILE}" --next-tag="${nextVersion}"
+        git-chglog --output "${PARAM_CHANGELOG_FILE}" -c "${PARAM_CONFIG_FILE}" --next-tag="${nextVersion}"
     else
         wd=$(pwd)
-        printf "updating %s using config file %s\n" "${wd}/${PARAM_OUTPUTFILE}" "${PARAM_CONFIG_FILE}"
-        git-chglog --output "${PARAM_OUTPUTFILE}" -c "${PARAM_CONFIG_FILE}"
+        printf "updating %s using config file %s\n" "${wd}/${PARAM_CHANGELOG_FILE}" "${PARAM_CONFIG_FILE}"
+        git-chglog --output "${PARAM_CHANGELOG_FILE}" -c "${PARAM_CONFIG_FILE}"
     fi
 }
 

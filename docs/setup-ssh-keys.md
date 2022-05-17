@@ -20,7 +20,7 @@ have to do this for each repo you want to use these features.
    ```
 2. Login to GitHub and go to the repositories settings, then go to "Deploy Keys"
 3. Click "add key" and Copy the *.pub value and paste it in
-   1. Git it any name you like,
+   1. Give it any name you like,
    2. and check the "Write" box
    3. then save.
 4. Login to CircleCI then go to the repositories settings.

@@ -1,10 +1,13 @@
 version: 2.1
 
 orbs:
+  # For CircleCI Server, some Orbs like `orb-tools` will need to correct URL of the server.
+  # You can set the project environment variable CIRCLECI_CLI_HOST="https://circleci.server.domain", for example,
+  # so that it is available for all jobs.
   vro: << pipeline.parameters.orb_repo >>@<<pipeline.parameters.dev-orb-version>>
   orb-tools: circleci/orb-tools@10.1.0
   bats: circleci/bats@1.0
-  shellcheck: circleci/shellcheck@2.0
+  shellcheck: circleci/shellcheck@2.2.4
   cli: circleci/circleci-cli@0.1.8
 
 # Pipeline Parameters
@@ -55,13 +58,13 @@ jobs:
             fi
             circleci orb --skip-update-check validate orb.yml
             circleci orb publish --skip-update-check orb.yml << pipeline.parameters.orb_repo >>@${GIT_TAG} --token ${CIRCLE_TOKEN}
-  debug_info:
+  debug-info:
     executor: vro/default
     steps:
       - attach_workspace:
           at: '.'
       - run:
-          name: debug info
+          name: "Debug info"
           command: |
             wd=$(pwd)
             who=$(whoami)
@@ -100,22 +103,22 @@ workflows:
       # Trigger an integration workflow to test the
       # dev:${CIRCLE_SHA1:0:7} version of your orb
       - orb-tools/trigger-integration-tests-workflow:
-          name: trigger-integration-dev
+          circleci-api-host: https://circleci.com
+          circleci-app-host: https://app.circleci.com
           context: orb-publishing
+          name: trigger-integration-dev
+          filters: *main-and-skip
           requires:
             - orb-tools/publish-dev
+      - debug-info:
           filters: *main-and-skip
-      - debug_info:
           requires: [ orb-tools/pack ]
-          filters: *main-and-skip
 
   integration-test:
     when: << pipeline.parameters.run-integration-tests >>
     jobs:
       - integration-test:
-          filters:
-            branches:
-              ignore: /main|updated-changelog-skip-ci/
+          filters: *main-and-skip
 
   auto-release:
     jobs:
