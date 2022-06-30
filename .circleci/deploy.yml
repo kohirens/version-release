@@ -1,9 +1,7 @@
 version: 2.1
 
-setup: true
-
 orbs:
-  # For CircleCI Server, some Orbs like `orb-tools` will need the r5correct URL of the server.
+  # For CircleCI Server, some Orbs like `orb-tools` will need the correct URL of the server.
   # You can set the project environment variable CIRCLECI_CLI_HOST="https://circleci.server.domain", for example,
   # so that it is available for all jobs.
   vro: << pipeline.parameters.orb_repo >>@<<pipeline.parameters.dev-orb-version>>
@@ -36,6 +34,7 @@ parameters:
     default: "kohirens-orb-publishing"
 
 jobs:
+
   orb-publish:
     executor: cli/default
     steps:
@@ -52,59 +51,32 @@ jobs:
             fi
             circleci orb --skip-update-check validate orb.yml
             circleci orb publish --skip-update-check orb.yml << pipeline.parameters.orb_repo >>@${GIT_TAG} --token ${CIRCLE_TOKEN}
-  debug-info:
-    executor: vro/default
-    steps:
-      - attach_workspace:
-          at: '.'
-      - run:
-          name: "Debug info"
-          command: |
-            wd=$(pwd)
-            who=$(whoami)
-            printf "current directory: %s\n" "${wd}"
-            printf "current user: %s\n" "${who}"
-            echo "list current directory contents:"
-            ls -la .
 
 workflows:
-  test-pack:
+  auto-release:
     jobs:
-      - orb-tools/continue: # load the deploy.yml
+      - vro/publish-changelog:
+          context: << pipeline.parameters.auth_context >>
           filters:
             branches:
               only: main
-          pipeline-number: << pipeline.number >>
-          vcs-type: << pipeline.project.type >>
-          config-path: "deploy.yml"
-      - orb-tools/lint:
-          filters: &main-and-skip
-            branches:
-              ignore: /main|updated-changelog-skip-ci/
-      - orb-tools/pack:
-          filters: *main-and-skip
-      - shellcheck/check:
-          dir: ./src/scripts
-          exclude: SC2148
-          filters: *main-and-skip
-      - bats/run:
-          path: ./src/tests
-          filters: *main-and-skip
-      - orb-tools/publish:
-          name: "publish-dev"
-          orb-name: << pipeline.parameters.orb_repo >>
+          ssh_finger: << pipeline.parameters.ssh-finger >>
+      - vro/tag-and-release:
+          requires: [ vro/publish-changelog ]
           context: << pipeline.parameters.auth_context >>
-          github-token: "GH_TOKEN"
-          vcs-type: << pipeline.project.type >>
-          requires: [ orb-tools/lint, orb-tools/pack, bats/run, shellcheck/check ]
-          filters: *main-and-skip
-      # Trigger an integration workflow to test the
-      # dev:${CIRCLE_SHA1:0:7} version of your orb
-      - orb-tools/continue:
-          filters: *main-and-skip
-          pipeline-number: << pipeline.number >>
-          requires: [ publish-dev ]
-          vcs-type: << pipeline.project.type >>
-      - debug-info:
-          filters: *main-and-skip
+  publish-orb:
+    jobs:
+      - orb-tools/pack:
+          filters:
+            tags:
+              only: /^v?\d+\.\d+\.\d+$/
+            branches:
+              ignore: /.*/
+      - orb-publish:
+          context: << pipeline.parameters.auth_context >>
           requires: [ orb-tools/pack ]
+          filters:
+            tags:
+              only: /^v?\d+\.\d+\.\d+$/
+            branches:
+              ignore: /.*/
