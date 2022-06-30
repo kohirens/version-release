@@ -32,6 +32,10 @@ parameters:
     description: Orb repository
     type: string
     default: "kohirens/version-release"
+  auth_context:
+    description: "Context containing keys for auth."
+    type: string
+    default: "kohirens-orb-publishing"
 
 jobs:
   # Define one or more jobs which will utilize your orb's commands and parameters to validate your changes.
@@ -93,7 +97,7 @@ workflows:
           filters: *main-and-skip
       - orb-tools/publish-dev:
           orb-name: << pipeline.parameters.orb_repo >>
-          context: orb-publishing
+          context: << pipeline.parameters.auth_context >>
           requires:
             - orb-tools/lint
             - orb-tools/pack
@@ -105,7 +109,7 @@ workflows:
       - orb-tools/trigger-integration-tests-workflow:
           circleci-api-host: https://circleci.com
           circleci-app-host: https://app.circleci.com
-          context: orb-publishing
+          context: << pipeline.parameters.auth_context >>
           name: trigger-integration-dev
           filters: *main-and-skip
           requires:
@@ -123,14 +127,14 @@ workflows:
   auto-release:
     jobs:
       - vro/publish-changelog: #publish-changelog
-          context: orb-publishing
+          context: << pipeline.parameters.auth_context >>
           filters:
             branches:
               only: main
           ssh_finger: << pipeline.parameters.ssh-finger >>
       - vro/tag-and-release:
           requires: [ vro/publish-changelog ]
-          context: orb-publishing
+          context: << pipeline.parameters.auth_context >>
   publish-orb:
     jobs:
       - orb-tools/pack:
@@ -140,7 +144,7 @@ workflows:
             branches:
               ignore: /.*/
       - orb-publish:
-          context: orb-publishing
+          context: << pipeline.parameters.auth_context >>
           requires: [ orb-tools/pack ]
           filters:
             tags:
