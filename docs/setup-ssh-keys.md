@@ -26,13 +26,13 @@ have to do this for each repo you want to use these features.
 4. Login to CircleCI then go to the repositories settings.
    1. Go to "SSH Keys"
    2. Click the "Add Key" button,
-   3. give it the name "github.com" (it is important to be named after the host it's used for)
-   4. paste in the private key
-   5. then save
-   6. Copy the fingerprint, you will paste this in your Circle CI config (in the near future).
+   3. Give it the name "github.com" (it is important to be named after the host it's used for)
+      NOTE: If you have GitHub Enterprise installation, then use that domain instead of "github.com".
+   4. Paste in the private key, then save.
+   5. Copy the fingerprint, you will paste this in your Circle CI config (in the near future).
 5. Copy the Fingerprint and paste it in your CI config (the future is) now
 
-# Setup A personal access token on GitHub
+## Setup A Personal Access Token on GitHub
 
 Unlike the SSH keys which are per repository. You will only need to make 1
 token for CircleCI to use across all the projects, as the token gives access to
