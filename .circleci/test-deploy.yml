@@ -1,0 +1,44 @@
+version: 2.1
+
+orbs:
+  # For CircleCI Server, some Orbs like `orb-tools` will need to correct URL of the server.
+  # You can set the project environment variable CIRCLECI_CLI_HOST="https://circleci.server.domain", for example,
+  # so that it is available for all jobs.
+  vro: << pipeline.parameters.orb_repo >>@<<pipeline.parameters.dev-orb-version>>
+  orb-tools: circleci/orb-tools@11.2.0
+  bats: circleci/bats@1.0
+  shellcheck: circleci/shellcheck@2.2.4
+  cli: circleci/circleci-cli@0.1.8
+
+parameters:
+  dev-orb-version:
+    description: >
+      The development version of the orb to test.
+      This value is automatically adjusted by the "trigger-integration-tests-workflow" job to correspond with the specific version created by the commit and should not be edited.
+      A "dev:alpha" version must exist for the initial pipeline run.
+    type: string
+    default: "dev:alpha"
+  orb_repo:
+    description: Orb repository
+    type: string
+    default: "kohirens/version-release"
+
+main-filter: &skip-main-branches
+    branches:
+      ignore: /main|updated-changelog-skip-ci/
+
+jobs:
+  # Define one or more jobs which will utilize your orb's commands and parameters to validate your changes.
+  integration-test:
+    executor: vro/default
+    steps:
+      - checkout
+      - vro/git-chglog-update:
+          chglog_config_file: "src/tests/data/.chglog/config.yml"
+          changelog_file: "CHANGELOG-4000.md"
+
+workflows:
+  test-orb:
+    jobs:
+      - integration-test:
+          filters: *skip-main-branches
