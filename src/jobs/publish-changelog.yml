@@ -38,6 +38,10 @@ parameters: # TODO: Change all params to use snake case in jobs and commands for
     description: Name of the environment variable holding the GitHub API token.
     type: env_var_name
     default: GH_TOKEN
+  github_server:
+    description: Github server domain.
+    type: string
+    default: "github.com"
   merge_type:
     description: Type of merge to perform, choose between merge|squash|rebase.
     type: enum
@@ -73,6 +77,7 @@ steps:
         PARAM_MERGE_TYPE: "<< parameters.merge_type >>"
         PARAM_COMMIT_FILE: "<< parameters.commit_file >>"
         PARAM_CONFIG_FILE: "<< parameters.chglog_config_file >>"
+        PARAM_GH_SERVER: "<< parameters.github_server >>"
       name: Commit and merge the CHANGELOG updates
       command: << include(scripts/publish-changelog.sh) >>
   - persist_to_workspace:

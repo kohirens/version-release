@@ -29,7 +29,7 @@ MergeChangelog() {
     git add CHANGELOG.md "${gitChgLogConfigDir}"
     git status
     git config --global user.name "${CIRCLE_USERNAME}"
-    git config --global user.email "${CIRCLE_USERNAME}@users.noreply.github.com"
+    git config --global user.email "${CIRCLE_USERNAME}@users.noreply.${PARAM_GH_SERVER}"
     git checkout -b "${GEN_BRANCH_NAME}"
     mergeBranchCommitMsg="Updated the ${PARAM_CHANGELOG_FILE}"
     git commit -m "${mergeBranchCommitMsg}" -m "automated update of ${PARAM_CHANGELOG_FILE}"
@@ -38,8 +38,8 @@ MergeChangelog() {
     if [ "${0#*$ORB_TEST_ENV}" == "$0" ]; then
         git push origin "${GEN_BRANCH_NAME}"
         # Switch to SSH to use the token stored in the environment variable GH_TOKEN.
-        gh config set git_protocol ssh --host github.com
-        gh auth status --hostname github.com
+        gh config set git_protocol ssh --host "${PARAM_GH_SERVER}"
+        gh auth status --hostname "${PARAM_GH_SERVER}"
         gh pr create --base "${PARAM_BRANCH}" --head "${GEN_BRANCH_NAME}" --fill
         sleep 5
         gh pr merge --auto "--${PARAM_MERGE_TYPE}"
