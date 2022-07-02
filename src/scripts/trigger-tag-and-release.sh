@@ -1,4 +1,5 @@
 TriggerTagAndRelease() {
+    set -e
     ls -la .
     # Do not trigger a release if there is nothing to tag.
     if [ ! -f "trigger.txt" ]; then
@@ -20,6 +21,19 @@ TriggerTagAndRelease() {
     PARAM_MAP="{\"triggered_by_bot\": true}"
     echo "{\"branch\": \"${PARAM_BRANCH}\", \"parameters\": ${PARAM_MAP}}" > pipelineparams.json
     cat pipelineparams.json
+
+    # BEGIN these work together
+    if [ -z "${CIRCLECI_API_HOST}" ]; then
+        echo "CIRCLECI_API_HOST environment variable is not set, please pass in 'circleci_api_host' parameter"
+    fi
+    if [ -z "${CIRCLECI_APP_HOST}" ]; then
+        echo "CIRCLECI_APP_HOST environment variable is not set, please pass in 'circleci_app_host' parameter"
+    fi
+    if [ -z "${CIRCLECI_API_HOST}" ] || [ -z "${CIRCLECI_APP_HOST}" ]; then
+        exit 1
+    fi
+    # END these work together
+
     TriggerPipeline
     Result
 }

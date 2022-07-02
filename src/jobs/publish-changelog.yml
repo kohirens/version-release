@@ -26,6 +26,14 @@ parameters: # TODO: Change all params to use snake case in jobs and commands for
     type: string
     default: ".chglog/config.yml"
     description: Location of a git-chglog configuration file.
+  circleci_api_host:
+    type: string
+    default: "https://circleci.com"
+    description: Host URL of CircleCI API, i.e. https://circleci.com
+  circleci_app_host:
+    type: string
+    default: "https://app.circleci.com"
+    description: Host URL of CircleCI Web UI, i.e. https://app.circleci.com
   commit_file:
     description: Name of the file to set the commit hash to tag.
     type: string
@@ -83,4 +91,6 @@ steps:
   - persist_to_workspace:
       root: "."
       paths: [ "<< parameters.commit_file >>", "<< parameters.chglog_conf_dir >>"]
-  - trigger-tag-and-release
+  - trigger-tag-and-release:
+      circleci_api_host: "<< parameters.circleci_api_host >>"
+      circleci_app_host: "<< parameters.circleci_app_host >>"
