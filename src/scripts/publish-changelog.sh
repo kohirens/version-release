@@ -39,7 +39,20 @@ MergeChangelog() {
         git push origin "${GEN_BRANCH_NAME}"
         # Switch to SSH to use the token stored in the environment variable GH_TOKEN.
         gh config set git_protocol ssh --host "${PARAM_GH_SERVER}"
+        echo
+        echo
+        echo "login to ${PARAM_GH_SERVER}"
+        # see: https://josh-ops.com/posts/gh-auth-login-in-actions/
+        # NOTE: Using just GH_TOKEN set in the environment seems to fail when you have
+        #       to supply the --hostname flag to point to a GHE server.
+        echo "${GH_TOKEN}" | gh auth login --hostname "${PARAM_GH_SERVER}" --with-token
+        echo
+        echo
+        echo "auth status of ${PARAM_GH_SERVER}"
         gh auth status --hostname "${PARAM_GH_SERVER}"
+        echo
+        echo
+        echo "Making a PR"
         gh pr create --base "${PARAM_BRANCH}" --head "${GEN_BRANCH_NAME}" --fill
         sleep 5
         gh pr merge --auto "--${PARAM_MERGE_TYPE}"
