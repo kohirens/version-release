@@ -33,3 +33,24 @@ circleci orb pack .\src\ > orb.yml
 circleci.exe orb publish .\orb.yml  kohirens/version-release@dev:alpha
 circleci config validate
 ```
+
+NOTE: If you're using CircleCI server then set the flag
+      `--host https://circleci.example.com` for example, at the end of each
+      command.
+
+```shell
+circleci orb pack src > orb.yml
+circleci orb validate orb.yml
+circleci orb publish orb.yml kohirens/version-release@dev:alpha
+circleci config validate
+```
+
+In case you have not registered the namespace (only needed once):
+
+```shell
+circleci namespace create kohirens github kohirens
+```
+
+```shell
+circleci orb create kohirens/version-release
+```
