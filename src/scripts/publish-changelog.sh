@@ -14,6 +14,7 @@ MergeChangelog() {
     fi
 
     # Exit if branch exist remotely already.
+    GEN_BRANCH_NAME="auto-update-changelog"
     branchExistRemotely=$(git ls-remote --heads "${CIRCLE_REPOSITORY_URL}" "${GEN_BRANCH_NAME}" | wc -l)
     echo "branchExistRemotely = ${branchExistRemotely}"
     # Exit if branch exist remotely already.
@@ -22,7 +23,6 @@ MergeChangelog() {
         exit 1
     fi
 
-    GEN_BRANCH_NAME="auto-update-changelog"
     # Piggy-back: The previous step command may have added the Git-ChgLog configuration. Lets commit
     # here to reduce duplicating the commit code there.
     gitChgLogConfigDir=$(dirname "${PARAM_CONFIG_FILE}")
