@@ -35,26 +35,27 @@ TriggerTagAndRelease() {
     # END these work together
 
     TriggerPipeline
-    Result
 }
 
 # Example API URL: https://circleci.com/api/v2/project/vcs-slug/org-name/repo-name/pipeline
 # Note: keep in mind that you have to use a personal API token; project tokens are currently not supported on CircleCI API (v2) at this time.
 # see: https://circleci.com/docs/api/v2/#operation/triggerPipeline
 TriggerPipeline() {
-    T=$(eval echo "$TOKEN")
-    curl -u "${T}": -X POST --header "Content-Type: application/json" -d @pipelineparams.json \
-      "${CIRCLECI_API_HOST}/api/v2/project/${PARAM_VCS_TYPE}/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/pipeline" -o /tmp/curl-result.txt
-}
+    projectUrl="${CIRCLECI_API_HOST}/api/v2/project/${PARAM_VCS_TYPE}/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/pipeline"
+    resultFile="/tmp/curl-result.txt"
+    echo "circleci project URL: ${projectUrl}"
 
-Result() {
-    CURL_RESULT=$(cat /tmp/curl-result.txt)
-    if [[ $(echo "$CURL_RESULT" | jq -r .message) == "Not Found" || $(echo "$CURL_RESULT" | jq -r .message) == "Permission denied" || $(echo "$CURL_RESULT" | jq -r .message) == "Project not found" ]]; then
+    curl -u "${CIRCLE_TOKEN}": -X POST --header "Content-Type: application/json" -d @pipelineparams.json \
+      "${projectUrl}" -o "${resultFile}"
+
+    resultMessage=$(jq -r .message < ${resultFile})
+
+    if [ "${resultMessage}" = "Not Found" ] || [ "${resultMessage}" = "Permission denied" ] || [ "${resultMessage}" = "Project not found" ]; then
         echo "Was unable to trigger tag-and-release workflow. API response: $(jq -r .message < /tmp/curl-result.txt)"
         exit 1
     else
         echo "Pipeline triggered!"
-        echo "${CIRCLECI_APP_HOST}/jobs/${PARAM_VCS_TYPE}/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/$(jq -r .number < /tmp/curl-result.txt)"
+        echo "${CIRCLECI_APP_HOST}/jobs/${PARAM_VCS_TYPE}/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/$(jq -r .number < ${resultFile})"
     fi
 }
 
