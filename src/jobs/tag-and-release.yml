@@ -33,6 +33,10 @@ parameters:
     description: Name of the environment variable holding the GitHub API token.
     type: env_var_name
     default: GH_TOKEN
+  github_server:
+    description: Github server domain.
+    type: string
+    default: "github.com"
   tagged_file:
     description: File to store the semantic version that was used to tag the release.
     type: string
@@ -63,6 +67,7 @@ steps:
         PARAM_CHANGELOG_FILE: "<< parameters.changelog_file >>"
         PARAM_COMMIT_FILE: "<< parameters.commit_file >>"
         PARAM_TAG_FILE: "<< parameters.tagged_file >>"
+        PARAM_GH_SERVER: "<< parameters.github_server >>"
       name: Make A New Release
       command: << include(scripts/tag-and-release.sh) >>
   - persist_to_workspace:
