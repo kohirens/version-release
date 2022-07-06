@@ -3,11 +3,9 @@ version: 2.1
 orbs:
   # For CircleCI Server, some Orbs like `orb-tools` will need the correct URL of the server.
   # You can set the project environment variable CIRCLECI_CLI_HOST="https://circleci.server.domain", for example,
-  # so that it is available for all jobs.
+  # so that it is available for all jobs. You should also set CIRCLECI_CLI_TOKEN for authentication.
   vro: << pipeline.parameters.orb_repo >>@<<pipeline.parameters.dev-orb-version>>
   orb-tools: circleci/orb-tools@11.2.0
-  bats: circleci/bats@1.0
-  shellcheck: circleci/shellcheck@2.2.4
   cli: circleci/circleci-cli@0.1.8
 
 # Pipeline Parameters

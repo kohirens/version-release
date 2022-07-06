@@ -67,6 +67,10 @@ jobs:
             echo "list current directory contents:"
             ls -la .
 
+branches-to-skip: &branches-to-skip
+  branches:
+    ignore: /main|updated-changelog-skip-ci|auto-update-changelog/
+
 workflows:
   test-pack:
     jobs:
@@ -78,18 +82,16 @@ workflows:
           vcs-type: << pipeline.project.type >>
           config-path: "deploy.yml"
       - orb-tools/lint:
-          filters: &main-and-skip
-            branches:
-              ignore: /main|updated-changelog-skip-ci/
+          filters: *branches-to-skip
       - orb-tools/pack:
-          filters: *main-and-skip
+          filters: *branches-to-skip
       - shellcheck/check:
           dir: ./src/scripts
           exclude: SC2148
-          filters: *main-and-skip
+          filters: *branches-to-skip
       - bats/run:
           path: ./src/tests
-          filters: *main-and-skip
+          filters: *branches-to-skip
       - orb-tools/publish:
           name: "publish-dev"
           orb-name: << pipeline.parameters.orb_repo >>
@@ -97,14 +99,13 @@ workflows:
           github-token: "GH_TOKEN"
           vcs-type: << pipeline.project.type >>
           requires: [ orb-tools/lint, orb-tools/pack, bats/run, shellcheck/check ]
-          filters: *main-and-skip
-      # Trigger an integration workflow to test the
-      # dev:${CIRCLE_SHA1:0:7} version of your orb
+          filters: *branches-to-skip
+      # Trigger integration test on dev:${CIRCLE_SHA1:0:7} of your orb
       - orb-tools/continue:
-          filters: *main-and-skip
+          filters: *branches-to-skip
           pipeline-number: << pipeline.number >>
           requires: [ publish-dev ]
           vcs-type: << pipeline.project.type >>
       - debug-info:
-          filters: *main-and-skip
+          filters: *branches-to-skip
           requires: [ orb-tools/pack ]
