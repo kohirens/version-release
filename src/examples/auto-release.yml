@@ -1,5 +1,5 @@
 description: >
-  Commit changes to the changelog and merge into a remote branch.
+  Pseudo example of how to push changes, auto update the changelog, merge, and publish a release to the main trunk branch.
 usage:
   version: 2.1
 
