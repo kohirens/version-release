@@ -1,5 +1,5 @@
 description: >
-  Commit changes to the changelog and merge into a remote branch.
+  Commit changes to the changelog and merge into a remote branch (default is main).
 usage:
   version: 2.1
 
@@ -18,7 +18,7 @@ usage:
 
   workflows:
     version: 2
-    auto-release: # Run ONLY on main and when triggered_by_bot is true via an API call.
+    publish-changelog:
       when:
         and:
           - equal: [main, << pipeline.git.branch >>]
@@ -26,9 +26,4 @@ usage:
       jobs:
         - vro/publish-changelog:
             context: orb-publishing
-            filters: { branches: { only: main } }
-            pre-steps:
-              - checkout
-              - attach_workspace: { at: '.' }
-              - run: echo "trigger source << pipeline.trigger_source >>"
             ssh_finger: << pipeline.parameters.ssh_finger >>

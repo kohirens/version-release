@@ -1,15 +1,19 @@
 description: |2
-  Auto update the CHANGELOG.md using specifically formatted Git commit messages, for example:
-
-    add: Awesome new feature
-    rmv: Obsolete features
-    BREAKING CHANGE
-
+  Auto update the CHANGELOG.md looking for specifically formatted tags (add:, rmv:, etc) in the Git commit messages.
+  See docs for more details in the GitHub repo for more details.
 usage:
   version: 2.1
 
   orbs:
     vro: kohirens/version-release@latest
+
+  jobs:
+    update-the-chglog:
+      executor: vro/default
+      steps:
+        - vro/git-chglog-update:
+            chglog_config_file: ".chglog/config.yml"
+            changelog_file: "CHANGELOG.md"
 
   workflows:
     use-my-orb:
@@ -17,9 +21,3 @@ usage:
         - checkout
         - update-the-chglog:
             requires: [ checkout ]
-
-jobs:
-  update-the-chglog:
-    executor: vro/default
-    steps:
-      - vro/git-chglog-update
