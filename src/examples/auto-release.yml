@@ -31,7 +31,7 @@ usage:
             context: orb-publishing
             ssh_finger: << pipeline.parameters.ssh_finger >>
 
-    publish-release-tag: # Run ONLY on main when kicked-off by publish-changelog workflow.
+    publish-release-tag: # This will be triggered by the publish-changelog workflow.
       when:
         and:
           - equal: [main, << pipeline.git.branch >>]
@@ -43,8 +43,7 @@ usage:
         - vro/tag-and-release:
             context: orb-publishing
 
-    # Everything that should go to production should proceed this workflow.
-    on-tag-release: # The filter will cause this to ONLY run on release tags.
+    on-tag-release: # This will be triggered by the publish-release-tag workflow.
       jobs:
         - add-your-jobs-here:
             context: orb-publishing

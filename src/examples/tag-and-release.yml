@@ -24,4 +24,3 @@ usage:
       jobs:
         - vro/tag-and-release:
             context: orb-publishing
-            filters: { branches: { only: main } }
