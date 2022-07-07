@@ -1,7 +1,7 @@
 # Runs prior to every test
 setup() {
     wd=$(pwd)
-    curl -LO https://github.com/kohirens/git-tool-belt/releases/download/1.2.9/git-tool-belt-linux-amd64.tar.gz
+    curl -LO https://github.com/kohirens/git-tool-belt/releases/download/2.0.0/git-tool-belt-linux-amd64.tar.gz
     mv git-tool-belt-linux-amd64.tar.gz /tmp/git-tool-belt-linux-amd64.tar.gz
     cd /tmp
     tar -xzf git-tool-belt-linux-amd64.tar.gz
