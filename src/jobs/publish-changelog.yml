@@ -90,7 +90,7 @@ steps:
       command: << include(scripts/publish-changelog.sh) >>
   - persist_to_workspace:
       root: "."
-      paths: [ "<< parameters.commit_file >>", "<< parameters.chglog_conf_dir >>"]
+      paths: [ "<< parameters.commit_file >>", "<< parameters.chglog_conf_dir >>" ]
   - trigger-tag-and-release:
       circleci_api_host: "<< parameters.circleci_api_host >>"
       circleci_app_host: "<< parameters.circleci_app_host >>"
