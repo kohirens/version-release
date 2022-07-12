@@ -80,7 +80,7 @@ workflows:
               only: main
           pipeline-number: << pipeline.number >>
           vcs-type: << pipeline.project.type >>
-          config-path: "deploy.yml"
+          config-path: ".circleci/deploy.yml"
       - orb-tools/lint:
           filters: *branches-to-skip
       - orb-tools/pack:
