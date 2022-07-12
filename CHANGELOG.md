@@ -2,6 +2,41 @@
 ## [Unreleased]
 
 
+<a name="2.0.0-rc1"></a>
+## [2.0.0-rc1] - 2022-07-12
+### Added
+- Parameters to set CircleCI URL for publish trigger.
+
+### Changed
+- Updated examples.
+- CI config clean up.
+- Make note of using CIRCLECI_CLI_TOKEN environment variable.
+- Refactored CI trigger workflow code.
+- Upgraded CircleCI CLI Orb to version 0.1.9.
+- Upgrade Shellcheck Orb to version 3.1.1.
+- Updated development doc.
+- Updated how to release doc.
+- GH unattended login.
+- Make github server configurable.
+- Updated setup-ssh-keys doc.
+- Replaced PARAM_OUTPUTFILE with PARAM_CHANGELOG_FILE.
+- Upgraded to git-tool-belt version 1.2.9.
+- Upgraded to git-tool-belt 1.2.3 in script test.
+- Only trigger a release publish when there are taggable changes.
+
+### Fixed
+- GitHub CLI login when publishing a changelog update.
+- CI location for deploy.yml.
+- Broken unit test.
+- adding missing git-chglog config.
+- Setting GitHub server for tagging a release.
+- Used variable before set.
+- Looking for trigger.txt when it was not expected to be found.
+
+### Removed
+- Obsolete parameters from trigger-tag-and-release command.
+
+
 <a name="1.1.0"></a>
 ## [1.1.0] - 2022-05-04
 ### Added
@@ -282,7 +317,8 @@
 - Sample command and job.
 
 
-[Unreleased]: https://github.com/kohirens/version-release-orb/compare/1.1.0...HEAD
+[Unreleased]: https://github.com/kohirens/version-release-orb/compare/2.0.0-rc1...HEAD
+[2.0.0-rc1]: https://github.com/kohirens/version-release-orb/compare/1.1.0...2.0.0-rc1
 [1.1.0]: https://github.com/kohirens/version-release-orb/compare/1.0.6...1.1.0
 [1.0.6]: https://github.com/kohirens/version-release-orb/compare/1.0.5...1.0.6
 [1.0.5]: https://github.com/kohirens/version-release-orb/compare/1.0.4...1.0.5
