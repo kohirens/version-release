@@ -34,6 +34,10 @@ parameters:
     description: "Context containing keys for auth."
     type: string
     default: "kohirens-orb-publishing"
+  triggered_by_bot:
+    description: Trigger publishing a release tag workflow.
+    type: boolean
+    default: false
 
 jobs:
   orb-publish:
