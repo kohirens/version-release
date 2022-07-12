@@ -25,6 +25,8 @@
 - Only trigger a release publish when there are taggable changes.
 
 ### Fixed
+- Setting dynamic parameter in main dynamic CI config.
+- Second GitHub CLI login when publishing a changelog update.
 - GitHub CLI login when publishing a changelog update.
 - CI location for deploy.yml.
 - Broken unit test.
