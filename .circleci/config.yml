@@ -3,14 +3,12 @@ version: 2.1
 setup: true
 
 orbs:
-  # For CircleCI Server, some Orbs like `orb-tools` will need the correct URL of the server.
-  # You can set the project environment variable CIRCLECI_CLI_HOST="https://circleci.server.domain", for example,
-  # so that it is available for all jobs. You should also set CIRCLECI_CLI_TOKEN for authentication.
   vro: << pipeline.parameters.orb_repo >>@<<pipeline.parameters.dev-orb-version>>
   orb-tools: circleci/orb-tools@11.2.0
   bats: circleci/bats@1.0.0
   shellcheck: circleci/shellcheck@3.1.1
   cli: circleci/circleci-cli@0.1.9
+  continuation: circleci/continuation@0.3.1
 
 # Pipeline Parameters
 # also see: https://circleci.com/docs/2.0/pipeline-variables/
@@ -34,28 +32,8 @@ parameters:
     description: "Context containing keys for auth."
     type: string
     default: "kohirens-orb-publishing"
-  triggered_by_bot:
-    description: Trigger publishing a release tag workflow.
-    type: boolean
-    default: false
 
 jobs:
-  orb-publish:
-    executor: cli/default
-    steps:
-      - checkout
-      - attach_workspace:
-          at: '.'
-      - run:
-          name: "Publish Orb"
-          command: |
-            GIT_TAG=$(git tag --points-at HEAD)
-            if [ -z "${GIT_TAG}" ]; then
-              echo "no tag found in order to publish Orb"
-              exit 1
-            fi
-            circleci orb --skip-update-check validate orb.yml
-            circleci orb publish --skip-update-check orb.yml << pipeline.parameters.orb_repo >>@${GIT_TAG} --token ${CIRCLE_TOKEN}
   debug-info:
     executor: vro/default
     steps:
@@ -70,21 +48,28 @@ jobs:
             printf "current user: %s\n" "${who}"
             echo "list current directory contents:"
             ls -la .
+  decide-workflow:
+    executor: vro/default
+    steps:
+      - checkout
+      - attach_workspace: { at: '.' }
+      - run:
+          name: "Generate workflow"
+          command: |
+            echo "decide which workflow to run based on if the changelog is up-to-date, if so, are there changes to tag."
+            echo "also generate a JSON file for setting the parameters"
+      - continuation/continue:
+          configuration_path: ".circleci/release-check.yml"
+          circleci_domain: "circleci.com"
+          parameters: "continued_automation.json"
 
 branches-to-skip: &branches-to-skip
   branches:
     ignore: /main|updated-changelog-skip-ci|auto-update-changelog/
 
 workflows:
-  test-pack:
+  workflow-picker:
     jobs:
-      - orb-tools/continue: # load the deploy.yml
-          filters:
-            branches:
-              only: main
-          pipeline-number: << pipeline.number >>
-          vcs-type: << pipeline.project.type >>
-          config-path: ".circleci/deploy.yml"
       - orb-tools/lint:
           filters: *branches-to-skip
       - orb-tools/pack:
@@ -104,12 +89,16 @@ workflows:
           vcs-type: << pipeline.project.type >>
           requires: [ orb-tools/lint, orb-tools/pack, bats/run, shellcheck/check ]
           filters: *branches-to-skip
-      # Trigger integration test on dev:${CIRCLE_SHA1:0:7} of your orb
-      - orb-tools/continue:
-          filters: *branches-to-skip
-          pipeline-number: << pipeline.number >>
+      - continuation/continue: # Trigger integration test on dev:${CIRCLE_SHA1:0:7} of your orb
           requires: [ publish-dev ]
-          vcs-type: << pipeline.project.type >>
+          configuration_path: ".circleci/integration-tests.yml"
+          circleci_domain: "circleci.com"
+          parameters: '{ "continued_automation": "integration-test" }'
       - debug-info:
           filters: *branches-to-skip
           requires: [ orb-tools/pack ]
+      - continuation/continue:
+          filters: { branches: { only: main } }
+          configuration_path: ".circleci/release-check.yml"
+          circleci_domain: "circleci.com"
+          parameters: '{ "continued_automation": "integration-test" }'
