@@ -4,6 +4,7 @@ orbs:
   # For CircleCI Server, some Orbs like `orb-tools` will need the correct URL of the server.
   # You can set the project environment variable CIRCLECI_CLI_HOST="https://circleci.server.domain", for example,
   # so that it is available for all jobs. You should also set CIRCLECI_CLI_TOKEN for authentication.
+  # TODO: Change to a semantic version after release.
   vro: << pipeline.parameters.orb_repo >>@<<pipeline.parameters.dev-orb-version>>
   orb-tools: circleci/orb-tools@11.2.0
   cli: circleci/circleci-cli@0.1.8
@@ -30,9 +31,12 @@ parameters:
     description: "Context containing keys for auth."
     type: string
     default: "kohirens-orb-publishing"
+  triggered_by_bot:
+    description: Trigger publishing a release tag workflow.
+    type: boolean
+    default: false
 
 jobs:
-
   orb-publish:
     executor: cli/default
     steps:
@@ -51,17 +55,6 @@ jobs:
             circleci orb publish --skip-update-check orb.yml << pipeline.parameters.orb_repo >>@${GIT_TAG} --token ${CIRCLE_TOKEN}
 
 workflows:
-  auto-release:
-    jobs:
-      - vro/publish-changelog:
-          context: << pipeline.parameters.auth_context >>
-          filters:
-            branches:
-              only: main
-          ssh_finger: << pipeline.parameters.ssh-finger >>
-      - vro/tag-and-release:
-          requires: [ vro/publish-changelog ]
-          context: << pipeline.parameters.auth_context >>
   publish-orb:
     jobs:
       - orb-tools/pack:

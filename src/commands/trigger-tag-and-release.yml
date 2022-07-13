@@ -1,5 +1,5 @@
 description: >
-  Trigger a pipeline to publish a tag to make a new release in the version control system.
+  Verify and trigger a pipeline to publish a release tag in the version control system.
 parameters:
   branch:
     description: Name of the branch to tag.
