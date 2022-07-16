@@ -9,10 +9,15 @@ parameters:
     description: Location of a git-chglog configuration file.
     type: string
     default: ".chglog/config.yml"
+  repository_path:
+    description: Location of a git repository.
+    type: string
+    default: "."
 steps:
   - run:
       environment:
         PARAM_CONFIG_FILE: "<< parameters.chglog_config_file >>"
         PARAM_CHANGELOG_FILE: "<< parameters.changelog_file >>"
+        PARAM_REPOSITORY_PATH: "<< parameters.repository_path >>"
       name: Updating the CHANGELOG.md
       command: << include(scripts/git-chglog-update.sh) >>
