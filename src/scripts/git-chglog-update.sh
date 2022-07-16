@@ -1,7 +1,7 @@
 GitChglogUpdate() {
     hasTag=$(git tag)
 
-    cd ${PARAM_REPOSITORY_PATH}
+    cd "${PARAM_REPOSITORY_PATH}" || exit
 
     echo
     echo

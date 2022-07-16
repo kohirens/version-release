@@ -19,30 +19,35 @@ parameters:
     description: Automation workflow description
     type: string
     default: ""
+  repo_path_01:
+    description: Path to repo
+    type: string
+    default: "/tmp/repo-01"
 
 main-filter: &branches-to-skip
     branches:
       ignore: /main|updated-changelog-skip-ci|auto-update-changelog/
 
 jobs:
-  integration-test:
+  integration-test-1:
     executor: vro/default
     steps:
       - checkout
       - run:
           command: |
             repoPath="/tmp/repo-01"
-            git clone -b main src/tests/data/repo-01.bundle ${repoPath}
+            git clone -b main src/tests/data/repo-01.bundle << pipeline.parameters.repo_path_01 >>
             git status
-            cp -R src/tests/data/.chglog ${repoPath}
-            ls -la ${repoPath}
-            cd ${repoPath}
+            cp -R src/tests/data/.chglog << pipeline.parameters.repo_path_01 >>
+            ls -la << pipeline.parameters.repo_path_01 >>
       - vro/git-chglog-update:
-          chglog_config_file: "src/tests/data/.chglog/config.yml"
-          changelog_file: "CHANGELOG-4000.md"
+          repository_path: << pipeline.parameters.repo_path_01 >>
+      - run:
+          command: |
+            ls -la << pipeline.parameters.repo_path_01 >>
 
 workflows:
   test-orb:
     jobs:
-      - integration-test:
+      - integration-test-1:
           filters: *branches-to-skip
