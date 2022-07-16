@@ -1,5 +1,8 @@
 GitChglogUpdate() {
     hasTag=$(git tag)
+
+    cd ${PARAM_REPOSITORY_PATH}
+
     echo
     echo
     pwd
