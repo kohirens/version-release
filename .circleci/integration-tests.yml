@@ -29,6 +29,14 @@ jobs:
     executor: vro/default
     steps:
       - checkout
+      - run:
+          command: |
+            repoPath="/tmp/repo-01"
+            git clone -b main src/tests/data/repo-01.bundle ${repoPath}
+            git status
+            cp -R src/tests/data/.chglog ${repoPath}
+            ls -la ${repoPath}
+            cd ${repoPath}
       - vro/git-chglog-update:
           chglog_config_file: "src/tests/data/.chglog/config.yml"
           changelog_file: "CHANGELOG-4000.md"

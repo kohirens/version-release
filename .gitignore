@@ -1,6 +1,7 @@
 # Directories
 # -----------
 /.idea/
+/src/tests/data/repo-*/
 /tmp/
 
 # Files
