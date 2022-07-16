@@ -1,14 +1,16 @@
 # Runs prior to every test
 setup() {
-    wd=$(pwd)
-    curl -LO https://github.com/kohirens/git-tool-belt/releases/download/2.0.0/git-tool-belt-linux-amd64.tar.gz
-    mv git-tool-belt-linux-amd64.tar.gz /tmp/git-tool-belt-linux-amd64.tar.gz
-    cd /tmp
-    tar -xzf git-tool-belt-linux-amd64.tar.gz
-    chmod +x ./git-tool-belt-linux-amd64
-    mkdir -p /home/circleci/bin
-    mv ./git-tool-belt-linux-amd64 /home/circleci/bin/git-tool-belt
-    cd "${wd}"
+    if [ ! -f "/home/circleci/bin/git-tool-belt" ]; then
+        wd=$(pwd)
+        curl -LO https://github.com/kohirens/git-tool-belt/releases/download/2.0.0/git-tool-belt-linux-amd64.tar.gz
+        mv git-tool-belt-linux-amd64.tar.gz /tmp/git-tool-belt-linux-amd64.tar.gz
+        cd /tmp
+        tar -xzf git-tool-belt-linux-amd64.tar.gz
+        chmod +x ./git-tool-belt-linux-amd64
+        mkdir -p /home/circleci/bin
+        mv ./git-tool-belt-linux-amd64 /home/circleci/bin/git-tool-belt
+        cd "${wd}"
+    fi
     # Load our script file.
     source ./src/scripts/add-missing-chglog-config.sh
 }

@@ -13,11 +13,13 @@ GitChglogUpdate() {
         echo "no tags found"
         git-chglog --output "${PARAM_CHANGELOG_FILE}" -c "${PARAM_CONFIG_FILE}" --next-tag=0.1.0
     elif [ -f "/usr/local/bin/git-tool-belt" ]; then
+        echo "git-tool-belt found"
         git-tool-belt semver -save build-version.json
         nextVersion=$(jq -r .nextVersion < build-version.json)
         echo "nextVersion = ${nextVersion}"
         git-chglog --output "${PARAM_CHANGELOG_FILE}" -c "${PARAM_CONFIG_FILE}" --next-tag="${nextVersion}"
     else
+        echo "running git-chglog as normal"
         wd=$(pwd)
         printf "updating %s using config file %s\n" "${wd}/${PARAM_CHANGELOG_FILE}" "${PARAM_CONFIG_FILE}"
         git-chglog --output "${PARAM_CHANGELOG_FILE}" -c "${PARAM_CONFIG_FILE}"
