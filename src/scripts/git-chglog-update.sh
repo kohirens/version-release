@@ -1,5 +1,10 @@
 GitChglogUpdate() {
     hasTag=$(git tag)
+    echo
+    echo
+    pwd
+    echo
+    echo
 
     if [ -z "${hasTag}" ]; then
         echo "no tags found"
