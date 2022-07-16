@@ -1,0 +1,36 @@
+description: >
+  Update the CHANGELOG.md file.
+parameters:
+  changelog_path:
+    description: Location of a git-chglog configuration file.
+    type: string
+    default: "CHANGELOG.md"
+  generated_workflow_path:
+    description: Path to place a generated workflow.
+    type: string
+    default: ".circleci/generated-config.yml"
+  continue_parameters_path:
+    description: Path to place a generated workflow.
+    type: string
+    default: ".circleci/generated-parameters.json"
+  chglog_config_file:
+    description: Location of a git-chglog configuration file.
+    type: string
+    default: ".chglog/config.yml"
+  repository_path:
+    description: Location of a git repository.
+    type: string
+    default: "."
+
+steps:
+  - git-chglog-update:
+      changelog_file: << parameters.changelog_path >>
+      chglog_config_file: << parameters.chglog_config_file >>
+      repository_path: << parameters.repository_path >>
+  - run:
+      environment:
+        PARAM_CHANGELOG_PATH: "<< parameters.changelog_path >>"
+        PARAM_GENERATED_WORKFLOW_PATH: "<< parameters.generated_workflow_path >>"
+        PARAM_CONTINUE_PARAMETERS_PATH: "<< parameters.continue_parameters_path >>"
+      name: "Generate a workflow"
+      command: << include(scripts/generate-workflow.sh) >>

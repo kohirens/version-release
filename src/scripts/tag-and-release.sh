@@ -2,7 +2,7 @@ TagAndRelease() {
     git fetch --all -p
 
     if [ -f "${PARAM_COMMIT_FILE}" ]; then
-        currCommit=$(cat "${PARAM_COMMIT_FILE}")
+        currCommit=$(<"${PARAM_COMMIT_FILE}")
         if [ "${currCommit}" != "" ]; then
           echo "resetting to commit ${currCommit}"
           git reset --hard "${currCommit}"

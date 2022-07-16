@@ -32,6 +32,10 @@ parameters:
     description: "Context containing keys for auth."
     type: string
     default: "kohirens-orb-publishing"
+  changelog_path:
+    description: "Path to the changelog file."
+    type: string
+    default: "CHANGELOG.md"
 
 jobs:
   debug-info:
@@ -48,20 +52,16 @@ jobs:
             printf "current user: %s\n" "${who}"
             echo "list current directory contents:"
             ls -la .
-  decide-workflow:
+  choose-a-workflow:
     executor: vro/default
     steps:
       - checkout
       - attach_workspace: { at: '.' }
-      - run:
-          name: "Generate workflow"
-          command: |
-            echo "decide which workflow to run based on if the changelog is up-to-date, if so, are there changes to tag."
-            echo "also generate a JSON file for setting the parameters"
+      - vro/generate-a-workflow
       - continuation/continue:
-          configuration_path: ".circleci/release-check.yml"
           circleci_domain: "circleci.com"
-          parameters: "continued_automation.json"
+          configuration_path: ".circleci/generated-config.yml"
+          parameters: ".circleci/generated-parameters.json"
 
 branches-to-skip: &branches-to-skip
   branches:
@@ -89,16 +89,13 @@ workflows:
           vcs-type: << pipeline.project.type >>
           requires: [ orb-tools/lint, orb-tools/pack, bats/run, shellcheck/check ]
           filters: *branches-to-skip
+      - debug-info:
+          filters: *branches-to-skip
+          requires: [ orb-tools/pack ]
       - continuation/continue: # Trigger integration test on dev:${CIRCLE_SHA1:0:7} of your orb
           requires: [ publish-dev ]
           configuration_path: ".circleci/integration-tests.yml"
           circleci_domain: "circleci.com"
           parameters: '{ "continued_automation": "integration-test" }'
-      - debug-info:
-          filters: *branches-to-skip
-          requires: [ orb-tools/pack ]
-      - continuation/continue:
+      - choose-a-workflow:
           filters: { branches: { only: main } }
-          configuration_path: ".circleci/release-check.yml"
-          circleci_domain: "circleci.com"
-          parameters: '{ "continued_automation": "integration-test" }'
