@@ -62,6 +62,23 @@ jobs:
           circleci_domain: "circleci.com"
           configuration_path: ".circleci/generated-config.yml"
           parameters: ".circleci/generated-parameters.json"
+  orb-publish:
+    executor: cli/default
+    steps:
+      - checkout
+      - attach_workspace:
+          at: '.'
+      - run:
+          name: "Publish Orb"
+          command: |
+            GIT_TAG=$(git tag --points-at HEAD)
+            if [ -z "${GIT_TAG}" ]; then
+              echo "no tag found in order to publish Orb"
+              exit 1
+            fi
+            circleci orb --skip-update-check validate orb.yml
+            circleci orb publish --skip-update-check orb.yml << pipeline.parameters.orb_repo >>@${GIT_TAG} --token ${CIRCLE_TOKEN}
+
 
 branches-to-skip: &branches-to-skip
   branches:
@@ -99,3 +116,18 @@ workflows:
           parameters: '{ "continued_automation": "integration-test" }'
       - choose-a-workflow:
           filters: { branches: { only: main } }
+      - orb-tools/pack:
+          name: "pack-tagged-orb"
+          filters:
+            tags:
+              only: /^v?\d+\.\d+\.\d+$/
+            branches:
+              ignore: /.*/
+      - orb-publish:
+          context: << pipeline.parameters.auth_context >>
+          requires: [ pack-tagged-orb ]
+          filters:
+            tags:
+              only: /^v?\d+\.\d+\.\d+$/
+            branches:
+              ignore: /.*/
