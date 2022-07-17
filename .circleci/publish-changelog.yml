@@ -35,6 +35,10 @@ parameters:
     description: Trigger publishing a release tag workflow.
     type: boolean
     default: false
+  continued_automation:
+    description: Automation workflow description
+    type: string
+    default: ""
 
 workflows:
   publish-changelog:
