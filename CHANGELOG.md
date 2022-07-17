@@ -2,6 +2,21 @@
 ## [Unreleased]
 
 
+<a name="2.1.0"></a>
+## [2.1.0] - 2022-07-17
+### Added
+- Gernerate workflows.
+- Repository path param to git-chglog-update command.
+
+### Changed
+- Refactored CI Dynamic configurations.
+
+### Fixed
+- Missing CI parameter from publish-changelog.
+- Publishing CHANGELOG.
+- Integration test to use a fixture.
+
+
 <a name="2.0.0-rc1"></a>
 ## [2.0.0-rc1] - 2022-07-12
 ### Added
@@ -319,7 +334,8 @@
 - Sample command and job.
 
 
-[Unreleased]: https://github.com/kohirens/version-release-orb/compare/2.0.0-rc1...HEAD
+[Unreleased]: https://github.com/kohirens/version-release-orb/compare/2.1.0...HEAD
+[2.1.0]: https://github.com/kohirens/version-release-orb/compare/2.0.0-rc1...2.1.0
 [2.0.0-rc1]: https://github.com/kohirens/version-release-orb/compare/1.1.0...2.0.0-rc1
 [1.1.0]: https://github.com/kohirens/version-release-orb/compare/1.0.6...1.1.0
 [1.0.6]: https://github.com/kohirens/version-release-orb/compare/1.0.5...1.0.6
