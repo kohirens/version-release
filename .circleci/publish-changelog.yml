@@ -36,38 +36,14 @@ parameters:
     type: boolean
     default: false
 
-jobs:
-  orb-publish:
-    executor: cli/default
-    steps:
-      - checkout
-      - attach_workspace:
-          at: '.'
-      - run:
-          name: "Publish Orb"
-          command: |
-            GIT_TAG=$(git tag --points-at HEAD)
-            if [ -z "${GIT_TAG}" ]; then
-              echo "no tag found in order to publish Orb"
-              exit 1
-            fi
-            circleci orb --skip-update-check validate orb.yml
-            circleci orb publish --skip-update-check orb.yml << pipeline.parameters.orb_repo >>@${GIT_TAG} --token ${CIRCLE_TOKEN}
-
 workflows:
-  publish-orb:
+  publish-changelog:
+    when:
+      and:
+        - equal: [ << pipeline.git.branch >>, "main" ]
+        - equal: [ << pipeline.parameters.continued_automation >>, "publish-changelog" ]
     jobs:
-      - orb-tools/pack:
-          filters:
-            tags:
-              only: /^v?\d+\.\d+\.\d+$/
-            branches:
-              ignore: /.*/
-      - orb-publish:
+      - vro/publish-changelog:
+          name: "auto-update-changelog"
           context: << pipeline.parameters.auth_context >>
-          requires: [ orb-tools/pack ]
-          filters:
-            tags:
-              only: /^v?\d+\.\d+\.\d+$/
-            branches:
-              ignore: /.*/
+          ssh_finger: << pipeline.parameters.ssh-finger >>
