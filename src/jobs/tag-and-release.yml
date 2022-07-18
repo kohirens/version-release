@@ -44,7 +44,7 @@ parameters:
   working_directory:
     description: In case you need to customize.
     type: string
-    default: "~/project"
+    default: "."
 
 executor: default
 working_directory: "<< parameters.working_directory >>"
@@ -58,6 +58,7 @@ steps:
       steps:
         - attach_workspace:
             at: "<< parameters.attach_workspace_path >>"
+  - check-last-commit-updated-changelog
   - git-chglog-update:
       chglog_config_file: "<< parameters.chglog_config_file >>"
       changelog_file: "<< parameters.changelog_file >>"
