@@ -1,0 +1,7 @@
+description: |2
+  Check if the last commit updated the changelog.
+
+steps:
+  - run:
+      name: "Check last commit updated the changelog"
+      command: << include(scripts/check-last-commit-updated-changelog.sh) >>
