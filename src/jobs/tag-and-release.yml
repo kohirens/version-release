@@ -44,7 +44,7 @@ parameters:
   working_directory:
     description: In case you need to customize.
     type: string
-    default: "."
+    default: "~/project"
 
 executor: default
 working_directory: "<< parameters.working_directory >>"
