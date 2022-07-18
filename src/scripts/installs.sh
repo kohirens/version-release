@@ -15,7 +15,7 @@ InstallGitChglog() {
 InstallGitToolBelt() {
     if [ ! -f "/home/circleci/bin/git-tool-belt" ]; then
         wd=$(pwd)
-        curl -LO https://github.com/kohirens/git-tool-belt/releases/download/2.0.0/git-tool-belt-linux-amd64.tar.gz
+        curl -LO https://github.com/kohirens/git-tool-belt/releases/download/2.1.0/git-tool-belt-linux-amd64.tar.gz
         mv git-tool-belt-linux-amd64.tar.gz /tmp/git-tool-belt-linux-amd64.tar.gz
         cd /tmp || exit 1
         tar -xzf git-tool-belt-linux-amd64.tar.gz
