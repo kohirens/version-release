@@ -8,6 +8,9 @@
 - Command to check last commit for updated changelog to tag-and-release job.
 - Check commit for updated changelog.
 
+### Fixed
+- Undo a breaking change.
+
 
 <a name="2.1.0"></a>
 ## [2.1.0] - 2022-07-17
