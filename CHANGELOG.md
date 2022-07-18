@@ -2,6 +2,13 @@
 ## [Unreleased]
 
 
+<a name="2.2.0"></a>
+## [2.2.0] - 2022-07-18
+### Added
+- Command to check last commit for updated changelog to tag-and-release job.
+- Check commit for updated changelog.
+
+
 <a name="2.1.0"></a>
 ## [2.1.0] - 2022-07-17
 ### Added
@@ -334,7 +341,8 @@
 - Sample command and job.
 
 
-[Unreleased]: https://github.com/kohirens/version-release-orb/compare/2.1.0...HEAD
+[Unreleased]: https://github.com/kohirens/version-release-orb/compare/2.2.0...HEAD
+[2.2.0]: https://github.com/kohirens/version-release-orb/compare/2.1.0...2.2.0
 [2.1.0]: https://github.com/kohirens/version-release-orb/compare/2.0.0-rc1...2.1.0
 [2.0.0-rc1]: https://github.com/kohirens/version-release-orb/compare/1.1.0...2.0.0-rc1
 [1.1.0]: https://github.com/kohirens/version-release-orb/compare/1.0.6...1.1.0
