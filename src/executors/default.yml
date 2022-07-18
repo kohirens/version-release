@@ -1,7 +1,7 @@
 description: >
   version release executor with git-tool-belt.
 docker:
-  - image: 'kohirens/git-tool-belt:2.0.0'
+  - image: 'kohirens/git-tool-belt:2.1.0'
     auth:
       username: ${DH_USER}
       password: ${DH_PASS}
