@@ -7,8 +7,25 @@ Provides the following features:
 1. Auto update the changelog from commit messages, then merge it into the main trunk
 2. Once the changelog is merged, publish a release on GitHub.
 
+## Pre-requisites
+
+You will need to integrate CircleCI and GitHub so that Circle CI can perform
+actions in GitHub on your behave. This is the automation part.
+
+* Make an SSH key/pair to allow Circle Ci to publish releases on your
+  repository in GitHub. See [Generate An SSH Key for Circle CI]
+* Make a GitHub Personal Access token so that Circle CI can make branches,
+  PRs, and merge changes for the CHANGELOG.md. See [Setup A Personal Access Token on GitHub]
+
 ## Resources
 
-See the [Version Release Orb](https://circleci.com/developer/orbs/orb/kohirens/version-release#usage-examples) for examples.
+See the [Version Release Orb] for examples.
 
-Visit the [Docs](/docs/index.md) for development details.
+Visit the [Docs] for development details.
+
+---
+
+[Generate An SSH Key for Circle CI]: /docs/setup-ssh-keys.md#generate-an-ssh-key-for-circle-ci
+[Setup A Personal Access Token on GitHub]: /docs/setup-ssh-keys.md#setup-a-personal-access-token-on-github
+[Version Release Orb]: https://circleci.com/developer/orbs/orb/kohirens/version-release#usage-examples
+[Docs]: /docs/index.md
