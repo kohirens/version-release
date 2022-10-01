@@ -35,7 +35,7 @@ MergeChangelog() {
     git commit -m "${mergeBranchCommitMsg}" -m "automated update of ${PARAM_CHANGELOG_FILE}"
     # Do not run when sourced for bats-core
     # TODO: This can be tested if you mock the gh, git, and setup a dummy repo at test time.
-    if [ "${0#*$ORB_TEST_ENV}" == "$0" ]; then
+    if [ "${0#*"${ORB_TEST_ENV}"}" == "$0" ]; then
         git push origin "${GEN_BRANCH_NAME}"
         # Switch to SSH to use the token stored in the environment variable GH_TOKEN.
         gh config set git_protocol ssh --host "${PARAM_GH_SERVER}"
@@ -103,6 +103,6 @@ waitForPrToMerge() {
 # Will not run if sourced for bats-core tests.
 # View src/tests for more information.
 ORB_TEST_ENV="bats-core"
-if [ "${0#*$ORB_TEST_ENV}" == "$0" ]; then
+if [ "${0#*"${ORB_TEST_ENV}"}" == "$0" ]; then
     MergeChangelog
 fi
