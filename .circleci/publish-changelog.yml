@@ -51,3 +51,4 @@ workflows:
           name: "auto-update-changelog"
           context: << pipeline.parameters.auth_context >>
           ssh_finger: << pipeline.parameters.ssh-finger >>
+          trigger_tag_and_release: false # when using a dynamic workflow this get trigger by the generate-workflow script
