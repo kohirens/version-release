@@ -2,6 +2,15 @@
 ## [Unreleased]
 
 
+<a name="2.2.2"></a>
+## [2.2.2] - 2022-10-01
+### Changed
+- Make Shell if statements Consistent
+
+### Fixed
+- Triggering Github Release
+
+
 <a name="2.2.1"></a>
 ## [2.2.1] - 2022-07-18
 ### Changed
@@ -350,7 +359,8 @@
 - Sample command and job.
 
 
-[Unreleased]: https://github.com/kohirens/version-release-orb/compare/2.2.1...HEAD
+[Unreleased]: https://github.com/kohirens/version-release-orb/compare/2.2.2...HEAD
+[2.2.2]: https://github.com/kohirens/version-release-orb/compare/2.2.1...2.2.2
 [2.2.1]: https://github.com/kohirens/version-release-orb/compare/2.2.0...2.2.1
 [2.2.0]: https://github.com/kohirens/version-release-orb/compare/2.1.0...2.2.0
 [2.1.0]: https://github.com/kohirens/version-release-orb/compare/2.0.0-rc1...2.1.0
