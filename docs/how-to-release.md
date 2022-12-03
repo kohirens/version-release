@@ -5,7 +5,7 @@ development life cycle, which the Version Release Orb provides.
 
 ## Prerequisites
 
-1. Read [Setup SSH Keys](/docs/setup-ssh-keys.md)
+1. Read [Setup SSH Keys](/docs/setup-keys.md)
 2. Add a [git-chglog] config to your repo.
 3. Add the [auto-release] workflow to your CI config.
 4. If using CircleCI Server ensure the environment variables

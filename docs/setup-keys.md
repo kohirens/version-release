@@ -1,4 +1,4 @@
-# Setup SSH Keys
+# Setup Deploy Keys
 
 SSH keys are needed to give CircleCI jobs the ability to read/write to the repo
 for the follow features.
@@ -77,3 +77,20 @@ release.
 
 NOTE: Without these certain parts of the jobs may fail. Also `write:packages` is
 not available for Circle CI Server at this time of writing.
+
+## Setup CircleCI API Token
+
+You will also need a CircleCI Token for accessing the API to trigger workflows.
+
+1. Go to your "User Settings" and then select "Personal API Tokens".
+2. Click the "Create New Token" button and save it as "CircleCI Automated
+   Releases" (or give it any name you like).
+3. Save the token as `CIRCLE_TOKEN` in the same context as the GH_TOKEN.
+
+NOTE: `GH_TOKEN` and `CIRCLE_TOKEN` can be given different names. You will
+need to update the parameters in the jobs to look for the names you give them in
+the context or environment. See [this orbs docs] for details.
+
+---
+
+[this orbs docs]: https://circle`ci.com/developer/orbs/orb/kohirens/version-release
