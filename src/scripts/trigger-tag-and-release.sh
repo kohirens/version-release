@@ -1,10 +1,7 @@
 TriggerTagAndRelease() {
     set -e
 
-    echo "checking to see if there are commits contain syntax to indicate a release should be published..."
-
-    # Debug
-    ls -la .
+    echo "checking for commits containing that conventional commit syntax..."
 
     # Do not trigger a release if there is nothing to tag.
     if [ ! -f "trigger.txt" ]; then
