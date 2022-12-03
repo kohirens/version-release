@@ -25,7 +25,7 @@ Visit the [Docs] for development details.
 
 ---
 
-[Generate An SSH Key for Circle CI]: /docs/setup-ssh-keys.md#generate-an-ssh-key-for-circle-ci
-[Setup A Personal Access Token on GitHub]: /docs/setup-ssh-keys.md#setup-a-personal-access-token-on-github
+[Generate An SSH Key for Circle CI]: /docs/setup-keys.md#generate-an-ssh-key-for-circle-ci
+[Setup A Personal Access Token on GitHub]: /docs/setup-keys.md#setup-a-personal-access-token-on-github
 [Version Release Orb]: https://circleci.com/developer/orbs/orb/kohirens/version-release#usage-examples
 [Docs]: /docs/index.md
