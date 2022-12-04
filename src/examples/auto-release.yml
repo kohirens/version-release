@@ -1,7 +1,7 @@
 description: >
   Pseudo example of how to push changes, auto update the changelog, merge, and
   publish a release to the main trunk branch.
-  
+
   Go to
   https://github.com/kohirens/version-release-orb/blob/main/docs/setup-keys.md
   which provides details on how to setup the following:
