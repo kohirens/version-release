@@ -2,6 +2,20 @@
 ## [Unreleased]
 
 
+<a name="2.3.0"></a>
+## [2.3.0] - 2022-12-04
+### Added
+- Parameter CIRCLE_TOKEN Environment Name
+
+### Changed
+- publish-changelog Unit Test
+- Updated auto-release Example
+
+### Fixed
+- YAML Lint Error
+- Orb Description and Links
+
+
 <a name="2.2.3"></a>
 ## [2.2.3] - 2022-12-03
 ### Fixed
@@ -365,7 +379,8 @@
 - Sample command and job.
 
 
-[Unreleased]: https://github.com/kohirens/version-release-orb/compare/2.2.3...HEAD
+[Unreleased]: https://github.com/kohirens/version-release-orb/compare/2.3.0...HEAD
+[2.3.0]: https://github.com/kohirens/version-release-orb/compare/2.2.3...2.3.0
 [2.2.3]: https://github.com/kohirens/version-release-orb/compare/2.2.2...2.2.3
 [2.2.2]: https://github.com/kohirens/version-release-orb/compare/2.2.1...2.2.2
 [2.2.1]: https://github.com/kohirens/version-release-orb/compare/2.2.0...2.2.1
