@@ -1,12 +1,26 @@
 description: >
-  Pseudo example of how to push changes, auto update the changelog, merge, and publish a release to the main trunk branch.
+  Pseudo example of how to push changes, auto update the changelog, merge, and
+  publish a release to the main trunk branch.
+  
+  Go to
+  https://github.com/kohirens/version-release-orb/blob/main/docs/setup-keys.md
+  which provides details on how to setup the following:
+
+    1. Make a PR for any CHANGELOG entries that will also need to be merged.
+    2. Allow CircleCI to make a Github release on your behalf.
+    3. Allow CircleCI to trigger workflows using the CircleCI API.
+
 usage:
   version: 2.1
 
   orbs:
-    vro: kohirens/version-release@latest
+    vr: kohirens/version-release@latest
 
   parameters:
+    circle_token:
+      description: A CircleCI API token for trigger workflows.
+      type: env_var_name
+      default: CIRCLE_TOKEN
     ssh_finger:
       description: Fingerprint of an SSH key to allow writing back to the repo.
       type: string
@@ -15,6 +29,10 @@ usage:
       description: Trigger publishing a release tag workflow.
       type: boolean
       default: false
+    gh_token:
+      description: A GitHub write token to make API calls on yur behalf.
+      type: env_var_name
+      default: GH_TOKEN
 
   workflows:
     # Other workflows here
@@ -27,9 +45,10 @@ usage:
           - equal: [main, << pipeline.git.branch >>]
           - equal: [webhook, << pipeline.trigger_source >>]
       jobs:
-        - vro/publish-changelog:
+        - vr/publish-changelog:
             context: orb-publishing
             ssh_finger: << pipeline.parameters.ssh_finger >>
+            gh_token: << pipeline.parameters.gh_token >>
 
     publish-release-tag: # This will be triggered by the publish-changelog workflow.
       when:
@@ -40,8 +59,9 @@ usage:
               pattern: "^api|webhook$"
               value: << pipeline.trigger_source >>
       jobs:
-        - vro/tag-and-release:
+        - vr/tag-and-release:
             context: orb-publishing
+            gh_token: << pipeline.parameters.gh_token >>
 
     on-tag-release: # This will be triggered by the publish-release-tag workflow.
       jobs:
