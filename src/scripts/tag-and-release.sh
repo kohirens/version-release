@@ -1,4 +1,23 @@
 TagAndRelease() {
+    # pre-checks
+    if [ -z "${GH_TOKEN}${PARAM_GH_TOKEN_VAR}" ]; then
+        echo "The environment variable name that should point to a GitHub write token is empty."
+        echo "Please set the docs for the tag-and-release job parameter \"gh_token\" and try again."
+        exit 1
+    fi
+
+    if [ -n "${PARAM_GH_TOKEN_VAR}" ]; then
+        # seems to be the best way for connecting to the Github using the CLI.
+        export GH_TOKEN="${!PARAM_GH_TOKEN_VAR}"
+    fi
+
+    # require a GH_TOKEN
+    if [ -z "${GH_TOKEN}" ]; then
+        echo "No Github write token was set en the environment variable \"${PARAM_GH_TOKEN}\"."
+        echo "Please set the variable and try again."
+        exit 1
+    fi
+
     git fetch --all -p
 
     if [ -f "${PARAM_COMMIT_FILE}" ]; then

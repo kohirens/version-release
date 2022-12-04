@@ -17,10 +17,10 @@ usage:
     vr: kohirens/version-release@latest
 
   parameters:
-    circle_token:
-      description: A CircleCI API token for trigger workflows.
+    gh_token_var:
+      description: A GitHub write token to make API calls on yur behalf.
       type: env_var_name
-      default: CIRCLE_TOKEN
+      default: GH_TOKEN
     ssh_finger:
       description: Fingerprint of an SSH key to allow writing back to the repo.
       type: string
@@ -29,7 +29,7 @@ usage:
       description: Trigger publishing a release tag workflow.
       type: boolean
       default: false
-    gh_token:
+    gh_token_var:
       description: A GitHub write token to make API calls on yur behalf.
       type: env_var_name
       default: GH_TOKEN
@@ -61,7 +61,7 @@ usage:
       jobs:
         - vr/tag-and-release:
             context: orb-publishing
-            gh_token: << pipeline.parameters.gh_token >>
+            gh_token_var: << pipeline.parameters.gh_token >>
 
     on-tag-release: # This will be triggered by the publish-release-tag workflow.
       jobs:
