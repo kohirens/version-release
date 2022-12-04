@@ -1,6 +1,28 @@
 TriggerTagAndRelease() {
     set -e
 
+    # pre-checks
+    if [ -z "${PARAM_GH_TOKEN}" ]; then
+        echo "An environment variable name that should point to a GitHub write token is empty."
+        echo "Please set the docs for the tag-and-release job parameter \"gh_token\" and try again."
+        exit 1
+    else
+        # the seems to be the best way for connecting to the Github using the CLI.
+        export GH_TOKEN="${!PARAM_GH_TOKEN}"
+    fi
+
+    if [ -z "${PARAM_CIRCLE_TOKEN}" ]; then
+        echo "environment variable name that should point to a CircleCI token is empty."
+        echo "Please set the docs for the tag-and-release job parameter \"circle_token_var\" and try again."
+        exit 1
+    fi
+
+    if [ -z "${GH_TOKEN}" ]; then
+        echo "No Github write token was set en the environment variable  \"${PARAM_GH_TOKEN}\"."
+        echo "Please set the variable and try again."
+        exit 1
+    fi
+
     echo "checking for commits containing that conventional commit syntax..."
 
     # Do not trigger a release if there is nothing to tag.
@@ -47,7 +69,7 @@ TriggerPipeline() {
     resultFile="/tmp/curl-result.txt"
     echo "circleci project URL: ${projectUrl}"
 
-    curl -u "${CIRCLE_TOKEN}": -X POST --header "Content-Type: application/json" -d @pipelineparams.json \
+    curl -u "${!PARAM_CIRCLE_TOKEN}": -X POST --header "Content-Type: application/json" -d @pipelineparams.json \
       "${projectUrl}" -o "${resultFile}"
 
     resultMessage=$(jq -r .message < ${resultFile})
