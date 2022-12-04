@@ -2,6 +2,15 @@
 ## [Unreleased]
 
 
+<a name="2.3.1"></a>
+## [2.3.1] - 2022-12-04
+### Changed
+- GH_TOKEN Environment Variable Name Check
+
+### Fixed
+- Environment Name Parameters For publish-changelog
+
+
 <a name="2.3.0"></a>
 ## [2.3.0] - 2022-12-04
 ### Added
@@ -379,7 +388,8 @@
 - Sample command and job.
 
 
-[Unreleased]: https://github.com/kohirens/version-release-orb/compare/2.3.0...HEAD
+[Unreleased]: https://github.com/kohirens/version-release-orb/compare/2.3.1...HEAD
+[2.3.1]: https://github.com/kohirens/version-release-orb/compare/2.3.0...2.3.1
 [2.3.0]: https://github.com/kohirens/version-release-orb/compare/2.2.3...2.3.0
 [2.2.3]: https://github.com/kohirens/version-release-orb/compare/2.2.2...2.2.3
 [2.2.2]: https://github.com/kohirens/version-release-orb/compare/2.2.1...2.2.2
