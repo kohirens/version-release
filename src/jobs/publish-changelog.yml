@@ -34,6 +34,10 @@ parameters:
     type: string
     default: "https://app.circleci.com"
     description: Host URL of CircleCI Web UI, i.e. https://app.circleci.com
+  circle_token_var:
+    description: Set the environment variable that has the CircleCI API token.
+    type: env_var_name
+    default: CIRCLE_TOKEN
   commit_file:
     description: Name of the file to set the commit hash to tag.
     type: string
@@ -85,6 +89,7 @@ steps:
   - run:
       environment:
         PARAM_CHANGELOG_FILE: "<< parameters.changelog_file >>"
+        PARAM_CIRCLE_TOKEN_VAR: "<< parameters.circle_token_var >>"
         PARAM_BRANCH: "<< parameters.branch >>"
         PARAM_MERGE_TYPE: "<< parameters.merge_type >>"
         PARAM_COMMIT_FILE: "<< parameters.commit_file >>"
