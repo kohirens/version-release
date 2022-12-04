@@ -17,6 +17,10 @@ usage:
     vr: kohirens/version-release@latest
 
   parameters:
+    circle_token_var:
+      description: A CircleCI API token for trigger workflows.
+      type: env_var_name
+      default: CIRCLE_TOKEN
     gh_token_var:
       description: A GitHub write token to make API calls on yur behalf.
       type: env_var_name
@@ -29,10 +33,6 @@ usage:
       description: Trigger publishing a release tag workflow.
       type: boolean
       default: false
-    gh_token_var:
-      description: A GitHub write token to make API calls on yur behalf.
-      type: env_var_name
-      default: GH_TOKEN
 
   workflows:
     # Other workflows here
@@ -48,7 +48,8 @@ usage:
         - vr/publish-changelog:
             context: orb-publishing
             ssh_finger: << pipeline.parameters.ssh_finger >>
-            gh_token: << pipeline.parameters.gh_token >>
+            gh_token_var: << pipeline.parameters.gh_token_var >>
+            circle_token_var: << pipeline.parameters.circle_token_var >>
 
     publish-release-tag: # This will be triggered by the publish-changelog workflow.
       when:
@@ -61,7 +62,7 @@ usage:
       jobs:
         - vr/tag-and-release:
             context: orb-publishing
-            gh_token_var: << pipeline.parameters.gh_token >>
+            gh_token_var: << pipeline.parameters.gh_token_var >>
 
     on-tag-release: # This will be triggered by the publish-release-tag workflow.
       jobs:
