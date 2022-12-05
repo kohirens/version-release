@@ -5,6 +5,10 @@ parameters:
     description: Name of the branch to tag.
     type: string
     default: "main"
+  circle_token_var:
+    description: Set the environment variable that has the CircleCI API token.
+    type: env_var_name
+    default: CIRCLE_TOKEN
   circleci_api_host:
     type: string
     default: "https://circleci.com"
@@ -15,6 +19,10 @@ parameters:
     default: "https://app.circleci.com"
     description: >
       Host URL of CircleCI Web UI
+  gh_token_var:
+    description: Name of the environment variable holding the GitHub API write token.
+    type: env_var_name
+    default: GH_TOKEN
   token_variable:
     type: env_var_name
     default: CIRCLE_TOKEN
@@ -33,6 +41,8 @@ steps:
         PARAM_VCS_TYPE: "<< parameters.vcs_type >>"
         CIRCLECI_API_HOST: "<< parameters.circleci_api_host >>"
         CIRCLECI_APP_HOST: "<< parameters.circleci_app_host >>"
+        PARAM_CIRCLE_TOKEN_VAR: "<< parameters.circle_token_var >>"
+        PARAM_GH_TOKEN_VAR: "<< parameters.gh_token_var >>"
         TOKEN: "$<<parameters.token_variable>>"
         ORB_TRIGGER_NAME: "trigger-tag-and-release"
       name: Trigger CI Tagging Workflow

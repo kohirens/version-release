@@ -34,7 +34,7 @@ parameters:
     type: env_var_name
     default: GH_TOKEN
   gh_token_var:
-    description: Name of the environment variable holding the GitHub API token.
+    description: Name of the environment variable holding the GitHub API write token.
     type: env_var_name
     default: GH_TOKEN
   github_server:
