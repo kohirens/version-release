@@ -1,4 +1,12 @@
 MergeChangelog() {
+    # require a GH_TOKEN
+    if [ -z "${GH_TOKEN}" ]; then
+        echo "No GitHub write token found."
+        echo "Please set the environment variable GH_TOKEN."
+        echo "You can also specify which environment variable to use, see \"gh_token_var\" parameter in the publish-changelog job."
+        exit 1
+    fi
+
     prevCommit=$(git rev-parse origin/"${PARAM_BRANCH}")
 
     # make the file so that the persist step does not fail.
@@ -63,7 +71,6 @@ MergeChangelog() {
         echo "trigger-tag-and-release" > trigger.txt
         echo
         echo
-        ls -la .
     fi
 }
 
