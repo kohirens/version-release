@@ -29,7 +29,7 @@ parameters:
   secrets:
     description: "Context containing keys for auth."
     type: string
-    default: "kohirens-orb-publishing"
+    default: "kohirens-automation"
   continued_automation:
     description: Automation workflow description
     type: string
