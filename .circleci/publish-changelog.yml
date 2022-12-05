@@ -27,7 +27,7 @@ parameters:
     description: Orb repository
     type: string
     default: "kohirens/version-release"
-  auth_context:
+  secrets:
     description: "Context containing keys for auth."
     type: string
     default: "kohirens-orb-publishing"
@@ -49,6 +49,6 @@ workflows:
     jobs:
       - vro/publish-changelog:
           name: "auto-update-changelog"
-          context: << pipeline.parameters.auth_context >>
+          context: << pipeline.parameters.secrets >>
           ssh_finger: << pipeline.parameters.ssh-finger >>
           trigger_tag_and_release: false # When using a dynamic workflow this will get triggered by the generate-workflow script.

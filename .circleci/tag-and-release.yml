@@ -26,7 +26,7 @@ parameters:
     description: Orb repository
     type: string
     default: "kohirens/version-release"
-  auth_context:
+  secrets:
     description: "Context containing keys for auth."
     type: string
     default: "kohirens-orb-publishing"
@@ -43,4 +43,4 @@ workflows:
         - equal: [ << pipeline.parameters.continued_automation >>, "publish-new-tag" ]
     jobs:
       - vro/tag-and-release:
-          context: << pipeline.parameters.auth_context >>
+          context: << pipeline.parameters.secrets >>

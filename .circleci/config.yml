@@ -28,10 +28,10 @@ parameters:
     description: Orb repository
     type: string
     default: "kohirens/version-release"
-  auth_context:
+  secrets:
     description: "Context containing keys for auth."
     type: string
-    default: "kohirens-orb-publishing"
+    default: "kohirens-automation"
   changelog_path:
     description: "Path to the changelog file."
     type: string
@@ -101,7 +101,7 @@ workflows:
       - orb-tools/publish:
           name: "publish-dev"
           orb-name: << pipeline.parameters.orb_repo >>
-          context: << pipeline.parameters.auth_context >>
+          context: << pipeline.parameters.secrets >>
           github-token: "GH_TOKEN"
           vcs-type: << pipeline.project.type >>
           requires: [ orb-tools/lint, orb-tools/pack, bats/run, shellcheck/check ]
@@ -124,7 +124,7 @@ workflows:
             branches:
               ignore: /.*/
       - orb-publish:
-          context: << pipeline.parameters.auth_context >>
+          context: << pipeline.parameters.secrets >>
           requires: [ pack-tagged-orb ]
           filters:
             tags:
