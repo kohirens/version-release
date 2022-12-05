@@ -3,13 +3,13 @@ TriggerTagAndRelease() {
 
     # pre-checks
     if [ -n "${PARAM_GH_TOKEN_VAR}" ] && [ "${PARAM_GH_TOKEN_VAR}" != "GH_TOKEN" ]; then
-        echo "Setting the GH_TOKEN environment variable"
+        echo "Setting the GH_TOKEN environment variable."
         export GH_TOKEN="${!PARAM_GH_TOKEN_VAR}"
     fi
 
-    if [ -z "${PARAM_CIRCLE_TOKEN}" ]; then
-        echo "environment variable name that should point to a CircleCI token is empty."
-        echo "Please set the docs for the tag-and-release job parameter \"circle_token_var\" and try again."
+    if [ -z "${CIRCLE_TOKEN}" ] && [ -z "${!PARAM_CIRCLE_TOKEN_VAR}" ]; then
+        echo "Unable to find a CircleCI API Token in the environment."
+        echo "Please see the docs for \"circle_token_var\" parameter in the tag-and-release job."
         exit 1
     fi
 
@@ -66,7 +66,7 @@ TriggerPipeline() {
     resultFile="/tmp/curl-result.txt"
     echo "circleci project URL: ${projectUrl}"
 
-    curl -u "${!PARAM_CIRCLE_TOKEN}": -X POST --header "Content-Type: application/json" -d @pipelineparams.json \
+    curl -u "${!PARAM_CIRCLE_TOKEN_VAR}": -X POST --header "Content-Type: application/json" -d @pipelineparams.json \
       "${projectUrl}" -o "${resultFile}"
 
     resultMessage=$(jq -r .message < ${resultFile})
