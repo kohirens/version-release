@@ -47,6 +47,10 @@ parameters:
     type: boolean
     default: true
   gh_token:
+    description: Obsolete, use gh_token_var.
+    type: env_var_name
+    default: GH_TOKEN
+  gh_token_var:
     description: Name of the environment variable holding the GitHub API token.
     type: env_var_name
     default: GH_TOKEN
@@ -95,6 +99,7 @@ steps:
         PARAM_COMMIT_FILE: "<< parameters.commit_file >>"
         PARAM_CONFIG_FILE: "<< parameters.chglog_config_file >>"
         PARAM_GH_SERVER: "<< parameters.github_server >>"
+        PARAM_GH_TOKEN_VAR: "<< parameters.gh_token_var >>"
       name: Commit and merge the CHANGELOG updates
       command: << include(scripts/publish-changelog.sh) >>
   - persist_to_workspace:
