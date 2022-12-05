@@ -2,6 +2,12 @@
 ## [Unreleased]
 
 
+<a name="2.3.5"></a>
+## [2.3.5] - 2022-12-05
+### Fixed
+- Setting CircleCI API Token from Parameter
+
+
 <a name="2.3.4"></a>
 ## [2.3.4] - 2022-12-05
 ### Fixed
@@ -409,7 +415,8 @@
 - Sample command and job.
 
 
-[Unreleased]: https://github.com/kohirens/version-release-orb/compare/2.3.4...HEAD
+[Unreleased]: https://github.com/kohirens/version-release-orb/compare/2.3.5...HEAD
+[2.3.5]: https://github.com/kohirens/version-release-orb/compare/2.3.4...2.3.5
 [2.3.4]: https://github.com/kohirens/version-release-orb/compare/2.3.3...2.3.4
 [2.3.3]: https://github.com/kohirens/version-release-orb/compare/2.3.2...2.3.3
 [2.3.2]: https://github.com/kohirens/version-release-orb/compare/2.3.1...2.3.2
