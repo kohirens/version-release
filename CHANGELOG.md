@@ -2,6 +2,12 @@
 ## [Unreleased]
 
 
+<a name="2.3.2"></a>
+## [2.3.2] - 2022-12-05
+### Changed
+- Append gh_token_var Parameter To The publish-changelog Job
+
+
 <a name="2.3.1"></a>
 ## [2.3.1] - 2022-12-04
 ### Changed
@@ -388,7 +394,8 @@
 - Sample command and job.
 
 
-[Unreleased]: https://github.com/kohirens/version-release-orb/compare/2.3.1...HEAD
+[Unreleased]: https://github.com/kohirens/version-release-orb/compare/2.3.2...HEAD
+[2.3.2]: https://github.com/kohirens/version-release-orb/compare/2.3.1...2.3.2
 [2.3.1]: https://github.com/kohirens/version-release-orb/compare/2.3.0...2.3.1
 [2.3.0]: https://github.com/kohirens/version-release-orb/compare/2.2.3...2.3.0
 [2.2.3]: https://github.com/kohirens/version-release-orb/compare/2.2.2...2.2.3
