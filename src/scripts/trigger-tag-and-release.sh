@@ -18,8 +18,9 @@ TriggerTagAndRelease() {
     fi
 
     if [ -z "${GH_TOKEN}" ]; then
-        echo "No Github write token was set en the environment variable  \"${PARAM_GH_TOKEN}\"."
-        echo "Please set the variable and try again."
+        echo "No GitHub write token found."
+        echo "Please set the environment variable GH_TOKEN."
+        echo "You can also specify which environment variable to use, see \"gh_token_var\" parameter in the publish-changelog job."
         exit 1
     fi
 

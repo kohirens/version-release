@@ -93,7 +93,6 @@ steps:
   - run:
       environment:
         PARAM_CHANGELOG_FILE: "<< parameters.changelog_file >>"
-        PARAM_CIRCLE_TOKEN_VAR: "<< parameters.circle_token_var >>"
         PARAM_BRANCH: "<< parameters.branch >>"
         PARAM_MERGE_TYPE: "<< parameters.merge_type >>"
         PARAM_COMMIT_FILE: "<< parameters.commit_file >>"
@@ -109,5 +108,7 @@ steps:
       condition: << parameters.trigger_tag_and_release >>
       steps:
         - trigger-tag-and-release:
+            circle_token_var: "<< parameters.circle_token_var >>"
             circleci_api_host: "<< parameters.circleci_api_host >>"
             circleci_app_host: "<< parameters.circleci_app_host >>"
+            gh_token_var: "<< parameters.gh_token_var >>"
