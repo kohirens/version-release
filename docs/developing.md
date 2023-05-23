@@ -51,6 +51,14 @@ In case you have not registered the namespace (only needed once):
 circleci namespace create kohirens github kohirens
 ```
 
+NOTE: If you are having trouble making your namespace with a GitHub org name
+then use the option to make it from the Org ID. You can get the org ID from
+your Circle CI organizations context page. For example:
+
+```shell
+circleci namespace create NamespaceName --org-id "your-org-id-here"
+```
+
 ```shell
 circleci orb create kohirens/version-release
 ```
