@@ -73,6 +73,7 @@ jobs:
               echo "no tag found in order to publish Orb"
               exit 1
             fi
+            circleci orb --skip-update-check pack src > orb.yml
             circleci orb --skip-update-check validate orb.yml
             circleci orb publish --skip-update-check orb.yml << pipeline.parameters.orb_repo >>@${GIT_TAG} --token ${CIRCLE_TOKEN}
 
@@ -113,16 +114,9 @@ workflows:
           parameters: '{ "continued_automation": "integration-test" }'
       - choose-a-workflow:
           filters: { branches: { only: main } }
-      - orb-tools/pack:
-          name: "pack-tagged-orb"
-          filters:
-            tags:
-              only: /^v?\d+\.\d+\.\d+$/
-            branches:
-              ignore: /.*/
       - orb-publish:
           context: << pipeline.parameters.secrets >>
-          requires: [ pack-tagged-orb ]
+          requires: [ choose-a-workflow ]
           filters:
             tags:
               only: /^v?\d+\.\d+\.\d+$/
