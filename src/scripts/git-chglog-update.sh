@@ -3,12 +3,6 @@ GitChglogUpdate() {
 
     cd "${PARAM_REPOSITORY_PATH}" || exit
 
-    echo
-    echo
-    pwd
-    echo
-    echo
-
     if [ -z "${hasTag}" ]; then
         echo "no tags found"
         git-chglog --output "${PARAM_CHANGELOG_FILE}" -c "${PARAM_CONFIG_FILE}" --next-tag=0.1.0
