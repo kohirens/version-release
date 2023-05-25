@@ -68,6 +68,7 @@ MergeChangelog() {
         gh pr merge --auto "--${PARAM_MERGE_TYPE}"
 
         waitForPrToMerge
+        sleep 3
         echo "trigger-tag-and-release" > trigger.txt
         echo
         echo

@@ -85,6 +85,9 @@ steps:
   - add_ssh_keys:
       fingerprints:
         - << parameters.ssh_finger >>
+  - run:
+      name: "3 second delay"
+      command: sleep 3
   - add-missing-chglog-config:
       chglog_config_file: "<< parameters.chglog_config_file >>"
   - git-chglog-update:
