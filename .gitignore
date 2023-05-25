@@ -6,6 +6,7 @@
 
 # Files
 # -----
+/.docker/app.env
 /build-version.json
 /really-i-need-a-file.txt
 /vro/info.go

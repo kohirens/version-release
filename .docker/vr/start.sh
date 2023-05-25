@@ -8,12 +8,12 @@
 set -e
 
 shutd () {
-    printf "Shutting down the container gracefully..."
+    printf "%s" "Shutting down the container gracefully..."
     # You can run clean commands here!
-    printf "done\n"
+    echo "done"
 }
 
-trap 'shutd' SIGTERM
+trap 'shutd' TERM
 
 echo "Starting up..."
 
