@@ -41,8 +41,7 @@ jobs:
   debug-info:
     executor: vro/default
     steps:
-      - attach_workspace:
-          at: '.'
+      - attach_workspace: { at: '.' }
       - run:
           name: "Debug info"
           command: |
@@ -66,8 +65,6 @@ jobs:
     executor: cli/default
     steps:
       - checkout
-      - attach_workspace:
-          at: '.'
       - run:
           name: "Publish Orb"
           command: |
