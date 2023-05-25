@@ -21,6 +21,10 @@ parameters:
     description: Location of a git repository.
     type: string
     default: "."
+  triggered_flow:
+    default: ""
+    description: Workflow to be executed.
+    type: string
 
 steps:
   - git-chglog-update:
@@ -32,5 +36,6 @@ steps:
         PARAM_CHANGELOG_PATH: "<< parameters.changelog_path >>"
         PARAM_GENERATED_WORKFLOW_PATH: "<< parameters.generated_workflow_path >>"
         PARAM_CONTINUE_PARAMETERS_PATH: "<< parameters.continue_parameters_path >>"
+        PARAM_TRIGGERED_FLOW: "<< parameters.triggered_flow >>"
       name: "Generate a workflow"
       command: << include(scripts/generate-workflow.sh) >>
