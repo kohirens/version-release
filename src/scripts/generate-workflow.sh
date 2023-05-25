@@ -62,7 +62,10 @@ GenerateAWorkflow() {
     generatePublishChangelogWorkflow
 
     generateTagAndReleaseWorkflow
-
+    if [ -n "${PARAM_TRIGGERED_FLOW}" ]; then
+        echo "triggering workflow ${PARAM_TRIGGERED_FLOW}"
+        echo "{ \"triggered_flow\": \"${PARAM_TRIGGERED_FLOW}\" }" > "${PARAM_CONTINUE_PARAMETERS_PATH}"
+    fi
     if [ ! -f "${PARAM_GENERATED_WORKFLOW_PATH}" ] || [ ! -f "${PARAM_CONTINUE_PARAMETERS_PATH}" ]; then
         echo "Failed to generate the workflow files, cannot continue."
         exit 1
@@ -74,4 +77,5 @@ GenerateAWorkflow() {
 ORB_TEST_ENV="bats-core"
 if [ "${0#*"${ORB_TEST_ENV}"}" = "$0" ]; then
     GenerateAWorkflow
+    debugGeneratedWorkflow "${PARAM_CONTINUE_PARAMETERS_PATH}"
 fi

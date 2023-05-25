@@ -1,0 +1,77 @@
+description: |2
+  Selects a workflow to execute when code is merged into main.
+
+parameters:
+  circleci_api_host:
+    type: string
+    default: "https://circleci.com"
+    description: Host URL of CircleCI API, i.e. https://circleci.com
+  circleci_app_host:
+    type: string
+    default: "https://app.circleci.com"
+    description: Host URL of CircleCI Web UI, i.e. https://app.circleci.com
+  circle_token_var:
+    description: Set the environment variable that has the CircleCI API token.
+    type: env_var_name
+    default: CIRCLE_TOKEN
+  changelog_file:
+    description: Location to output/update the CHANGELOG file.
+    type: string
+    default: "CHANGELOG.md"
+  do_checkout:
+    description: In case you need to customize.
+    type: boolean
+    default: true
+  git_chglog_config_file:
+    type: string
+    default: ".chglog/config.yml"
+    description: Location of a git-chglog configuration file.
+  github_token_var:
+    description: Name of the environment variable holding the GitHub API token.
+    type: env_var_name
+    default: GH_TOKEN
+  github_server:
+    description: Github server domain.
+    type: string
+    default: "github.com"
+  main_trunk_branch:
+    description: Name of the main trunk branch to tag.
+    type: string
+    default: "main"
+  ssh_finger:
+    description: |2
+      Fingerprint of an SSH key that can be used to perform a merge into a
+      branch.
+    type: string
+  vcs_type:
+    type: enum
+    default: "gh"
+    enum: ["gh"]
+    description: VCS type. Only Github `gh` is supported. No BitBucket `bb` yet.
+  working_directory:
+    description: In case you need to customize, defaults to the current dir.
+    type: string
+    default: .
+
+executor: default
+
+steps:
+  - when:
+      condition: << parameters.do_checkout >>
+      steps:
+        - checkout
+  - add_ssh_keys:
+      fingerprints:
+        - << parameters.ssh_finger >>
+  - run:
+      environment:
+        PARAM_CIRCLECI_API_HOST: "<< parameters.circleci_api_host >>"
+        PARAM_CIRCLECI_APP_HOST: "<< parameters.circleci_app_host >>"
+        PARAM_CHANGELOG_FILE: "<< parameters.changelog_file >>"
+        PARAM_GH_SERVER: "<< parameters.github_server >>"
+        PARAM_GIT_CHGLOG_CONFIG_FILE: "<< parameters.git_chglog_config_file >>"
+        PARAM_MAIN_TRUNK_BRANCH: "<< parameters.main_trunk_branch >>"
+        PARAM_VCS_TYPE: "<< parameters.vcs_type >>"
+        PARAM_WORKING_DIRECTORY: "<< parameters.working_directory >>"
+      name: Select which workflow to execute when code is merged into main.
+      command: << include(scripts/workflow-selector.sh) >>
