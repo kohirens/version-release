@@ -1,46 +1,28 @@
 version: 2.1
 # This config should only be run on the main trunk branch
 orbs:
-  # For CircleCI Server, some Orbs like `orb-tools` will need the correct URL of the server.
-  # You can set the project environment variable CIRCLECI_CLI_HOST="https://circleci.server.domain", for example,
-  # so that it is available for all jobs. You should also set CIRCLECI_CLI_TOKEN for authentication.
-  vro: << pipeline.parameters.orb_repo >>@<<pipeline.parameters.dev-orb-version>>
-  orb-tools: circleci/orb-tools@11.2.0
-  cli: circleci/circleci-cli@0.1.8
+  vro: kohirens/version-release@2.3.5
 
-# Pipeline Parameters
-# also see: https://circleci.com/docs/2.0/pipeline-variables/
 parameters:
-  dev-orb-version:
-    description: >
-      The development version of the orb to test.
-      This value is automatically adjusted by the "trigger-integration-tests-workflow" job to correspond with the specific version created by the commit and should not be edited.
-      A "dev:alpha" version must exist for the initial pipeline run.
-    type: string
-    default: "dev:alpha"
-  ssh-finger:
-    description: SSH fingerprint.
-    type: string
-    default: "0a:16:aa:bf:a7:8b:2a:68:aa:62:28:63:20:11:62:4a"
-  orb_repo:
-    description: Orb repository
-    type: string
-    default: "kohirens/version-release"
-  secrets:
-    description: "Context containing keys for auth."
-    type: string
-    default: "kohirens-automation"
   continued_automation:
     description: Automation workflow description
     type: string
     default: ""
+  ctx_auto_release:
+    description: "Context containing keys for auth."
+    type: string
+    default: "kohirens-automation"
+  triggered_flow:
+    default: ""
+    description: Trigger workflow.
+    type: string
 
 workflows:
   publish-a-release:
     when:
       and:
-        - equal: [ << pipeline.git.branch >>, "main" ]
-        - equal: [ << pipeline.parameters.continued_automation >>, "publish-new-tag" ]
+        - equal: ["main", << pipeline.git.branch >>]
+        - equal: ["tag-and-release", << pipeline.parameters.triggered_flow >>]
     jobs:
       - vro/tag-and-release:
-          context: << pipeline.parameters.secrets >>
+          context: << pipeline.parameters.ctx_auto_release >>

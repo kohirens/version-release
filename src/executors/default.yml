@@ -1,7 +1,13 @@
 description: >
   version release executor with git-tool-belt.
+
+parameters:
+  exec_img_tag:
+    type: string
+    default: "latest"
+
 docker:
-  - image: 'kohirens/version-release:latest'
+  - image: kohirens/version-release:<< parameters.exec_img_tag >>
     auth:
       username: ${DH_USER}
       password: ${DH_PASS}

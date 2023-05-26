@@ -10,54 +10,44 @@ description: |2
 
   We use a PR instead of a push in case the branch is protected from direct pushes.
 parameters:
-  branch:
-    description: Name of the branch to merge into.
+  attach_workspace_path:
+    description: Set where to attach the workspace.
     type: string
-    default: "main"
+    default: "."
   changelog_file:
     description: Location to output/update the CHANGELOG file.
     type: string
     default: "CHANGELOG.md"
-  chglog_conf_dir:
-    description: Location to output/update the CHANGELOG file.
-    type: string
-    default: ".chglog"
-  chglog_config_file:
-    type: string
-    default: ".chglog/config.yml"
-    description: Location of a git-chglog configuration file.
-  circleci_api_host:
-    type: string
-    default: "https://circleci.com"
-    description: Host URL of CircleCI API, i.e. https://circleci.com
-  circleci_app_host:
-    type: string
-    default: "https://app.circleci.com"
-    description: Host URL of CircleCI Web UI, i.e. https://app.circleci.com
-  circle_token_var:
-    description: Set the environment variable that has the CircleCI API token.
-    type: env_var_name
-    default: CIRCLE_TOKEN
-  commit_file:
-    description: Name of the file to set the commit hash to tag.
-    type: string
-    default: "commit-to-tag.txt"
+  do_attach_workspace:
+    description: >
+      Set this to `true` to attaching the workspace or false to skip this step.
+      If you do set this to false, then you may want to set `do_checkout` to
+      true.
+    type: boolean
+    default: false
   do_checkout:
-    description: In case you need to customize.
+    description: >
+      Set this to true to perform a checkout step, or false to skip.
+      If you do set this to false, then you may want to set
+      `do_attach_workspace` to true.
     type: boolean
     default: true
-  gh_token:
-    description: Obsolete, use gh_token_var.
-    type: env_var_name
-    default: GH_TOKEN
-  gh_token_var:
-    description: Name of the environment variable holding the GitHub API token.
-    type: env_var_name
-    default: GH_TOKEN
+  exec_img_tag:
+    default: "latest"
+    description: Version of the executor image to pull.
+    type: string
+  git_chglog_config_file:
+      type: string
+      default: ".chglog/config.yml"
+      description: Location of a git-chglog configuration file.
   github_server:
     description: Github server domain.
     type: string
     default: "github.com"
+  main_trunk_branch:
+      description: Name of the main trunk branch to tag.
+      type: string
+      default: "main"
   merge_type:
     description: Type of merge to perform, choose between merge|squash|rebase.
     type: enum
@@ -66,52 +56,35 @@ parameters:
   ssh_finger:
     description: Fingerprint of an SSH key that can be used to perform a merge into a branch.
     type: string
-  trigger_tag_and_release:
-    description: Trigger tag and release via script.
-    type: boolean
-    default: true
   working_directory:
-    description: In case you need to customize.
+    description: In case you need to customize, defaults to the current dir.
     type: string
-    default: "~/project"
+    default: .
 
-executor: default
-working_directory: "<< parameters.working_directory >>"
+executor:
+  name: default
+  exec_img_tag: << parameters.exec_img_tag >>
+
 steps:
   - when:
       condition: << parameters.do_checkout >>
       steps:
         - checkout
+  - when:
+      condition: << parameters.do_attach_workspace >>
+      steps:
+        - attach_workspace:
+            at: "<< parameters.attach_workspace_path >>"
   - add_ssh_keys:
       fingerprints:
         - << parameters.ssh_finger >>
   - run:
-      name: "3 second delay"
-      command: sleep 3
-  - add-missing-chglog-config:
-      chglog_config_file: "<< parameters.chglog_config_file >>"
-  - git-chglog-update:
-      chglog_config_file: "<< parameters.chglog_config_file >>"
-      changelog_file: "<< parameters.changelog_file >>"
-  - run:
       environment:
+        PARAM_MAIN_TRUNK_BRANCH: "<< parameters.main_trunk_branch >>"
         PARAM_CHANGELOG_FILE: "<< parameters.changelog_file >>"
-        PARAM_BRANCH: "<< parameters.branch >>"
-        PARAM_MERGE_TYPE: "<< parameters.merge_type >>"
-        PARAM_COMMIT_FILE: "<< parameters.commit_file >>"
-        PARAM_CONFIG_FILE: "<< parameters.chglog_config_file >>"
         PARAM_GH_SERVER: "<< parameters.github_server >>"
-        PARAM_GH_TOKEN_VAR: "<< parameters.gh_token_var >>"
+        PARAM_GIT_CHGLOG_CONFIG_FILE: "<< parameters.git_chglog_config_file >>"
+        PARAM_MERGE_TYPE: "<< parameters.merge_type >>"
+        PARAM_WORKING_DIRECTORY: "<< parameters.working_directory >>"
       name: Commit and merge the CHANGELOG updates
       command: << include(scripts/publish-changelog.sh) >>
-  - persist_to_workspace:
-      root: "."
-      paths: [ "<< parameters.commit_file >>", "<< parameters.chglog_conf_dir >>" ]
-  - when:
-      condition: << parameters.trigger_tag_and_release >>
-      steps:
-        - trigger-tag-and-release:
-            circle_token_var: "<< parameters.circle_token_var >>"
-            circleci_api_host: "<< parameters.circleci_api_host >>"
-            circleci_app_host: "<< parameters.circleci_app_host >>"
-            gh_token_var: "<< parameters.gh_token_var >>"
