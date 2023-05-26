@@ -116,7 +116,6 @@ workflows:
           filters: { branches: { only: main } }
       - orb-publish:
           context: << pipeline.parameters.secrets >>
-          requires: [ choose-a-workflow ]
           filters:
             tags:
               only: /^v?\d+\.\d+\.\d+$/
