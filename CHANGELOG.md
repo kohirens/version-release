@@ -2,6 +2,9 @@
 ## [Unreleased]
 
 
+<a name="2.4.2"></a>
+## [2.4.2] - 2023-05-26
+
 <a name="2.4.1"></a>
 ## [2.4.1] - 2023-05-26
 ### Fixed
@@ -433,7 +436,8 @@
 - Sample command and job.
 
 
-[Unreleased]: https://github.com/kohirens/version-release-orb/compare/2.4.1...HEAD
+[Unreleased]: https://github.com/kohirens/version-release-orb/compare/2.4.2...HEAD
+[2.4.2]: https://github.com/kohirens/version-release-orb/compare/2.4.1...2.4.2
 [2.4.1]: https://github.com/kohirens/version-release-orb/compare/2.4.0...2.4.1
 [2.4.0]: https://github.com/kohirens/version-release-orb/compare/2.3.5...2.4.0
 [2.3.5]: https://github.com/kohirens/version-release-orb/compare/2.3.4...2.3.5
