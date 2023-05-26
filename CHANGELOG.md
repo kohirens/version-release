@@ -3,7 +3,7 @@
 
 
 <a name="2.4.1"></a>
-## [2.4.1] - 2023-05-25
+## [2.4.1] - 2023-05-26
 ### Fixed
 - Orb Publish On Tag Release
 
