@@ -1,4 +1,5 @@
 trigger_workflow() {
+    git-chglog --version
     vro workflow-selector \
         "${PARAM_CHANGELOG_FILE}" \
         "${PARAM_MAIN_TRUNK_BRANCH}" \

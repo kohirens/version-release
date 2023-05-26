@@ -22,6 +22,10 @@ parameters:
     description: In case you need to customize.
     type: boolean
     default: true
+  exec_img_tag:
+    default: "latest"
+    description: Version of the executor image to pull.
+    type: string
   git_chglog_config_file:
     type: string
     default: ".chglog/config.yml"
@@ -53,7 +57,9 @@ parameters:
     type: string
     default: .
 
-executor: default
+executor:
+  name: default
+  exec_img_tag: << parameters.exec_img_tag >>
 
 steps:
   - when:

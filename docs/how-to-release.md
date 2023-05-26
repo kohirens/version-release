@@ -8,12 +8,15 @@ development life cycle, which the Version Release Orb provides.
 1. Read [Setup SSH Keys](/docs/setup-keys.md)
 2. Add a [git-chglog] config to your repo.
 3. Add the [auto-release] workflow to your CI config.
-4. If using CircleCI Server ensure the environment variables
-   `CIRCLECI_API_HOST` and `CIRCLECI_APP_HOST` are set. For example:
-   ```shell
-   CIRCLECI_API_HOST="https://cirlceci.com"
-   CIRCLECI_APP_HOST="https://app.cirlceci.com"
+4. When using a private CircleCI Server ensure you set the parameters
+   `circleci_api_host` and `circleci_app_host` to the correct values. This will
+   allow the workflow-selector workflow to pipeline to trigger workflow on the
+   CI server. For example:
+   ```yaml
+   circleci_api_host="https://api.example-circleci.com"
+   circleci_app_host="https://app.example-circleci.com"
    ```
+   Otherwise the jobs will fail since it will look at public Circle CI server.
 
 ## Get Started
 
@@ -49,6 +52,8 @@ to increment the version number accordingly.
 | Manual       |     | Major           |     | Minor  |     | Patch                             |
 |--------------|-----|-----------------|-----|--------|-----|-----------------------------------|
 | rel: [x.x.x] | \>  | BREAKING CHANGE | \>  | `add:` | \>  | `chg:` or `dep:` `fix:` or `rmv:` |
+
+NOTE: This is an abomination and should never be used.
 
 ## Incrementing the Major
 

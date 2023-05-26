@@ -23,8 +23,8 @@ usage:
 
   parameters:
     ctx_auto_release:
-      default: "auto-release-vars: CIRCLE_TOKEN, GH_TOKEN"
-      description: Release automation secrets.
+      default: "auto-release-vars"
+      description: Release automation secrets CIRCLE_TOKEN and GH_TOKEN
       type: string
     ssh_finger:
       description: Fingerprint of an SSH key to allow writing back to the repo.
@@ -42,16 +42,16 @@ usage:
     workflow-selector:
       when:
         and:
-          - equal: ["workflow-selector", << pipeline.triggered_flow >>]
+          - equal: ["workflow-selector", << pipeline.parameters.triggered_flow >>]
           - equal: [ main, << pipeline.git.branch >> ]
       jobs:
-        - vro/workflow-selector:
+        - vr/workflow-selector:
             context: << pipeline.parameters.ctx_auto_release >>
 
     publish-changelog:
       when:
         and:
-          - equal: ["publish-changelog", << pipeline.triggered_flow >>]
+          - equal: ["publish-changelog", << pipeline.parameters.triggered_flow >>]
       jobs:
         - vr/publish-changelog:
             context: << pipeline.parameters.ctx_auto_release >>
@@ -63,12 +63,13 @@ usage:
           - equal: ["publish-release-tag", << pipeline.parameters.triggered_flow >>]
       jobs:
         - vr/tag-and-release:
-            context: orb-publishing
+            context: << pipeline.parameters.ctx_auto_release >>
 
     # Triggered by Circle after the publish-release-tag workflow completes.
     on-tag-release:
       jobs:
         - add-your-jobs-here:
+            context: << pipeline.parameters.ctx_auto_release >>
             filters:
               tags:
                 only: /^v?\d+\.\d+\.\d+$/

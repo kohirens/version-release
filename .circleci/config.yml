@@ -3,55 +3,72 @@ version: 2.1
 setup: true
 
 orbs:
-  vro: << pipeline.parameters.orb_repo >>@<<pipeline.parameters.dev-orb-version>>
-  orb-tools: circleci/orb-tools@11.2.0
+  vro: kohirens/version-release@2.3.5
+  orb-tools: circleci/orb-tools@12.0.3
   bats: circleci/bats@1.0.0
   shellcheck: circleci/shellcheck@3.1.1
-  cli: circleci/circleci-cli@0.1.9
   continuation: circleci/continuation@0.3.1
+  cli: circleci/circleci-cli@0.1.9
 
-# Pipeline Parameters
-# also see: https://circleci.com/docs/2.0/pipeline-variables/
+filter-semantic-tag: &filter-semantic-tag
+    tags:
+        only: /^v?\d+\.\d+\.\d+$/
+    branches:
+        ignore: /.*/
+
 parameters:
-  dev-orb-version:
+  ctx_auto_release:
+    default: "kohirens-automation"
+    description: Release automation
+    type: string
+  ctx_docker_hub:
+    default: "kohirens-automation-dockerhub"
+    description: Container automation
+    type: string
+  orb_version:
+    default: "dev:alpha"
     description: >
       The development version of the orb to test.
       This value is automatically adjusted by the "trigger-integration-tests-workflow" job to correspond with the specific version created by the commit and should not be edited.
       A "dev:alpha" version must exist for the initial pipeline run.
     type: string
-    default: "dev:alpha"
-  ssh-finger:
-    description: SSH fingerprint.
-    type: string
-    default: "0a:16:aa:bf:a7:8b:2a:68:aa:62:28:63:20:11:62:4a"
   orb_repo:
+    default: "kohirens/version-release"
     description: Orb repository
     type: string
-    default: "kohirens/version-release"
-  secrets:
-    description: "Context containing keys for auth."
+  triggered_flow:
+    default: ""
+    description: Workflow to be executed.
     type: string
-    default: "kohirens-automation"
-  changelog_path:
-    description: "Path to the changelog file."
-    type: string
-    default: "CHANGELOG.md"
+
+executors:
+  image-builder:
+    docker: # see https://circleci.com/docs/building-docker-images/#docker-version
+      - image: docker:20.10.18-git
+        auth:
+          username: ${DH_USER}
+          password: ${DH_PASS}
+    resource_class: small
+  kohirens-ci:
+    docker: # see https://circleci.com/developer/images/image/cimg/base
+      - image: cimg/base:edge
+        auth:
+          username: ${DH_USER}
+          password: ${DH_PASS}
+    resource_class: small
 
 jobs:
-  debug-info:
-    executor: vro/default
+  co:
+    executor: image-builder
     steps:
-      - attach_workspace: { at: '.' }
-      - run:
-          name: "Debug info"
-          command: |
-            wd=$(pwd)
-            who=$(whoami)
-            printf "current directory: %s\n" "${wd}"
-            printf "current user: %s\n" "${who}"
-            echo "list current directory contents:"
-            ls -la .
+      - checkout
+      - persist_to_workspace: { root: ".",  paths: [ "*" ] }
   choose-a-workflow:
+    parameters:
+      triggered_flow:
+        default: ""
+        description: Determines which workflow to trigger using the Circle API.
+        type: string
     executor: vro/default
     steps:
       - checkout
@@ -62,62 +79,132 @@ jobs:
           configuration_path: ".circleci/generated-config.yml"
           parameters: ".circleci/generated-parameters.json"
   orb-publish:
+    parameters:
+      ver_tag:
+        default: "dev:alpha"
+        description: version tag for the image
+        type: string
     executor: cli/default
     steps:
-      - checkout
+      - attach_workspace: { at: "." }
       - run:
           name: "Publish Orb"
           command: |
-            GIT_TAG=$(git tag --points-at HEAD)
-            if [ -z "${GIT_TAG}" ]; then
+            BUILD_VER=<<parameters.ver_tag>>
+            if [ -z "${BUILD_VER}" ]; then
               echo "no tag found in order to publish Orb"
               exit 1
             fi
             circleci orb --skip-update-check pack src > orb.yml
             circleci orb --skip-update-check validate orb.yml
-            circleci orb publish --skip-update-check orb.yml << pipeline.parameters.orb_repo >>@${GIT_TAG} --token ${CIRCLE_TOKEN}
-
+            circleci orb publish --skip-update-check orb.yml << pipeline.parameters.orb_repo >>@${BUILD_VER} --token ${CIRCLE_TOKEN}
+  publish-image:
+    parameters:
+      ver_tag:
+        default: "latest"
+        description: version tag for the image
+        type: string
+      image_repo:
+        type: string
+    environment:
+      DOCKER_BUILDKIT: 1
+    executor: image-builder
+    steps:
+      - attach_workspace: { at: "." }
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - run:
+          name: Build and push Docker image
+          command: |
+            export BUILD_VER="<<parameters.ver_tag>>"
+            if [ -z "${BUILD_VER}" ]; then
+                echo "ver_tag parameters is not set, or is empty"
+                exit 1
+            fi
+            export DH_IMAGE="<<parameters.image_repo>>"
+            echo "${DH_PASS}" | docker login -u "${DH_USER}" --password-stdin
+            echo ""
+            echo "Building ${DH_IMAGE} Version \"${BUILD_VER}\""
+            docker build --rm \
+                -f .docker/vr/Dockerfile \
+                -t "${DH_IMAGE}" \
+                -t "${DH_IMAGE}:${BUILD_VER}" \
+                --progress plain \
+                --target "release" .
+            echo ""
+            echo "Pushing ${DH_IMAGE} Version \"${BUILD_VER}\""
+            docker push "${DH_IMAGE}:${BUILD_VER}"
+            echo ""
+            echo "Cleaning up ${DH_IMAGE} Version \"${BUILD_VER}\""
+            docker rmi "${DH_IMAGE}:${BUILD_VER}"
 
 branches-to-skip: &branches-to-skip
   branches:
-    ignore: /main|updated-changelog-skip-ci|auto-update-changelog/
+    ignore: /main|auto-update-changelog/
+
+pre-attach: &pre-attach
+  - attach_workspace: { at: "." }
 
 workflows:
-  workflow-picker:
+  quality-checks:
     jobs:
-      - orb-tools/lint:
-          filters: *branches-to-skip
-      - orb-tools/pack:
-          filters: *branches-to-skip
-      - shellcheck/check:
-          dir: ./src/scripts
-          exclude: SC2148
+      - co:
           filters: *branches-to-skip
       - bats/run:
+          pre-steps: *pre-attach
+          requires: [ co ]
           path: ./src/tests
-          filters: *branches-to-skip
+      - orb-tools/lint:
+          pre-steps: *pre-attach
+          requires: [ co ]
+      - shellcheck/check:
+          pre-steps: *pre-attach
+          requires: [ co ]
+          dir: ./src/scripts
+          exclude: SC2148
+      - publish-image:
+          name: "publish-dev-image"
+          context: << pipeline.parameters.ctx_docker_hub >>
+          requires: [ bats/run, orb-tools/lint, shellcheck/check ]
+          image_repo: << pipeline.parameters.orb_repo >>
+      - orb-tools/pack:
+          pre-steps: *pre-attach
+          checkout: false
+          requires: [ publish-dev-image ]
       - orb-tools/publish:
-          name: "publish-dev"
-          orb-name: << pipeline.parameters.orb_repo >>
-          context: << pipeline.parameters.secrets >>
-          github-token: "GH_TOKEN"
-          vcs-type: << pipeline.project.type >>
-          requires: [ orb-tools/lint, orb-tools/pack, bats/run, shellcheck/check ]
-          filters: *branches-to-skip
-      - debug-info:
-          filters: *branches-to-skip
+          name: "publish-dev-orb"
+          context: << pipeline.parameters.ctx_auto_release >>
           requires: [ orb-tools/pack ]
+          attach_workspace: true
+          checkout: false
+          github_token: "GH_TOKEN"
+          orb_name: << pipeline.parameters.orb_repo >>
+          vcs_type: << pipeline.project.type >>
       - continuation/continue: # Trigger integration test on dev:${CIRCLE_SHA1:0:7} of your orb
-          requires: [ publish-dev ]
-          configuration_path: ".circleci/integration-tests.yml"
+          requires: [ publish-dev-orb ]
           circleci_domain: "circleci.com"
+          configuration_path: ".circleci/integration-tests.yml"
           parameters: '{ "continued_automation": "integration-test" }'
+  workflow-picker:
+    jobs:
       - choose-a-workflow:
           filters: { branches: { only: main } }
+          triggered_flow: <<pipeline.parameters.triggered_flow>>
+  on-tag-release:
+    when: # see https://discuss.circleci.com/t/tag-matching-using-condition-an-example/45876
+      or:
+        - matches: { pattern: "^v?\\d+\\.\\d+\\.\\d+$", value: << pipeline.git.tag >> }
+    jobs:
       - orb-publish:
-          context: << pipeline.parameters.secrets >>
+          context: << pipeline.parameters.ctx_auto_release >>
+          ver_tag: << pipeline.git.tag >>
           filters:
-            tags:
-              only: /^v?\d+\.\d+\.\d+$/
-            branches:
-              ignore: /.*/
+              <<: *filter-semantic-tag
+      - publish-image:
+          name: "publish-prod-image"
+          context: << pipeline.parameters.ctx_docker_hub >>
+          requires: [ orb-tools/lint, orb-tools/pack, bats/run, shellcheck/check ]
+          image_repo: << pipeline.parameters.orb_repo >>
+          ver_tag: << pipeline.git.tag >>
+          filters:
+              <<: *filter-semantic-tag
