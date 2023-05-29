@@ -2,13 +2,19 @@
 # -----------
 /.idea/
 /src/tests/data/repo-*/
-/tmp/
+/vro/mock-server/request/
+/vro/mock-server/*.log
+/vro/mock-server/ssl/
+repo-*/
+tmp/
 
 # Files
 # -----
-/.docker/app.env
 /build-version.json
 /really-i-need-a-file.txt
 /vro/info.go
+/vro/mock-server/mock-server.exe
 /vro/vro.exe
+/vro/vro
+app.env
 orb.yml
