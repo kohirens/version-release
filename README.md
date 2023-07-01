@@ -1,17 +1,21 @@
 # Version Release
 
+Used in CircleCI Workflows to automatically update your CHANGELOG.md file in
+your GitHub repository.
+
 [![CircleCI](https://dl.circleci.com/status-badge/img/gh/kohirens/version-release-orb/tree/main.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/kohirens/version-release-orb/tree/main) [![CircleCI Orb Version](https://badges.circleci.com/orbs/kohirens/version-release.svg)](https://circleci.com/orbs/registry/orb/kohirens/version-release) [![GitHub License](https://img.shields.io/badge/license-MIT-lightgrey.svg)](https://raw.githubusercontent.com/kohirens/version-release-orb/master/LICENSE) [![CircleCI Community](https://img.shields.io/badge/community-CircleCI%20Discuss-343434.svg)](https://discuss.circleci.com/c/ecosystem/orbs)
 
 Provides the following features:
 
-1. Auto update the changelog from commit messages, then merge it into the main trunk
-2. Once the changelog is merged, publish a release on GitHub.
+1. Auto update the change log from commit messages, then merge it into the main trunk
+2. Once the change log is merged, publish a release on GitHub.
 
 ## Pre-requisites
 
 You will need to integrate CircleCI and GitHub so that Circle CI can perform
 actions in GitHub on your behave. This is the automation part.
-
+* GitHub repository
+* CircleCI integration
 * Make an SSH key/pair to allow Circle Ci to publish releases on your
   repository in GitHub. See [Generate An SSH Key for Circle CI]
 * Make a GitHub Personal Access token so that Circle CI can make branches,
