@@ -1,0 +1,12 @@
+description: CircleCI base image
+
+parameters:
+  exec_img_tag:
+    type: string
+    default: "2023.04"
+
+docker:
+  - image: cimg/base:<< parameters.exec_img_tag >>
+    auth:
+      username: ${DH_USER}
+      password: ${DH_PASS}
