@@ -1,0 +1,77 @@
+description: Publish an image to Docker Hub.
+
+parameters:
+    attach_workspace_path:
+        default: "."
+        description: Set where to attach the workspace.
+        type: string
+    build_context:
+        default: "."
+        description: Set where to attach the workspace.
+        type: string
+    build_args:
+        default: ""
+        description: Build arguments, for example --build-arg "foo".
+        type: string
+    do_attach_workspace:
+        default: false
+        description: |2
+          Set this to `true` to attaching the workspace or false to skip this
+          step. If you do set this to false, then you may want to set
+          `do_checkout` to true.
+        type: boolean
+    do_checkout:
+        description: |
+          Set this to true to perform a checkout step, or false to skip.
+          If you do set this to false, then you may want to set
+          `do_attach_workspace` to true.
+        type: boolean
+        default: true
+    docker_buildkit:
+        default: "1"
+        description: Set the Docker environment variable DOCKER_BUILDKIT
+        type: string
+    dockerfile:
+        default: "Dockerfile"
+        description: Path to the Docker environment variable DOCKER_BUILDKIT
+        type: string
+    image_tag:
+        default: ""
+        description: A tag to stamp the image in Docker Hub.
+        type: string
+    repository:
+        description: |2
+          Docker Hub image repository for example "kohirens/version-release".
+        type: string
+    target:
+        default: ""
+        description: |2
+          Set the build target,
+          see https://docs.docker.com/engine/reference/commandline/build/#target
+        type: string
+
+executor: cimg-base
+
+environment:
+    BUILD_ARGS: << parameters.build_args >>
+    BUILD_CONTEXT: << parameters.build_context >>
+    DOCKER_BUILDKIT: << parameters.docker_buildkit >>
+    DOCKER_FILE: << parameters.dockerfile >>
+    IMG_TAG: << parameters.image_tag >>
+    REPOSITORY: << parameters.repository >>
+    TARGET: << parameters.target >>
+
+steps:
+    - when:
+          condition: << parameters.do_checkout >>
+          steps:
+              - checkout
+    - when:
+          condition: << parameters.do_attach_workspace >>
+          steps:
+              - attach_workspace:
+                    at: << parameters.attach_workspace_path >>
+    - setup_remote_docker
+    - run:
+        name: Push Docker image
+        command: << include(scripts/publish-docker-hub.sh) >>
