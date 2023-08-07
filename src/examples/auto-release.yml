@@ -47,6 +47,7 @@ usage:
       jobs:
         - vr/workflow-selector:
             context: << pipeline.parameters.ctx_auto_release >>
+            ssh_finger: << pipeline.parameters.ssh_finger >>
 
     publish-changelog:
       when:
