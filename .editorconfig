@@ -4,7 +4,7 @@
 root = true
 
 # Standard encoding and whitespace
-[*.{css,html,js,json,md,sh,yml}]
+[*.{css,html,js,json,md,sh,yml,yaml}]
 charset = utf-8
 end_of_line = lf
 insert_final_newline = true
