@@ -2,8 +2,22 @@
 ## [Unreleased]
 
 
-<a name="2.4.2"></a>
-## [2.4.2] - 2023-05-26
+<a name="3.0.0"></a>
+## [3.0.0] - 2023-08-09
+### Added
+- workflow-selector Job
+- Publish Docker Hub Job
+- workflow-selector Job
+- Version Release Orb Container Image
+- Version Release CLI Application
+
+### Changed
+- Fixed CI Pipeline
+- Over To Use Version Release Orb CLI
+
+### Fixed
+- Auto Release
+
 
 <a name="2.4.1"></a>
 ## [2.4.1] - 2023-05-26
@@ -436,8 +450,8 @@
 - Sample command and job.
 
 
-[Unreleased]: https://github.com/kohirens/version-release-orb/compare/2.4.2...HEAD
-[2.4.2]: https://github.com/kohirens/version-release-orb/compare/2.4.1...2.4.2
+[Unreleased]: https://github.com/kohirens/version-release-orb/compare/3.0.0...HEAD
+[3.0.0]: https://github.com/kohirens/version-release-orb/compare/2.4.1...3.0.0
 [2.4.1]: https://github.com/kohirens/version-release-orb/compare/2.4.0...2.4.1
 [2.4.0]: https://github.com/kohirens/version-release-orb/compare/2.3.5...2.4.0
 [2.3.5]: https://github.com/kohirens/version-release-orb/compare/2.3.4...2.3.5
