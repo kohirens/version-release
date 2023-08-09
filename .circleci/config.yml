@@ -8,19 +8,6 @@ orbs:
     shellcheck: circleci/shellcheck@3.1.1
     vr: kohirens/version-release@<< pipeline.parameters.orb_version >>
 
-filter-semantic-tag: &filter-semantic-tag
-    tags:
-        only: /^v?\d+\.\d+\.\d+$/
-    branches:
-        ignore: /.*/
-
-main-filter: &branches-to-skip
-    branches:
-        ignore: /main|auto-update-changelog/
-
-pre-attach: &pre-attach
-    - attach_workspace: { at: "." }
-
 parameters:
     ctx_auto_release:
         default: "kohirens-automation"
@@ -29,6 +16,9 @@ parameters:
     ctx_docker_hub:
         default: "kohirens-automation-dockerhub"
         description: Container automation
+        type: string
+    exec_img_tag:
+        default: "latest"
         type: string
     orb_version:
         default: "dev:alpha"
@@ -41,22 +31,18 @@ parameters:
         default: "kohirens/version-release"
         description: Orb repository
         type: string
-    triggered_flow:
-        default: ""
-        description: Workflow to be executed.
-        type: string
-    continued_automation:
-        default: ""
-        description: Automation workflow description
-        type: string
-    ssh_finger:
-        description: SSH fingerprint.
-        type: string
-        default: "0a:16:aa:bf:a7:8b:2a:68:aa:62:28:63:20:11:62:4a"
     run_integration_tests:
         type: boolean
         default: false
         description: Run integration tests
+    ssh_finger:
+        description: SSH fingerprint.
+        type: string
+        default: "0a:16:aa:bf:a7:8b:2a:68:aa:62:28:63:20:11:62:4a"
+    triggered_flow:
+        default: ""
+        description: Workflow to be executed.
+        type: string
 
 executors:
     image-builder:
@@ -73,6 +59,20 @@ executors:
                   username: ${DH_USER}
                   password: ${DH_PASS}
         resource_class: small
+
+
+filter-semantic-tag: &filter-semantic-tag
+    tags:
+        only: /^v?\d+\.\d+\.\d+$/
+    branches:
+        ignore: /.*/
+
+main-filter: &branches-to-skip
+    branches:
+        ignore: /main|auto-update-changelog/
+
+pre-attach: &pre-attach
+    - attach_workspace: { at: "." }
 
 jobs:
     co:
@@ -187,15 +187,10 @@ workflows:
                   requires: [ co ]
                   dir: ./src/scripts
                   exclude: SC2148
-            - publish-image:
-                  name: "publish-dev-image"
-                  context: << pipeline.parameters.ctx_docker_hub >>
-                  requires: [ bats/run, orb-tools/lint, shellcheck/check ]
-                  image_repo: << pipeline.parameters.orb_repo >>
             - orb-tools/pack:
                   pre-steps: *pre-attach
                   checkout: false
-                  requires: [ publish-dev-image ]
+                  requires: [ bats/run, orb-tools/lint, shellcheck/check ]
             - orb-tools/publish:
                   name: "publish-dev-orb"
                   context: << pipeline.parameters.ctx_auto_release >>
@@ -222,6 +217,13 @@ workflows:
                   context: <<pipeline.parameters.ctx_docker_hub>>
                   filters: *branches-to-skip
                   requires: [ co ]
+            - vr/publish-docker-hub:
+                  name: "publish-dev-image"
+                  context: << pipeline.parameters.ctx_docker_hub >>
+                  requires: [ co ]
+                  dockerfile: ".docker/vr/Dockerfile"
+                  image_tag: "dev"
+                  repository: << pipeline.parameters.orb_repo >>
         when: << pipeline.parameters.run_integration_tests >>
 
     workflow-selector:
@@ -233,12 +235,6 @@ workflows:
             - vr/workflow-selector:
                   context: << pipeline.parameters.ctx_auto_release >>
                   ssh_finger: << pipeline.parameters.ssh_finger >>
-
-#    workflow-picker:
-#        jobs:
-#            - choose-a-workflow:
-#                  filters: { branches: { only: main } }
-#                  triggered_flow: <<pipeline.parameters.triggered_flow>>
 
     publish-changelog:
         when:
@@ -258,20 +254,36 @@ workflows:
                   context: << pipeline.parameters.ctx_auto_release >>
 
     on-tag-release:
-        when: # see https://discuss.circleci.com/t/tag-matching-using-condition-an-example/45876
-            or:
-                - matches: { pattern: "^v?\\d+\\.\\d+\\.\\d+$", value: << pipeline.git.tag >> }
         jobs:
-            - orb-publish:
-                  context: << pipeline.parameters.ctx_auto_release >>
-                  ver_tag: << pipeline.git.tag >>
+            - co:
                   filters:
                       <<: *filter-semantic-tag
-            - publish-image:
-                  name: "publish-prod-image"
+            - vr/publish-docker-hub:
+                  name: "publish-prod-image-latest"
                   context: << pipeline.parameters.ctx_docker_hub >>
-                  requires: [ orb-tools/lint, orb-tools/pack, bats/run, shellcheck/check ]
-                  image_repo: << pipeline.parameters.orb_repo >>
+                  requires: [ co ]
+                  filters:
+                      <<: *filter-semantic-tag
+                  do_attach_workspace: true
+                  do_checkout: false
+                  dockerfile: ".docker/vr/Dockerfile"
+                  repository: << pipeline.parameters.orb_repo >>
+                  image_tag: "latest"
+            - vr/publish-docker-hub:
+                  name: "publish-prod-image-semver"
+                  context: << pipeline.parameters.ctx_docker_hub >>
+                  requires: [ co ]
+                  filters:
+                      <<: *filter-semantic-tag
+                  do_attach_workspace: true
+                  do_checkout: false
+                  dockerfile: ".docker/vr/Dockerfile"
+                  repository: << pipeline.parameters.orb_repo >>
+                  image_tag: "<< pipeline.git.tag >>"
+            - orb-publish:
+                  name: "publish-prod-orb"
+                  context: << pipeline.parameters.ctx_auto_release >>
+                  requires: [ publish-prod-image-latest ]
                   ver_tag: << pipeline.git.tag >>
                   filters:
                       <<: *filter-semantic-tag
