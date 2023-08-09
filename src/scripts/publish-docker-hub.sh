@@ -8,8 +8,13 @@ if [ -z "${BUILD_CONTEXT}" ]; then
 fi
 
 if [ -z "${IMG_TAG}" ]; then
-    IMG_TAG=$(git describe --tags --always)
-    echo "image tag parameter is empty, defaulting to ${IMG_TAG}"
+    echo "cannot build the image, image_tag parameter is empty"
+    exit 1
+fi
+
+if [ -z "${REPOSITORY}" ]; then
+    echo "cannot build the image, repository parameter is empty"
+    exit 1
 fi
 
 export DH_IMAGE="${REPOSITORY}:${IMG_TAG}"
