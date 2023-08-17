@@ -1,14 +1,15 @@
-description: >
-  Pseudo example of how to push changes, auto update the changelog, merge it,
-  and publish a release tag for the main trunk branch.
+description: |2
+  Will trigger when changes are merged into the main trunk. A new changelog will
+  be generated and auto merged into the main trunk; then a release will be
+  published for the main trunk branch in this example.
 
   There are some prerequisites, so please go to
   https://github.com/kohirens/version-release-orb/blob/main/docs/how-to-release.md
   which provides details on how to setup the following:
 
-    1. Make a PR for any CHANGELOG entries that will also need to be merged.
-    2. Allow CircleCI to make a Github release on your behalf.
-    3. Allow CircleCI to trigger workflows using the CircleCI API.
+    1. Allow CircleCI to write back to a Github repository on your behalf
+       to make branches and pull-request, via SSH and API.
+    2. Allow CircleCI to trigger workflows using the CircleCI API.
 
   Required Environment Variables:
 
