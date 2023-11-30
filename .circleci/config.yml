@@ -3,7 +3,7 @@ version: 2.1
 orbs:
     bats: circleci/bats@1.0.0
     cli: circleci/circleci-cli@0.1.9
-    orb-tools: circleci/orb-tools@12.0.3
+    orb-tools: circleci/orb-tools@12.0.4
     ot: circleci/orb-tools@10.1.0
     shellcheck: circleci/shellcheck@3.1.1
     vr: kohirens/version-release@<< pipeline.parameters.orb_version >>
@@ -180,6 +180,7 @@ workflows:
                   requires: [ co ]
                   path: ./src/tests
             - orb-tools/lint:
+                  checkout: false
                   pre-steps: *pre-attach
                   requires: [ co ]
             - shellcheck/check:
