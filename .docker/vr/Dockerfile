@@ -4,7 +4,7 @@ ARG USER_GID='1000'
 ARG USER_GROUP='app_users'
 ARG REPO='github.com/kohirens/version-release-orb'
 
-FROM golang:1.20-alpine3.18 AS build
+FROM kohirens/go:1.21.0 AS build
 
 ARG USER_NAME
 ARG USER_UID
