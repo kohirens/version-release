@@ -5,13 +5,9 @@ import (
 	"github.com/kohirens/stdlib/cli"
 	"github.com/kohirens/stdlib/log"
 	"github.com/kohirens/version-release-orb/vro/pkg/git"
-	"github.com/kohirens/version-release-orb/vro/pkg/gitchglog"
+	"github.com/kohirens/version-release-orb/vro/pkg/gitcliff"
 	"github.com/kohirens/version-release-orb/vro/pkg/gittoolbelt"
 	"strings"
-)
-
-const (
-	cmdGitChgLog = "git-chglog"
 )
 
 func areChangelogChangesPresent(wd, chgLogFile string) (bool, error) {
@@ -38,7 +34,7 @@ func areChangelogChangesPresent(wd, chgLogFile string) (bool, error) {
 
 		// This should produce the same changelog, even if it is for a future
 		// release, and if it produces a new changelog, then ignore that.
-		if e := gitchglog.RebuildChangelog(wd, chgLogFile, sv); e != nil {
+		if e := gitcliff.RebuildChangelog(wd, chgLogFile, sv); e != nil {
 			return false, fmt.Errorf(stderr.RebuildWithChgLogCheck, chgLogFile, e.Error())
 		}
 
@@ -59,17 +55,10 @@ func areChangelogChangesPresent(wd, chgLogFile string) (bool, error) {
 // IsChangelogUpToDate Indicate if there are any changes to be added to the
 // changelog.
 func IsChangelogUpToDate(wd, chgLogFile string) (bool, error) {
-	// TODO: Submit PR to git-chglog/git-chglog so that it does not produce a
-	// todo: header when there are no commits to list for --next-tag.
-	// NOTE: If you use --next-tag, the git-chglog will produce a header even
-	// if there are no changelog updates. Running without the --next-tag should
-	// produce the same changelog or changes listed under the unreleased header.
-	// This allows better detection of true changes to the changelog.
-	// If there are, then run the RebuildChangelog which uses --next-tag.
-	// step 1: run command with not --next-tag,
+	// step 1: run command with no --bump,
 	so, se, _, co := cli.RunCommand(
 		wd,
-		cmdGitChgLog,
+		gitcliff.Cmd,
 		[]string{"--output", chgLogFile},
 	)
 
