@@ -42,6 +42,10 @@ parameters:
       description: Name of the main trunk branch to tag.
       type: string
       default: "main"
+  tag:
+    description: Environment variable to get the semver tag, will override tagged.txt.
+    type: string
+    default: "CIRCLE_TAG"
   tagged_file:
     description: File to store the semantic version that was used to tag the release.
     type: string

@@ -94,6 +94,13 @@ HEALTHCHECK --interval=5s --timeout=3s --start-period=3s --retries=4 \
 
 USER root
 
+# Update OS
+RUN apk --no-progress --purge --no-cache upgrade \
+ && apk add \
+    git-cliff \
+ && rm -vrf /var/cache/apk/* \
+ && rm -rf /tmp/*
+
 RUN rm /usr/local/bin/git-chglog
 
 USER ${USER_NAME}

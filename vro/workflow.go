@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"github.com/kohirens/stdlib/log"
 	"github.com/kohirens/version-release-orb/vro/pkg/circleci"
-	"github.com/kohirens/version-release-orb/vro/pkg/gitchglog"
+	"github.com/kohirens/version-release-orb/vro/pkg/gitcliff"
 	"github.com/kohirens/version-release-orb/vro/pkg/gittoolbelt"
 )
 
@@ -21,6 +21,8 @@ func NewWorkflow(token string, ghClient circleci.GithubClient) *Workflow {
 		Token:        token,
 	}
 }
+
+// PublishChangelog Run automation to update the CHANGELOG.md
 func (wf *Workflow) PublishChangelog(wd, chgLogFile, branch string) error {
 	// Step 1: Determine if the changelog has updates
 	isUpdated, err1 := IsChangelogUpToDate(wd, chgLogFile)
@@ -41,7 +43,7 @@ func (wf *Workflow) PublishChangelog(wd, chgLogFile, branch string) error {
 	}
 
 	// Step 3: Generate a new changelog using the version info.
-	if e := gitchglog.RebuildChangelog(wd, chgLogFile, si); e != nil {
+	if e := gitcliff.RebuildChangelog(wd, chgLogFile, si); e != nil {
 		return e
 	}
 
@@ -49,7 +51,8 @@ func (wf *Workflow) PublishChangelog(wd, chgLogFile, branch string) error {
 	return wf.GitHubClient.PublishChangelog(wd, branch, chgLogFile)
 }
 
-func (wf *Workflow) PublishReleaseTag(chgLogFile, branch, wd string) error {
+// PublishReleaseTag Publish a release on GitHub.
+func (wf *Workflow) PublishReleaseTag(branch, wd string) error {
 	// Step 1: Grab semantic version info.
 	si, err1 := gittoolbelt.Semver(wd)
 	if err1 != nil {
