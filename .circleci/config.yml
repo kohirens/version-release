@@ -21,7 +21,7 @@ parameters:
         default: "latest"
         type: string
     orb_version:
-        default: "dev:alpha"
+        default: "3.1.0"
         description: >
             The development version of the orb to test.
             This value is automatically adjusted by the "trigger-integration-tests-workflow" job to correspond with the specific version created by the commit and should not be edited.
