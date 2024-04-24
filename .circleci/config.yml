@@ -3,7 +3,6 @@ version: 2.1
 orbs:
     bats: circleci/bats@1.0.0
     cli: circleci/circleci-cli@0.1.9
-    orb-tools: circleci/orb-tools@12.0.4
     ot: circleci/orb-tools@10.1.0
     shellcheck: circleci/shellcheck@3.1.1
     vr: kohirens/version-release@<< pipeline.parameters.orb_version >>
@@ -179,33 +178,21 @@ workflows:
                   pre-steps: *pre-attach
                   requires: [ co ]
                   path: ./src/tests
-            - orb-tools/lint:
-                  checkout: false
-                  pre-steps: *pre-attach
-                  requires: [ co ]
             - shellcheck/check:
                   pre-steps: *pre-attach
                   requires: [ co ]
                   dir: ./src/scripts
                   exclude: SC2148
-            - orb-tools/pack:
-                  pre-steps: *pre-attach
-                  checkout: false
-                  requires: [ bats/run, orb-tools/lint, shellcheck/check ]
-            - orb-tools/publish:
+            - orb-publish:
                   name: "publish-dev-orb"
                   context: << pipeline.parameters.ctx_auto_release >>
-                  requires: [ orb-tools/pack ]
-                  attach_workspace: true
-                  checkout: false
-                  github_token: "GH_TOKEN"
-                  orb_name: << pipeline.parameters.orb_repo >>
-                  vcs_type: << pipeline.project.type >>
+                  requires: [ bats/run, shellcheck/check ]
+                  ver_tag: "dev:<< pipeline.git.revision >>"
             - ot/trigger-integration-tests-workflow:
                   name: trigger-integration-tests
                   context: << pipeline.parameters.ctx_auto_release >>
                   pipeline-param-map: >-
-                      {\"run_integration_tests\": true, \"orb_version\": \"dev:${CIRCLE_SHA1}\"}
+                      {\"run_integration_tests\": true, \"orb_version\": \"dev:<< pipeline.git.revision >>\"}
                   requires: [ publish-dev-orb ]
         when:
             and:
