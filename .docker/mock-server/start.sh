@@ -10,7 +10,7 @@ set -e
 shutd () {
     printf "Shutting down the container gracefully..."
     # You can run clean commands here!
-    echo "done"
+    last_signal="15"
 }
 
 trap 'shutd' TERM
@@ -29,16 +29,23 @@ gen-ss-cert.sh --company="mock-server" \
 
 mkdir -p mock-server/tmp
 
+# Run the mock server (git-web) in the background
 mock-server &
+child_proc=${!}
 
-echo "ready"
-
-if [ "${DO_STAY}" = "" ]; then
-    go test ./...
-fi
+echo "Ready!"
 
 # This keeps the container running until it receives a signal to be stopped.
 # Also very low CPU usage.
-if [ "${DO_STAY}" = "1" ]; then
-    while :; do :; done & kill -STOP $! && wait $!
+if [ "${KEEP_RUNNING}" = "1" ]; then
+    while [ "${last_signal}" != "15" ]; do
+        sleep 1
+    done
+else
+    go test ./...
 fi
+
+# kill the mock server
+kill -9 ${child_proc}
+wait ${child_proc}
+echo "done"
