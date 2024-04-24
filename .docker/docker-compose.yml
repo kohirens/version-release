@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
     cli:
         build:
@@ -14,11 +12,11 @@ services:
         image: 'kohirens/version-release:dev'
         networks:
             default:
-
         volumes:
             - '../:/home/${USER_NAME}/src/${REPO}'
             - '~/.ssh/known_hosts:/home/${USER_NAME}/.ssh/known_hosts'
             - 'vscode:/home/${USER_NAME}/.vscode-server'
+            - './vr/.ash_history:/home/circleci/.ash_history'
 
     web:
         build:
@@ -27,9 +25,15 @@ services:
             dockerfile: '.docker/mock-server/Dockerfile'
             context: '..'
         environment:
-            DO_STAY: 1
+            KEEP_RUNNING: 1
         env_file:
             - 'mock-server/integration-test.env'
+
+        develop:
+            watch:
+                - action: rebuild
+                  path: ../vro/mock-server
+                  target: /root/src/${REPO}/vro
         image: 'mock-server'
         networks:
             default:
@@ -40,7 +44,7 @@ services:
                     - "github.com"
                     - "api.github.com"
         volumes:
-            - '../:/root/src/${REPO}/'
+            - './mock-server/.ash_history:/root/.ash_history'
 
 volumes:
     vscode: null

@@ -10,15 +10,19 @@ set -e
 shutd () {
     printf "%s" "Shutting down the container gracefully..."
     # You can run clean commands here!
-    echo "done"
+    last_signal="15"
 }
 
 trap 'shutd' TERM
 
-echo "Starting up..."
+echo "Ready!"
 
 # Run non-blocking commands here
 
 # This keeps the container running until it receives a signal to be stopped.
 # Also very low CPU usage.
-while :; do :; done & kill -STOP $! && wait $!
+while [ "${last_signal}" != "15" ]; do
+    sleep 1
+done
+
+echo "done"
