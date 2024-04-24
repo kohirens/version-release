@@ -30,7 +30,7 @@ validate the orb, CI config, and get the CI pipeline working as expected.
 
 ```shell
 circleci orb pack .\src\ > orb.yml
-circleci.exe orb publish .\orb.yml  kohirens/version-release@dev:alpha
+circleci orb publish .\orb.yml kohirens/version-release@dev:alpha
 circleci config validate
 ```
 
