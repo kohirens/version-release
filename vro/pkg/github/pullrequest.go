@@ -307,7 +307,12 @@ func (gh *Client) OpenPullRequest(base, branch, title, summary string) (*PullReq
 	}
 
 	if res.StatusCode != 201 {
-		return nil, fmt.Errorf(stderr.ResponseStatusCode, res.StatusCode)
+		resMsg := ""
+		b, e := io.ReadAll(res.Body)
+		if e == nil {
+			resMsg = string(b)
+		}
+		return nil, fmt.Errorf(stderr.ResponseStatusCode, res.StatusCode, uri, resMsg)
 	}
 
 	b, err3 := io.ReadAll(res.Body)
