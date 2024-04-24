@@ -1,5 +1,4 @@
 publish_changelog() {
-    git-chglog --version
     vro publish-changelog \
         "${PARAM_CHANGELOG_FILE}" \
         "${PARAM_MAIN_TRUNK_BRANCH}" \
