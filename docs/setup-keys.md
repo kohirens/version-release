@@ -60,23 +60,21 @@ release.
 2. Go to your profile settings
 3. click "Developer Settings" then "personal access tokens"
 4. click the "Generate new token"
-5. The token should have the following checked:
+5. Set token data to 1 year out (that is the longest you can set it at this time of writing):
+6. Select the following options:
    ```
-   repo
-       *
-
-   write:packages
-       read:packages
-
-   admin:org
-       read:org
+   Repository access:
+     All repositories
+   Permissions
+     Commit statuses Access: Read-only
+     Contents Access: Read and Write
+     Metadata Access: Read-only
+     Pull requests Access: Read and Write
    ```
-   NOTE: The `*` means check all the boxes in that section.
-6. Go to CircleCI and go to your Org Context and save in the context as
+7. Go to CircleCI and go to your Org Context and save in the context as
    `GH_TOKEN`.
 
-NOTE: Without these certain parts of the jobs may fail. Also `write:packages` is
-not available for Circle CI Server at this time of writing.
+NOTE: Without these certain parts of the jobs may fail.
 
 ## Setup CircleCI API Token
 
