@@ -53,29 +53,33 @@ filter_unconventional = true
 split_commits = false
 # regex for parsing and grouping commits
 commit_parsers = [
-  { message = "^.*: add", group = "Added" },
-  { message = "^.*: support", group = "Added" },
-  { message = "^.*: remove", group = "Removed" },
-  { message = "^.*: delete", group = "Removed" },
-  { message = "^test", group = "Fixed" },
-  { message = "^fix", group = "Fixed" },
-  { message = "^.*: fix", group = "Fixed" },
-  { message = "^.*", group = "Changed" },
+  { message = "^add:", group = "Added" },
+  { message = "^chg:", group = "Changed" },
+  { message = "^dep:", group = "Deprecated" },
+  { message = "^rmv:", group = "Removed" },
+  { message = "^fix:", group = "Fixed" },
+  { message = "^sec:", group = "Security" },
+  { message = "^doc", group = "Documentation" },
+  { message = "^style", group = "Styling" },
+  { message = "^test", group = "Testing" },
+  { message = "^chore\\(release\\): prepare for", skip = true },
+  { message = "^chore", group = "Miscellaneous Tasks" },
+  { message = "^.*", group = "Miscellaneous Tasks" },
 ]
 # protect breaking changes from being skipped due to matching a skipping commit_parser
 protect_breaking_commits = false
 # filter out the commits that are not matched by commit parsers
 filter_commits = true
 # regex for matching git tags
-tag_pattern = "v[0-9].*"
+tag_pattern = "[0-9].*"
 # regex for skipping tags
-skip_tags = "v0.1.0-beta.1"
+skip_tags = "0.1.0-beta.1"
 # regex for ignoring tags
 ignore_tags = ""
 # sort the tags topologically
 topo_order = false
 # sort the commits inside sections by oldest/newest order
-sort_commits = "oldest"
+sort_commits = "newest"
 
 [bump]
 features_always_bump_minor = true
