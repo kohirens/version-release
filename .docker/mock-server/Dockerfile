@@ -11,10 +11,12 @@ ENV CGO_ENABLED=0
 ENV SHELL=/bin/sh
 ENV TZ=America/Detroit
 
-RUN env && apk --no-progress --purge --no-cache upgrade \
+RUN echo "https://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories  \
+ && apk --no-progress --purge --no-cache upgrade \
  && apk --no-progress --purge --no-cache add --upgrade \
     curl \
     git \
+    git-cliff \
     git-daemon \
     openssh \
     openssl \
@@ -28,18 +30,13 @@ RUN mkdir -p ~/bin ~/src
 
 ENV PATH=${PATH}:/root/bin
 
-# Install git-cliff
-RUN wget https://github.com/orhun/git-cliff/releases/download/v${GIT_CLIFF_VER}/git-cliff-${GIT_CLIFF_VER}-aarch64-unknown-linux-musl.tar.gz \
- && tar -xz -f git-cliff-${GIT_CLIFF_VER}-aarch64-unknown-linux-musl.tar.gz \
- && mv git-cliff-${GIT_CLIFF_VER}/git-cliff /usr/local/bin \
- && git-cliff --version
-
 COPY --from=kohirens/git-tool-belt:2.1.2 /usr/local/bin/git-tool-belt /root/bin
 
-COPY --chmod=+x .docker/mock-server/gen-ss-cert.sh /usr/bin/
+COPY --chown=root:root --chmod=+x .docker/mock-server/gen-ss-cert.sh /usr/bin/
 COPY --chown=root:root .docker/.gitconfig /root
 
-RUN /usr/bin/gen-ss-cert.sh --company="mock-server" \
+RUN chmod +x /usr/bin/gen-ss-cert.sh \
+ && gen-ss-cert.sh --company="mock-server" \
     --sans="DNS:github.com, DNS:*.github.com, DNS:*.circleci.com" \
     --out-dir="./ssl" \
     "circleci.com"
@@ -64,6 +61,8 @@ RUN cd mock-server \
  && go install
 
 COPY --chmod=+x .docker/mock-server/start.sh /usr/local/bin
+
+RUN chmod +x /usr/local/bin/start.sh
 
 ENTRYPOINT [ "start.sh" ]
 

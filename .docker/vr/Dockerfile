@@ -19,16 +19,18 @@ ENV WORK_DIR=/home/${USER_NAME}/src/${REPO}
 ENV SHELL=/bin/sh
 
 # Update OS
-RUN apk --no-progress --purge --no-cache upgrade \
+RUN echo "https://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories \
+ && apk --no-progress --purge --no-cache upgrade \
  && apk add \
     git \
-    git-cliff \
  && rm -vrf /var/cache/apk/* \
  && rm -rf /tmp/*
 
-RUN wget https://github.com/orhun/git-cliff/releases/download/v${GIT_CLIFF_VER}/git-cliff-${GIT_CLIFF_VER}-aarch64-unknown-linux-musl.tar.gz \
- && tar -xz -f git-cliff-${GIT_CLIFF_VER}-aarch64-unknown-linux-musl.tar.gz \
+RUN wget https://github.com/orhun/git-cliff/releases/download/v${GIT_CLIFF_VER}/git-cliff-${GIT_CLIFF_VER}-x86_64-unknown-linux-musl.tar.gz \
+ && tar -xz -f git-cliff-${GIT_CLIFF_VER}-x86_64-unknown-linux-musl.tar.gz \
+ && git-cliff-${GIT_CLIFF_VER}/git-cliff --version \
  && mv git-cliff-${GIT_CLIFF_VER}/git-cliff /usr/local/bin \
+ && chmod +x  /usr/local/bin/git-cliff \
  && git-cliff --version
 
 # Add a non-root group and user.
@@ -73,16 +75,18 @@ FROM kohirens/git-tool-belt:2.1.2 AS release
 ARG USER_NAME
 ARG USER_GROUP
 ARG REPO
+ARG GIT_CLIFF_VER
 
 HEALTHCHECK --interval=5s --timeout=3s --start-period=3s --retries=4 \
     CMD vro -help || exit 1
 
 USER root
 
-# Install git-cliff
-RUN wget https://github.com/orhun/git-cliff/releases/download/v${GIT_CLIFF_VER}/git-cliff-${GIT_CLIFF_VER}-aarch64-unknown-linux-musl.tar.gz \
- && tar -xz -f git-cliff-${GIT_CLIFF_VER}-aarch64-unknown-linux-musl.tar.gz \
+RUN wget https://github.com/orhun/git-cliff/releases/download/v${GIT_CLIFF_VER}/git-cliff-${GIT_CLIFF_VER}-x86_64-unknown-linux-musl.tar.gz \
+ && tar -xz -f git-cliff-${GIT_CLIFF_VER}-x86_64-unknown-linux-musl.tar.gz \
+ && git-cliff-${GIT_CLIFF_VER}/git-cliff --version \
  && mv git-cliff-${GIT_CLIFF_VER}/git-cliff /usr/local/bin \
+ && chmod +x  /usr/local/bin/git-cliff \
  && git-cliff --version
 
 RUN rm /usr/local/bin/git-chglog
@@ -91,7 +95,6 @@ USER ${USER_NAME}
 
 # Add build artifacts
 COPY --from=build --chown=${USER_NAME}:${USER_GROUP} "/home/${USER_NAME}/bin/vro" /bin/vro
-COPY --from=build --chown=${USER_NAME}:${USER_GROUP} "/home/${USER_NAME}/bin/git-chglog" /bin
 
 ENV PATH="${PATH}:/home/${USER_NAME}/bin"
 
