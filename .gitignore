@@ -16,5 +16,6 @@ tmp/
 /vro/mock-server/mock-server.exe
 /vro/vro.exe
 /vro/vro
+.ash_history
 app.env
 orb.yml
