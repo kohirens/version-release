@@ -32,12 +32,12 @@ services:
         develop:
             watch:
                 - action: rebuild
-                  path: ../vro/mock-server
-                  target: /root/src/${REPO}/vro
+                  path: ../vro/
+                  target: /root/src/${REPO}/vro/
         image: 'mock-server'
         networks:
             default:
-                aliases:
+                aliases: # set hosts name so that request do NOT leave the container when test are run
                     - "circleci.com"
                     - "api.circleci.com"
                     - "app.circleci.com"
