@@ -197,7 +197,7 @@ func PrintStatus(wd string) {
 // StatusWithOptions Print git status, pass in some optional flags if needed.
 func StatusWithOptions(wd string, options []string) ([]byte, error) {
 	opts := append([]string{"status"}, options...)
-	fmt.Printf("opts = %v", opts)
+
 	status, se, _, _ := cli.RunCommand(
 		wd,
 		cmdGit,
