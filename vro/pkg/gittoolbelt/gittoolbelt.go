@@ -3,7 +3,6 @@ package gittoolbelt
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/kohirens/stdlib"
 	"github.com/kohirens/stdlib/cli"
 	"github.com/kohirens/stdlib/log"
 	"strings"
@@ -18,23 +17,6 @@ type SemverInfo struct {
 	CurrentVersion    string `json:"currentVersion"`
 	NextVersion       string `json:"nextVersion"`
 	NextVersionReason string `json:"nextVersionReason"`
-}
-
-// AddGitChgLogConfig Will adds git-chglog configuration files if it is not
-// found at the location.
-func AddGitChgLogConfig(wd, configFile, repoUri string) bool {
-	so, se, _, _ := cli.RunCommand(
-		wd,
-		cmdGitToolBelt,
-		[]string{"checkconf", "-path", configFile, "-repo", repoUri},
-	)
-
-	if se != nil {
-		log.Logf(stderr.CouldNotAddConfig, so, se.Error())
-		return false
-	}
-
-	return stdlib.PathExist(wd + "/" + configFile)
 }
 
 // IsTaggable Looks at the current directory as a repo and branch, then checks

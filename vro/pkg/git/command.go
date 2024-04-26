@@ -185,18 +185,28 @@ func StageFiles(wd string, files ...string) error {
 	return nil
 }
 
-// Status Print git status
-func Status(wd string) ([]byte, error) {
+// PrintStatus Outputs the git status of the specified directory.
+func PrintStatus(wd string) {
+	status, e1 := StatusWithOptions(wd, []string{})
+
+	if e1 == nil {
+		fmt.Println(string(status))
+	}
+}
+
+// StatusWithOptions Print git status, pass in some optional flags if needed.
+func StatusWithOptions(wd string, options []string) ([]byte, error) {
+	opts := append([]string{"status"}, options...)
+	fmt.Printf("opts = %v", opts)
 	status, se, _, _ := cli.RunCommand(
 		wd,
 		cmdGit,
-		[]string{"status"},
+		opts,
 	)
+
 	if se != nil {
 		return nil, fmt.Errorf(stderr.CouldNotDisplayGitStatus, status, se.Error())
 	}
-
-	fmt.Println(string(status))
 
 	return status, nil
 }

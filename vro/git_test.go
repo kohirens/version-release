@@ -12,8 +12,8 @@ func TestIsChangelogUpToDate(t *testing.T) {
 		repo       string
 		want       bool
 	}{
-		{"notUpToDate", "CHANGELOG.md", "repo-04", false},
-		{"upToDate", "CHANGELOG.md", "repo-05", true},
+		{"has-changes", "CHANGELOG.md", "repo-04", false},
+		{"no-changes", "CHANGELOG.md", "repo-05", true},
 	}
 
 	for _, tt := range tests {
