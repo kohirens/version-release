@@ -43,6 +43,7 @@ if [ "${KEEP_RUNNING}" = "1" ]; then
     done
 else
     go test ./...
+    exit 0
 fi
 
 # kill the mock server
