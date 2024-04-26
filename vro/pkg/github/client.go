@@ -2,10 +2,8 @@ package github
 
 import (
 	"fmt"
-	"github.com/kohirens/stdlib"
 	"github.com/kohirens/stdlib/log"
 	"github.com/kohirens/version-release-orb/vro/pkg/git"
-	"github.com/kohirens/version-release-orb/vro/pkg/gittoolbelt"
 	"io"
 	"net/http"
 	"time"
@@ -100,15 +98,6 @@ func (gh *Client) PublishChangelog(wd, branch, chaneLogFile string) error {
 
 	if e := git.CheckoutBranch(wd, GenBranchName); e != nil {
 		return e
-	}
-
-	if gh.ChglogConfigFile != "" {
-		if !stdlib.PathExist(gh.ChglogConfigFile) {
-			gittoolbelt.AddGitChgLogConfig(wd, gh.ChglogConfigFile, gh.RepositoryUri)
-			if e := git.StageFiles(wd, gh.ChglogConfigFile); e != nil {
-				return e
-			}
-		}
 	}
 
 	// Staging the CHANGELOG file.

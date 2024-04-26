@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/kohirens/stdlib/log"
 	"github.com/kohirens/version-release-orb/vro/pkg/circleci"
-	"github.com/kohirens/version-release-orb/vro/pkg/gitcliff"
 	"github.com/kohirens/version-release-orb/vro/pkg/gittoolbelt"
 )
 
@@ -30,21 +29,11 @@ func (wf *Workflow) PublishChangelog(wd, chgLogFile, branch string) error {
 		return err1
 	}
 
+	// nothing to publish
 	if isUpdated {
 		// If there were no changes to publish then how did we get here?
 		// This pipeline should not have been triggered.
 		return fmt.Errorf(stderr.NoChangelogChanges)
-	}
-
-	// Step 2: There are changes, so get the repositories semantic version info.
-	si, err2 := gittoolbelt.Semver(wd)
-	if err2 != nil {
-		return fmt.Errorf(stderr.NoSemverInfo, err2)
-	}
-
-	// Step 3: Generate a new changelog using the version info.
-	if e := gitcliff.RebuildChangelog(wd, chgLogFile, si); e != nil {
-		return e
 	}
 
 	// Step 4: Commit, push, and publish the changelog.

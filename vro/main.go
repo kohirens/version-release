@@ -168,7 +168,7 @@ func main() {
 
 		// Step 2: When the changelog has updates, then trigger the changelog
 		// workflow and return.
-		thereAreChanges, err5 := areChangelogChangesPresent(wd, chgLogFile)
+		thereAreChanges, err5 := IsChangelogUpToDate(wd, chgLogFile)
 		if err5 != nil {
 			mainErr = err5
 			return

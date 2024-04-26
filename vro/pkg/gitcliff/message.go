@@ -1,13 +1,15 @@
 package gitcliff
 
 var stderr = struct {
-	CouldNotUpdateChgLog string
+	UpdateChgLog string
 }{
-	CouldNotUpdateChgLog: "cannot update changelog: %v\n",
+	UpdateChgLog: "cannot update changelog: %v\n",
 }
 
 var stdout = struct {
 	Cs string
+	Wd string
 }{
 	Cs: "cs: %s\n",
+	Wd: "wd: %s",
 }

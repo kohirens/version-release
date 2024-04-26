@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/kohirens/stdlib/cli"
 	"github.com/kohirens/stdlib/log"
-	"github.com/kohirens/version-release-orb/vro/pkg/gittoolbelt"
 )
 
 const (
@@ -12,17 +11,17 @@ const (
 )
 
 // RebuildChangelog Runs git-cliff to update the change log file.
-func RebuildChangelog(wd, chgLogFile string, si *gittoolbelt.SemverInfo) error {
+func RebuildChangelog(wd, chgLogFile string) error {
 	_, se, _, cs := cli.RunCommand(
 		wd,
 		Cmd,
-		[]string{"--output", chgLogFile, "--tag", si.NextVersion},
+		[]string{"--output", chgLogFile, "--bump"},
 	)
 
 	log.Infof(stdout.Cs, cs)
 
 	if se != nil {
-		return fmt.Errorf(stderr.CouldNotUpdateChgLog, se.Error())
+		return fmt.Errorf(stderr.UpdateChgLog, se.Error())
 	}
 
 	return nil
