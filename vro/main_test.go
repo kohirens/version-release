@@ -136,7 +136,6 @@ func TestTriggeredPublishChangelogWorkflow(t *testing.T) {
 	_ = os.Setenv("CIRCLE_REPOSITORY_URL", "git@github.com:kohirens/version-release-orb.git")
 	_ = os.Setenv("PARAM_MERGE_TYPE", "rebase")
 	_ = os.Setenv("CIRCLE_USERNAME", "test")
-	_ = os.Setenv("PARAM_GIT_CHGLOG_CONFIG_FILE", ".chglog/config.yml")
 
 	// run the test
 	cmd := help.GetTestBinCmd(subEnvVarName, fixedArgs)
