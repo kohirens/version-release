@@ -112,7 +112,6 @@ func main() {
 			"CIRCLE_USERNAME",
 			"GH_TOKEN",
 			"PARAM_GH_SERVER",
-			"PARAM_GIT_CHGLOG_CONFIG_FILE",
 			"PARAM_MERGE_TYPE",
 		})
 		if err1 != nil {
@@ -133,7 +132,6 @@ func main() {
 		gh := github.NewClient(eVars["CIRCLE_REPOSITORY_URL"], eVars["GH_TOKEN"], eVars["PARAM_GH_SERVER"], client)
 		gh.MergeMethod = eVars["PARAM_MERGE_TYPE"]
 		gh.Username = eVars["CIRCLE_USERNAME"]
-		gh.ChglogConfigFile = eVars["PARAM_GIT_CHGLOG_CONFIG_FILE"]
 		wf := NewWorkflow(eVars["CIRCLE_TOKEN"], gh)
 
 		mainErr = wf.PublishChangelog(wd, chgLogFile, branch)

@@ -10,10 +10,6 @@ parameters:
     description: Location to output/update the CHANGELOG file.
     type: string
     default: "CHANGELOG.md"
-  chglog_config_file:
-    description: Location of a git-chglog configuration file.
-    type: string
-    default: ".chglog/config.yml"
   do_attach_workspace:
     description: Set to `false` to skip attaching the workspace.
     type: boolean
@@ -26,10 +22,6 @@ parameters:
     default: "latest"
     description: Version of the executor image to pull.
     type: string
-  gh_token:
-    description: Obsolete, use gh_token_var.
-    type: env_var_name
-    default: GH_TOKEN
   gh_token_var:
     description: Name of the environment variable holding the GitHub API write token.
     type: env_var_name

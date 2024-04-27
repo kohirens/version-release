@@ -21,16 +21,15 @@ const (
 )
 
 type Client struct {
-	ChglogConfigFile string
-	Client           HttpClient
-	Domain           string
-	MergeMethod      string
-	Org              string
-	RepositoryUri    string
-	Repository       string
-	Token            string
-	Username         string
-	Host             string
+	Client        HttpClient
+	Domain        string
+	MergeMethod   string
+	Org           string
+	RepositoryUri string
+	Repository    string
+	Token         string
+	Username      string
+	Host          string
 }
 
 func NewClient(repositoryUri, token, host string, client HttpClient) *Client {

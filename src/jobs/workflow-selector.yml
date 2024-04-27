@@ -26,10 +26,6 @@ parameters:
     default: "latest"
     description: Version of the executor image to pull.
     type: string
-  git_chglog_config_file:
-    type: string
-    default: ".chglog/config.yml"
-    description: Location of a git-chglog configuration file.
   github_token_var:
     description: Name of the environment variable holding the GitHub API token.
     type: env_var_name
@@ -75,7 +71,6 @@ steps:
         PARAM_CIRCLECI_APP_HOST: "<< parameters.circleci_app_host >>"
         PARAM_CHANGELOG_FILE: "<< parameters.changelog_file >>"
         PARAM_GH_SERVER: "<< parameters.github_server >>"
-        PARAM_GIT_CHGLOG_CONFIG_FILE: "<< parameters.git_chglog_config_file >>"
         PARAM_MAIN_TRUNK_BRANCH: "<< parameters.main_trunk_branch >>"
         PARAM_VCS_TYPE: "<< parameters.vcs_type >>"
         PARAM_WORKING_DIRECTORY: "<< parameters.working_directory >>"
