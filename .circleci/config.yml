@@ -155,7 +155,7 @@ workflows:
                   context: << pipeline.parameters.ctx_docker_hub >>
                   requires: [ co ]
                   dockerfile: ".docker/vr/Dockerfile"
-                  image_tag: "dev"
+                  image_tag: "latest"
                   repository: << pipeline.parameters.orb_repo >>
         when: << pipeline.parameters.run_integration_tests >>
 
