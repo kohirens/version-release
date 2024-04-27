@@ -16,9 +16,6 @@ parameters:
         default: "kohirens-automation-dockerhub"
         description: Container automation
         type: string
-#    exec_img_tag:
-#        default: "latest"
-#        type: string
     orb_version:
         default: "3.1.0"
         description: >
@@ -92,46 +89,6 @@ jobs:
                       circleci orb --skip-update-check pack src > orb.yml
                       circleci orb --skip-update-check validate orb.yml
                       circleci orb publish --skip-update-check orb.yml << pipeline.parameters.orb_repo >>@${BUILD_VER} --token ${CIRCLE_TOKEN}
-
-    publish-image:
-        parameters:
-            ver_tag:
-                default: "latest"
-                description: version tag for the image
-                type: string
-            image_repo:
-                type: string
-        environment:
-            DOCKER_BUILDKIT: 1
-        executor: image-builder
-        steps:
-            - attach_workspace: { at: "." }
-            - setup_remote_docker:
-                  docker_layer_caching: true
-            - run:
-                  name: Build and push Docker image
-                  command: |
-                      export BUILD_VER="<<parameters.ver_tag>>"
-                      if [ -z "${BUILD_VER}" ]; then
-                          echo "ver_tag parameters is not set, or is empty"
-                          exit 1
-                      fi
-                      export DH_IMAGE="<<parameters.image_repo>>"
-                      echo "${DH_PASS}" | docker login -u "${DH_USER}" --password-stdin
-                      echo ""
-                      echo "Building ${DH_IMAGE} Version \"${BUILD_VER}\""
-                      docker build --rm \
-                          -f .docker/vr/Dockerfile \
-                          -t "${DH_IMAGE}" \
-                          -t "${DH_IMAGE}:${BUILD_VER}" \
-                          --progress plain \
-                          --target "release" .
-                      echo ""
-                      echo "Pushing ${DH_IMAGE} Version \"${BUILD_VER}\""
-                      docker push "${DH_IMAGE}:${BUILD_VER}"
-                      echo ""
-                      echo "Cleaning up ${DH_IMAGE} Version \"${BUILD_VER}\""
-                      docker rmi "${DH_IMAGE}:${BUILD_VER}"
 
     integration-test-vr:
         executor: image-builder
