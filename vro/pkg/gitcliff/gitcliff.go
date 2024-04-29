@@ -1,17 +1,20 @@
 package gitcliff
 
 import (
+	"encoding/json"
 	"fmt"
+	"github.com/kohirens/stdlib"
 	"github.com/kohirens/stdlib/cli"
 	"github.com/kohirens/stdlib/log"
+	"strings"
 )
 
 const (
 	Cmd = "git-cliff"
 )
 
-// RebuildChangelog Runs git-cliff to update the change log file.
-func RebuildChangelog(wd, chgLogFile string) error {
+// BuildChangelog Runs git-cliff to update the change log file.
+func BuildChangelog(wd, chgLogFile string) error {
 	// Note footer links may not be generated with these methods.
 	// build new: git-cliff --output CHANGELOG.md
 	args := []string{"--bump", "--output", chgLogFile}

@@ -5,13 +5,14 @@ import (
 	"github.com/kohirens/stdlib/log"
 	"github.com/kohirens/version-release-orb/vro/pkg/git"
 	"github.com/kohirens/version-release-orb/vro/pkg/gitcliff"
+	"regexp"
 )
 
 // IsChangelogUpToDate Indicate if there are any changes to be added to the
 // changelog. Side effect is that it will build the changelog.
 func IsChangelogUpToDate(wd, chgLogFile string) (bool, error) {
 	// step 1: run command with no --bump to build a new or update an existing log
-	if e := gitcliff.RebuildChangelog(wd, chgLogFile); e != nil {
+	if e := gitcliff.BuildChangelog(wd, chgLogFile); e != nil {
 		return true, e
 	}
 
