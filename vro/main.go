@@ -174,15 +174,13 @@ func main() {
 
 		// Step 2: When the changelog has updates, then trigger the changelog
 		// workflow and return.
-		thereAreChanges, err5 := IsChangelogUpToDate(wd, chgLogFile)
+		upToDate, err5 := IsChangelogUpToDate(wd, chgLogFile)
 		if err5 != nil {
 			mainErr = err5
 			return
 		}
 
-		fmt.Printf("thereAreChanges = %v\n", thereAreChanges)
-
-		if thereAreChanges {
+		if !upToDate {
 			// Step 2.a: Set pipeline parameters and trigger the workflow: publish changelog.
 			pp, e1 := circleci.GetPipelineParameters(branch, publishChgLogWorkflow)
 			if e1 != nil {

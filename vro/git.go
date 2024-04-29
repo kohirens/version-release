@@ -23,7 +23,7 @@ func IsChangelogUpToDate(wd, chgLogFile string) (bool, error) {
 		return true, fmt.Errorf(stderr.GitStatus, status, e1.Error())
 	}
 
-	log.Infof(stdout.GitStatus, status)
+	log.Infof(stdout.GitStatus, string(status))
 
 	git.PrintStatus(wd)
 
