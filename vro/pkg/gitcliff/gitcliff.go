@@ -1,11 +1,13 @@
 package gitcliff
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"github.com/kohirens/stdlib"
 	"github.com/kohirens/stdlib/cli"
 	"github.com/kohirens/stdlib/log"
+	"regexp"
 	"strings"
 )
 
@@ -35,6 +37,35 @@ func BuildChangelog(wd, chgLogFile string) error {
 	}
 
 	return nil
+}
+
+// Bump Returns the next semantic version
+func Bump(wd string) string {
+	so, se, _, cs := cli.RunCommand(
+		wd,
+		Cmd,
+		[]string{"--bumped-version"},
+	)
+
+	log.Infof(stdout.Cs, cs)
+
+	if se != nil {
+		log.Errf(stderr.UpdateChgLog, se.Error())
+		return ""
+	}
+
+	re := regexp.MustCompile(`^v?\d\.\d\.\d`)
+
+	var found []byte
+	out := bytes.Split(bytes.Trim(so, "\n"), []byte("\n"))
+
+	if len(out) > 1 {
+		found = re.Find(out[1])
+	} else {
+		found = re.Find(out[0])
+	}
+
+	return string(found)
 }
 
 // HasUnreleasedChanges Indicate there are changes in the current branch that

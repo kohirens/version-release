@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/kohirens/stdlib/log"
-	"github.com/kohirens/version-release-orb/vro/pkg/gittoolbelt"
 	"io"
 	"time"
 )
@@ -97,11 +96,11 @@ type ReleasesResponse struct {
 	Assets          []Asset   `json:"assets"`
 }
 
-func (gh *Client) TagAndRelease(branch string, info *gittoolbelt.SemverInfo) (*ReleasesResponse, error) {
+func (gh *Client) TagAndRelease(branch, tag string) (*ReleasesResponse, error) {
 	uri := fmt.Sprintf(epRelease, gh.Host, gh.Org, gh.Repository)
 	body := &Release{
-		Name:         info.NextVersion + " - " + time.Now().Format("2006-01-02"),
-		TagName:      info.NextVersion,
+		Name:         tag + " - " + time.Now().Format("2006-01-02"),
+		TagName:      tag,
 		TargetCommit: branch,
 	}
 

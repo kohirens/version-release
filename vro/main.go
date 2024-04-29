@@ -101,7 +101,7 @@ func main() {
 		gh := github.NewClient(eVars["CIRCLE_REPOSITORY_URL"], eVars["GH_TOKEN"], eVars["PARAM_GH_SERVER"], client)
 		wf := NewWorkflow(eVars["CIRCLE_TOKEN"], gh)
 
-		mainErr = wf.PublishReleaseTag(branch, wd)
+		mainErr = wf.PublishReleaseTag2(branch, wd)
 
 	case publishChgLogWorkflow:
 		log.Logf(stdout.StartWorkflow, publishChgLogWorkflow)

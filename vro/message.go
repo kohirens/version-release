@@ -44,6 +44,7 @@ var stdout = struct {
 	FoundChgInFile: "running %s produced changes in the %s",
 	GitStatus:      "Git status: %v",
 	NoCommitsToTag: "no commits to tag",
+	ReleaseTag:     "releasing %v",
 	StartWorkflow:  "starting %v workflow",
 	Wd:             "wd: %s",
 }

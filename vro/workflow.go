@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/kohirens/stdlib/log"
 	"github.com/kohirens/version-release-orb/vro/pkg/circleci"
+	"github.com/kohirens/version-release-orb/vro/pkg/gitcliff"
 	"github.com/kohirens/version-release-orb/vro/pkg/gittoolbelt"
 )
 
@@ -49,9 +50,32 @@ func (wf *Workflow) PublishReleaseTag(branch, wd string) error {
 	}
 
 	// Step 2: Publish a new tag on GitHub.
-	rr, err2 := wf.GitHubClient.TagAndRelease(branch, si)
+	rr, err2 := wf.GitHubClient.TagAndRelease(branch, si.NextVersion)
 	if err2 != nil {
 		return err2
+	}
+
+	log.Logf(stdout.ReleaseTag, rr.Name)
+
+	return nil
+}
+
+// PublishReleaseTag2 Publish a release on GitHub.
+func (wf *Workflow) PublishReleaseTag2(branch, wd string) error {
+	// Step 1: Grab semantic version info.
+	isTaggable, e1 := gitcliff.HasUnreleasedChanges(wd)
+	if e1 != nil {
+		return fmt.Errorf(stderr.CouldNotGetVersion, e1.Error())
+	}
+
+	if !isTaggable {
+		log.Logf("nothing to tag")
+		return nil
+	}
+	// Step 2: Publish a new tag on GitHub.
+	rr, e2 := wf.GitHubClient.TagAndRelease(branch, gitcliff.Bump(wd))
+	if e2 != nil {
+		return e2
 	}
 
 	log.Logf(stdout.ReleaseTag, rr.Name)
