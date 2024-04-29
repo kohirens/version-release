@@ -9,14 +9,13 @@ import (
 	"fmt"
 	"github.com/kohirens/stdlib/log"
 	"github.com/kohirens/version-release-orb/vro/pkg/github"
-	"github.com/kohirens/version-release-orb/vro/pkg/gittoolbelt"
 	"io"
 	"net/http"
 	"time"
 )
 
 type GithubClient interface {
-	TagAndRelease(string, *gittoolbelt.SemverInfo) (*github.ReleasesResponse, error)
+	TagAndRelease(revision, tag string) (*github.ReleasesResponse, error)
 	PublishChangelog(wd, branch, chaneLogFile string) error
 }
 

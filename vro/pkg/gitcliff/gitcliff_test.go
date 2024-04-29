@@ -90,3 +90,26 @@ func loadFile(filename string) []byte {
 	contents, _ := os.ReadFile(filename)
 	return contents
 }
+
+func TestBump(t *testing.T) {
+	tests := []struct {
+		name   string
+		bundle string
+		want   string
+	}{
+		{"has-unreleased-commits", "repo-04", "0.1.0"},
+		{"no-unreleased", "repo-05", "0.1.0"},
+		{"major-release", "repo-06", "1.0.0"},
+		{"minor-release", "repo-07", "0.2.0"},
+		{"patch-release", "repo-08", "0.1.1"},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			repo := help.SetupARepository(tt.bundle, tmpDir, fixtureDir, ps)
+
+			if got := Bump(repo); got != tt.want {
+				t.Errorf("Bump() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
