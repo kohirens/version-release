@@ -629,6 +629,58 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed Test Fixture
 - When Changes are Taggable
 
+## [4.0.0] - 2024-04-29
+
+### Added
+
+- Unreleased Changes Detection
+
+### Changed
+
+- Semantic Version Tagging
+- Detecting Semantic Tag For a Commit
+- Distinguish Between A New/Existing Changelog
+- Dev Tag To Latest
+- Update Git Cliff Configuration
+- Calls To Build A Changelog
+- Updated Development Environment
+- Calls To Build A Changelog
+- Updated Development Environment
+- Phase Out Obsolete Tools
+- Configuring SSH Keys
+- Updated Formatting
+- Updated GitHub Integration
+- Updated the SSH Fingerprint
+- Switch To Git-Cliff
+- Default Orb Tag
+- Version Release Tool Base Image
+
+### Fixed
+
+- Updating Changelog
+- Image Builds
+- Error Message
+
+### Miscellaneous Tasks
+
+- Building Changelog
+- Configure Changlog Section Types
+- Removed Unused CI Configuration
+- Updated Test Fixture
+- Updated Git Ignore for .ash_history File
+- Cleanup CI Configuration
+
+### Removed
+
+- Tag File References
+- Obsolete References
+- Removed Obsolete Configuration
+
+### Testing
+
+- Fixed Test Fixture
+- When Changes are Taggable
+
 <a name="unreleased"></a>
 ## [Unreleased]
 
