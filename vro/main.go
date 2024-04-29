@@ -12,6 +12,7 @@ import (
 	"github.com/kohirens/version-release-orb/vro/pkg/gittoolbelt"
 	"net/http"
 	"os"
+	"strconv"
 	"time"
 )
 
@@ -60,6 +61,12 @@ func main() {
 	if af.version {
 		log.Logf(stdout.CurrentVersion, af.CurrentVersion, af.CommitHash)
 		return
+	}
+
+	vl, vlFound := os.LookupEnv("VERBOSITY_LEVEL")
+	if vlFound {
+		num, _ := strconv.ParseInt(vl, 10, 64)
+		log.VerbosityLevel = int(num)
 	}
 
 	ca := flag.Args()
@@ -172,6 +179,8 @@ func main() {
 			mainErr = err5
 			return
 		}
+
+		fmt.Printf("thereAreChanges = %v\n", thereAreChanges)
 
 		if thereAreChanges {
 			// Step 2.a: Set pipeline parameters and trigger the workflow: publish changelog.
