@@ -36,3 +36,69 @@ func BuildChangelog(wd, chgLogFile string) error {
 
 	return nil
 }
+
+// HasUnreleasedChanges Indicate there are changes in the current branch that
+// needed to be added to the changelog and tagged.
+//
+//	This makes use of the --context flag to return any unreleased commit.
+func HasUnreleasedChanges(wd string) (bool, error) {
+	so, se, _, cs := cli.RunCommand(
+		wd,
+		Cmd,
+		[]string{"--unreleased", "--context"},
+	)
+
+	log.Infof(stdout.Cs, cs)
+
+	if se != nil {
+		return false, fmt.Errorf(stderr.UpdateChgLog, se.Error())
+	}
+
+	var u []unreleased
+
+	if e := json.Unmarshal(so, &u); e != nil {
+		return false, fmt.Errorf(stderr.CannotDecodeJson, e.Error())
+	}
+
+	return len(u) > 0, nil
+}
+
+type unreleased struct {
+	Version interface{} `json:"version"`
+	Commits []struct {
+		Id                  string        `json:"id"`
+		Message             string        `json:"message"`
+		Body                interface{}   `json:"body"`
+		Footers             []interface{} `json:"footers"`
+		Group               string        `json:"group"`
+		BreakingDescription interface{}   `json:"breaking_description"`
+		Breaking            bool          `json:"breaking"`
+		Scope               interface{}   `json:"scope"`
+		Links               []interface{} `json:"links"`
+		Author              struct {
+			Name      string `json:"name"`
+			Email     string `json:"email"`
+			Timestamp int    `json:"timestamp"`
+		} `json:"author"`
+		Committer struct {
+			Name      string `json:"name"`
+			Email     string `json:"email"`
+			Timestamp int    `json:"timestamp"`
+		} `json:"committer"`
+		Conventional bool `json:"conventional"`
+		MergeCommit  bool `json:"merge_commit"`
+		Github       struct {
+			Username    interface{}   `json:"username"`
+			PrTitle     interface{}   `json:"pr_title"`
+			PrNumber    interface{}   `json:"pr_number"`
+			PrLabels    []interface{} `json:"pr_labels"`
+			IsFirstTime bool          `json:"is_first_time"`
+		} `json:"github"`
+	} `json:"commits"`
+	CommitId  interface{} `json:"commit_id"`
+	Timestamp int         `json:"timestamp"`
+	Previous  interface{} `json:"previous"`
+	Github    struct {
+		Contributors []interface{} `json:"contributors"`
+	} `json:"github"`
+}

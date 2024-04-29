@@ -56,6 +56,33 @@ func TestBuildChangelog(t *testing.T) {
 	}
 }
 
+func TestHasUnreleasedChanges(t *testing.T) {
+	tests := []struct {
+		name    string
+		bundle  string
+		want    bool
+		wantErr bool
+	}{
+		{"has-unreleased", "repo-02", true, false},
+		{"no-unreleased", "repo-03", false, false},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			repo := help.SetupARepository(tt.bundle, tmpDir, fixtureDir, ps)
+			got, e1 := HasUnreleasedChanges(repo)
+			if (e1 != nil) != tt.wantErr {
+				t.Errorf("HasUnreleasedChanges() error = %v, wantErr %v", e1.Error(), tt.wantErr)
+				return
+			}
+
+			if got != tt.want {
+				t.Errorf("HasUnreleasedChanges() want %v, got %v", got, tt.want)
+				return
+			}
+		})
+	}
+}
+
 func loadFile(filename string) []byte {
 	if !stdlib.PathExist(filename) {
 		panic(fmt.Sprintf("file %v not found", filename))
