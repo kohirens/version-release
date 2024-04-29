@@ -11,6 +11,7 @@ var stderr = struct {
 	CouldNotRemoveOrigin     string
 	CouldNotSetGlobalConfig  string
 	CouldNotSetRemoteUrl     string
+	LastLog                  string
 	NoTags                   string
 }{
 	CouldNotAddOrigin:        "problem adding the origin %s: %s, %s",
@@ -23,6 +24,7 @@ var stderr = struct {
 	CouldNotRemoveOrigin:     "problem removing the origin %s: %s, %s",
 	CouldNotSetGlobalConfig:  "could not set global config %s; %v",
 	CouldNotSetRemoteUrl:     "problem setting the remote push URL: %s, %s",
+	LastLog:                  "could not get latest log: %s",
 	NoTags:                   "no tag for %s found: %v",
 }
 

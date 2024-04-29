@@ -181,6 +181,11 @@ func main() {
 		}
 
 		if !upToDate {
+			if lastUpdateWasAutoChangelog(wd) { // do not perform updates consecutively
+				log.Errf(stderr.ChgLogAutoUpdate)
+				return
+			}
+
 			// Step 2.a: Set pipeline parameters and trigger the workflow: publish changelog.
 			pp, e1 := circleci.GetPipelineParameters(branch, publishChgLogWorkflow)
 			if e1 != nil {

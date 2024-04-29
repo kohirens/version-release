@@ -1,6 +1,7 @@
 package main
 
 var stderr = struct {
+	ChgLogAutoUpdate      string
 	ChangelogChanges      string
 	CommitAlreadyTagged   string
 	CouldNotGetVersion    string
@@ -14,6 +15,7 @@ var stderr = struct {
 	PublishReleaseTagArgs string
 	SemverWithChgLogCheck string
 }{
+	ChgLogAutoUpdate:      "the last commit contains an auto update to the CHANGELOG.md",
 	ChangelogChanges:      "the changelog has changes to be committed",
 	CommitAlreadyTagged:   "commit %v is already tagged, so there is nothing to do",
 	CouldNotGetVersion:    "could not get version info; %s",
