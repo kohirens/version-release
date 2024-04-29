@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"github.com/kohirens/stdlib/log"
 	"github.com/kohirens/version-release-orb/vro/pkg/circleci"
+	"github.com/kohirens/version-release-orb/vro/pkg/git"
 	"github.com/kohirens/version-release-orb/vro/pkg/github"
 	"github.com/kohirens/version-release-orb/vro/pkg/gittoolbelt"
 	"net/http"
@@ -186,7 +187,7 @@ func main() {
 		}
 
 		// Step 4: No changelog updates, then verify the commit is not tagged.
-		if IsCommitTagged(wd, commit) {
+		if git.HasSemverTag(wd, commit) {
 			log.Logf(stderr.CommitAlreadyTagged, commit)
 			return
 		}

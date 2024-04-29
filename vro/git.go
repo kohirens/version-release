@@ -5,7 +5,6 @@ import (
 	"github.com/kohirens/stdlib/log"
 	"github.com/kohirens/version-release-orb/vro/pkg/git"
 	"github.com/kohirens/version-release-orb/vro/pkg/gitcliff"
-	"regexp"
 )
 
 // IsChangelogUpToDate Indicate if there are any changes to be added to the
@@ -32,15 +31,4 @@ func IsChangelogUpToDate(wd, chgLogFile string) (bool, error) {
 	// update-to-date or the file does not exist.
 	// however it should exist since we ran the Git-cliff command to build it.
 	return len(status) == 0, nil
-}
-
-// IsCommitTagged Checks if there is a tag ref for a commit.
-func IsCommitTagged(wd, commit string) bool {
-	tag, foundTag := git.LookupTags(wd, commit)
-	if foundTag {
-		log.Logf(stdout.AlreadyReleased, commit, tag)
-		return true
-	}
-
-	return false
 }

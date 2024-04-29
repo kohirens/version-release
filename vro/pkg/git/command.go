@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/kohirens/stdlib/cli"
 	"github.com/kohirens/stdlib/log"
+	"regexp"
 	"strings"
 )
 
@@ -91,22 +92,23 @@ func DoesBranchExistRemotely(wd, uri, branch string) bool {
 	return len(bytes.Trim(status, "\n")) > 0
 }
 
-// LookupTags Looks up tags for a commit
-func LookupTags(wd, commit string) ([]byte, bool) {
+// HasSemverTag Looks up tags for a commit
+func HasSemverTag(wd, commit string) bool {
 	so, se, _, _ := cli.RunCommand(
 		wd,
 		cmdGit,
-		[]string{"show-ref", commit},
+		[]string{"describe", commit},
 	)
 
 	if se != nil {
-		log.Logf(stderr.NoTags, commit)
-		return nil, false
+		log.Errf(stderr.NoTags, commit, se.Error())
+		return false
 	}
 
 	log.Logf(stdout.TagsFound, so)
 
-	return so, true
+	re := regexp.MustCompile(`^v?\d.\d.\d`)
+	return re.MatchString(string(so))
 }
 
 // Push Pushes changes to an origin.

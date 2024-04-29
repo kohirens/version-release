@@ -1,16 +1,16 @@
 # Version Release
 
 Use in CircleCI pipeline to automatically update your CHANGELOG.md file based
-on [Conventional Commits] using a [git-chglog] configuration, then auto-publish
+on [Conventional Commits] using a [git-cliff] configuration, then auto-publish
 a release.
 
 [![CircleCI](https://dl.circleci.com/status-badge/img/gh/kohirens/version-release-orb/tree/main.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/kohirens/version-release-orb/tree/main) [![CircleCI Orb Version](https://badges.circleci.com/orbs/kohirens/version-release.svg)](https://circleci.com/orbs/registry/orb/kohirens/version-release) [![GitHub License](https://img.shields.io/badge/license-MIT-lightgrey.svg)](https://raw.githubusercontent.com/kohirens/version-release-orb/master/LICENSE) [![CircleCI Community](https://img.shields.io/badge/community-CircleCI%20Discuss-343434.svg)](https://discuss.circleci.com/c/ecosystem/orbs)
 
 Provides the following features:
 
-1. Auto update the change log from commit messages, then merge it into the main
-   trunk.
-2. Once the change log is merged, publish a release.
+1. Auto update the change log from Git commit messages, then merge it into the
+   main trunk.
+2. Once the change log is merged, auto publish a release.
 
 ## Prerequisites
 
@@ -35,4 +35,4 @@ branches, make pull request, and publish releases to your repository.
 [Version Release Orb]: https://circleci.com/developer/orbs/orb/kohirens/version-release#usage-examples
 [Docs]: https://github.com/kohirens/version-release-orb/blob/main/docs/index.md
 [Conventional Commits]: https://www.conventionalcommits.org/en/v1.0.0/
-[git-chglog]: https://github.com/git-chglog/git-chglog
+[git-cliff]: https://git-cliff.org/docs/
