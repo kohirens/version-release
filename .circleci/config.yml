@@ -155,7 +155,7 @@ workflows:
                   context: << pipeline.parameters.ctx_docker_hub >>
                   requires: [ co ]
                   dockerfile: ".docker/vr/Dockerfile"
-                  image_tag: "latest"
+                  image_tag: "dev"
                   repository: << pipeline.parameters.orb_repo >>
         when: << pipeline.parameters.run_integration_tests >>
 
@@ -168,6 +168,7 @@ workflows:
             - vr/workflow-selector:
                   context: << pipeline.parameters.ctx_auto_release >>
                   ssh_finger: << pipeline.parameters.ssh_finger >>
+                  exec_img_tag: "dev"
 
     publish-changelog:
         when:
@@ -177,6 +178,7 @@ workflows:
             - vr/publish-changelog:
                   context: << pipeline.parameters.ctx_auto_release >>
                   ssh_finger: << pipeline.parameters.ssh_finger >>
+                  exec_img_tag: "dev"
 
     publish-release-tag:
         when:
@@ -185,6 +187,7 @@ workflows:
         jobs:
             - vr/tag-and-release:
                   context: << pipeline.parameters.ctx_auto_release >>
+                  exec_img_tag: "dev"
 
     on-tag-release:
         jobs:
