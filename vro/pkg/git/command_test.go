@@ -3,6 +3,7 @@ package git
 import (
 	help "github.com/kohirens/stdlib/test"
 	"os"
+	"strings"
 	"testing"
 )
 
@@ -55,6 +56,25 @@ func TestHasSemverTag(t *testing.T) {
 
 			if got := HasSemverTag(repo, tt.commit); got != tt.want {
 				t.Errorf("hasSemverTag() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestLastLog(t *testing.T) {
+	tests := []struct {
+		name   string
+		bundle string
+		want   string
+	}{
+		{"success", "repo-03", "test1234"},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			repo := help.SetupARepository(tt.bundle, tmpDir, fixtureDir, ps)
+
+			if got := LastLog(repo); !strings.Contains(got, tt.want) {
+				t.Errorf("LastLog() = %v, want %v", got, tt.want)
 			}
 		})
 	}

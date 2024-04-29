@@ -111,6 +111,22 @@ func HasSemverTag(wd, commit string) bool {
 	return re.MatchString(string(so))
 }
 
+// LastLog Return the last commit log.
+func LastLog(wd string) string {
+	so, se, _, _ := cli.RunCommand(
+		wd,
+		cmdGit,
+		[]string{"log", "-1"},
+	)
+
+	if se != nil {
+		log.Errf(stderr.LastLog, se.Error())
+		return ""
+	}
+
+	return string(so)
+}
+
 // Push Pushes changes to an origin.
 // git push origin <branch_name>
 func Push(wd, origin, branch string) error {
