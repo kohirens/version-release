@@ -85,7 +85,7 @@ func HasUnreleasedChanges(wd string) (bool, error) {
 		return false, fmt.Errorf(stderr.UpdateChgLog, se.Error())
 	}
 
-	var u []unreleased
+	var u []Unreleased
 
 	if e := json.Unmarshal(so, &u); e != nil {
 		return false, fmt.Errorf(stderr.CannotDecodeJson, e.Error())
@@ -94,8 +94,41 @@ func HasUnreleasedChanges(wd string) (bool, error) {
 	return len(u) > 0, nil
 }
 
-type unreleased struct {
-	Version interface{} `json:"version"`
+// UnreleasedChangelogContext Indicate there are changes in the current branch that
+// needed to be added to the changelog and tagged.
+//
+//	This makes use of the --context flag to return any unreleased commit.
+func UnreleasedChangelogContext(wd string) ([]Unreleased, error) {
+	so, se, _, cs := cli.RunCommand(
+		wd,
+		Cmd,
+		[]string{"--unreleased", "--context", "--bump"},
+	)
+
+	log.Infof(stdout.Cs, cs)
+
+	if se != nil {
+		return nil, fmt.Errorf(stderr.UpdateChgLog, se.Error())
+	}
+
+	if len(so) < 1 {
+		return nil, nil
+	}
+	//Remove WARN  git_cliff_core::release > No releases found, using 0.1.0 as the next version.
+	re := regexp.MustCompile("WARN.*\n")
+	soClean := re.ReplaceAll(so, []byte{})
+
+	var u []Unreleased
+
+	if e := json.Unmarshal(soClean, &u); e != nil {
+		return nil, fmt.Errorf(stderr.CannotDecodeJson, e.Error())
+	}
+
+	return u, nil
+}
+
+type Unreleased struct {
+	Version string `json:"version"`
 	Commits []struct {
 		Id                  string        `json:"id"`
 		Message             string        `json:"message"`

@@ -92,6 +92,28 @@ func DoesBranchExistRemotely(wd, uri, branch string) bool {
 	return len(bytes.Trim(status, "\n")) > 0
 }
 
+func GetCurrentTag(wd string) string {
+	so, se, _, _ := cli.RunCommand(
+		wd,
+		cmdGit,
+		[]string{"tag", "-l", "--sort", "creatordate"},
+	)
+
+	if se != nil {
+		return ""
+	}
+
+	if len(so) < 1 {
+		return ""
+	}
+
+	tags := bytes.Split(so, []byte("\n"))
+	if len(tags) < 0 {
+		return ""
+	}
+	return string(tags[0])
+}
+
 // HasSemverTag Looks up tags for a commit
 func HasSemverTag(wd, commit string) bool {
 	so, se, _, _ := cli.RunCommand(
