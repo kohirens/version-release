@@ -11,6 +11,9 @@ var stderr = struct {
 	MissingEnv            string
 	NoSemverInfo          string
 	NoChangelogChanges    string
+	NothingToTag          string
+	NoVersionTag          string
+	OpenFile              string
 	PublishChangelogArgs  string
 	PublishReleaseTagArgs string
 	SemverWithChgLogCheck string
@@ -25,6 +28,9 @@ var stderr = struct {
 	MissingEnv:            "%s environment variable is not set",
 	NoChangelogChanges:    "the changelog has no changes to be committed",
 	NoSemverInfo:          "could not get version info; %s",
+	NothingToTag:          "next semantic version is empty, so we cannot release a tag",
+	NoVersionTag:          "could not find semantic version tag",
+	OpenFile:              "could not open file %v: %v",
 	PublishChangelogArgs:  "3 arguments are required to run this command, see -help",
 	PublishReleaseTagArgs: "3 arguments are required to run this command, see -help",
 	SemverWithChgLogCheck: "while checking for changes in the %s; could not get semver info: %s",
@@ -36,6 +42,7 @@ var stdout = struct {
 	FoundChgInFile string
 	GitStatus      string
 	NoCommitsToTag string
+	NextVersion    string
 	NoTags         string
 	ReleaseTag     string
 	StartWorkflow  string
@@ -45,6 +52,7 @@ var stdout = struct {
 	CurrentVersion: "%v, %v",
 	FoundChgInFile: "running %s produced changes in the %s",
 	GitStatus:      "Git status: %v",
+	NextVersion:    "next version %v",
 	NoCommitsToTag: "no commits to tag",
 	ReleaseTag:     "releasing %v",
 	StartWorkflow:  "starting %v workflow",

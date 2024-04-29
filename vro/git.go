@@ -1,39 +1,68 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
+	"github.com/kohirens/stdlib"
 	"github.com/kohirens/stdlib/log"
 	"github.com/kohirens/version-release-orb/vro/pkg/git"
 	"github.com/kohirens/version-release-orb/vro/pkg/gitcliff"
+	"os"
+	"regexp"
 	"strings"
 )
 
 // IsChangelogUpToDate Indicate if there are any changes to be added to the
 // changelog. Side effect is that it will build the changelog.
 func IsChangelogUpToDate(wd, chgLogFile string) (bool, error) {
-	// TODO: Check to see if the current changelog contains the unreleased tag.
+	var version string
+	// Check to see if the current changelog contains the unreleased tag.
 
-	// step 1: run command with no --bump to build a new or update an existing log
-	if e := gitcliff.BuildChangelog(wd, chgLogFile); e != nil {
-		return true, e
-	}
-
-	// step 2: check the git status of changelog for modification
-	status, e1 := git.StatusWithOptions(wd, []string{"--porcelain", chgLogFile})
+	u, e1 := gitcliff.UnreleasedChangelogContext(wd)
 	if e1 != nil {
-		// we return true, but we don't really know since there was an error,
-		// in any case don't do anything with the file, so pretend its up-to-date
-		return true, fmt.Errorf(stderr.GitStatus, status, e1.Error())
+		return false, e1
 	}
 
-	log.Infof(stdout.GitStatus, string(status))
+	if len(u) > 0 {
+		version = u[0].Version
+		log.Logf(stdout.NextVersion, version)
+	} else {
+		version = git.GetCurrentTag(wd)
+	}
 
-	git.PrintStatus(wd)
+	if version == "" {
+		return false, fmt.Errorf(stderr.NoVersionTag)
+	}
 
-	// when git status --porcelain will be an empty string when the file is
-	// update-to-date or the file does not exist.
-	// however it should exist since we ran the Git-cliff command to build it.
-	return len(status) == 0, nil
+	filename := wd + string(os.PathSeparator) + chgLogFile
+	// there are unreleased changes and changelog does not exist
+	if !stdlib.PathExist(filename) {
+		return false, nil
+	}
+
+	chgLogRdr, e2 := os.Open(filename)
+	if e2 != nil {
+		return false, fmt.Errorf(stderr.OpenFile, chgLogFile, e2.Error())
+	}
+
+	defer chgLogRdr.Close()
+
+	isUpToDate := false
+	re := regexp.MustCompile(`^## \[v?` + version + `]\s+-\s+\d+-\d+-\d+`)
+	res := re.String()
+	fmt.Printf("%v", res)
+	scanner := bufio.NewScanner(chgLogRdr)
+
+	for scanner.Scan() {
+		line := scanner.Text()
+		if re.MatchString(line) {
+			log.Logf("Match found!")
+			isUpToDate = true
+			break
+		}
+	}
+
+	return isUpToDate, nil
 }
 
 func lastUpdateWasAutoChangelog(wd string) bool {
