@@ -7,6 +7,7 @@ import (
 	help "github.com/kohirens/stdlib/test"
 	"os"
 	"testing"
+	"time"
 )
 
 const (
@@ -14,6 +15,16 @@ const (
 	tmpDir     = "tmp"
 	ps         = string(os.PathSeparator)
 )
+
+func TestMain(m *testing.M) {
+	// Only runs when this environment variable is set.
+	help.ResetDir(tmpDir, 0777)
+
+	// Run all tests
+	exitCode := m.Run()
+
+	os.Exit(exitCode)
+}
 
 func TestBuildChangelog(t *testing.T) {
 	chgLogFile := "CHANGELOG.md"
@@ -35,8 +46,9 @@ func TestBuildChangelog(t *testing.T) {
 
 			actual := loadFile(repo + ps + chgLogFile)
 			expected := loadFile(fixtureDir + ps + fmt.Sprintf("%v-expected-chglog.txt", tt.bundle))
+			expt := fmt.Sprintf(string(expected), time.Now().Format("2006-01-02"))
 
-			if bytes.Compare(actual, expected) != 0 {
+			if bytes.Compare(actual, []byte(expt)) != 0 {
 				t.Errorf("BuildChangelog() error %v does not match expected output", chgLogFile)
 				return
 			}
