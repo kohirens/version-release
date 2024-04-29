@@ -29,25 +29,23 @@ var stderr = struct {
 }
 
 var stdout = struct {
-	AlreadyReleased string
-	Cs              string
-	CurrentVersion  string
-	FoundChgInFile  string
-	GitStatus       string
-	NoCommitsToTag  string
-	ReleaseTag      string
-	StartWorkflow   string
-	Wd              string
+	Cs             string
+	CurrentVersion string
+	FoundChgInFile string
+	GitStatus      string
+	NoCommitsToTag string
+	NoTags         string
+	ReleaseTag     string
+	StartWorkflow  string
+	Wd             string
 }{
-	AlreadyReleased: "commit %v already has a release tag %s",
-	Cs:              "cs: %s",
-	CurrentVersion:  "%v, %v",
-	FoundChgInFile:  "running %s produced changes in the %s",
-	GitStatus:       "Git status: %v",
-	NoCommitsToTag:  "no commits to tag",
-	ReleaseTag:      "released tag %q",
-	StartWorkflow:   "starting %v workflow",
-	Wd:              "wd: %s",
+	Cs:             "cs: %s",
+	CurrentVersion: "%v, %v",
+	FoundChgInFile: "running %s produced changes in the %s",
+	GitStatus:      "Git status: %v",
+	NoCommitsToTag: "no commits to tag",
+	StartWorkflow:  "starting %v workflow",
+	Wd:             "wd: %s",
 }
 
 var um = map[string]string{

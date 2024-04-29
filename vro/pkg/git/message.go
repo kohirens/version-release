@@ -23,7 +23,7 @@ var stderr = struct {
 	CouldNotRemoveOrigin:     "problem removing the origin %s: %s, %s",
 	CouldNotSetGlobalConfig:  "could not set global config %s; %v",
 	CouldNotSetRemoteUrl:     "problem setting the remote push URL: %s, %s",
-	NoTags:                   "no tag for %s found",
+	NoTags:                   "no tag for %s found: %v",
 }
 
 var stdout = struct {

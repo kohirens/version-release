@@ -173,7 +173,7 @@ func TestTriggerPipeline_NoChangelogOrTaggableChanges(t *testing.T) {
 		t.Errorf("got %d, want %d", got, wantCode)
 	}
 
-	want2 := "no commits to tag"
+	want2 := "commit 285543c691b57f334644d1c29f9288b52645cd08 is already tagged"
 	if !strings.Contains(string(so), want2) {
 		t.Errorf("did not find expected message %q in output", want2)
 	}
