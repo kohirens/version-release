@@ -61,19 +61,23 @@ func (wf *Workflow) PublishReleaseTag(branch, wd string) error {
 }
 
 // PublishReleaseTag2 Publish a release on GitHub.
-func (wf *Workflow) PublishReleaseTag2(branch, wd string) error {
-	// Step 1: Grab semantic version info.
-	isTaggable, e1 := gitcliff.HasUnreleasedChanges(wd)
-	if e1 != nil {
-		return fmt.Errorf(stderr.CouldNotGetVersion, e1.Error())
+func (wf *Workflow) PublishReleaseTag2(branch, wd, semVer string) error {
+	// check if a version has been provided as input.
+	var nextVer string
+	if semVer != "" {
+		nextVer = semVer
+		log.Infof("semVer = %v", nextVer)
+	} else {
+		nextVer = gitcliff.Bump(wd)
+		log.Infof("Bump() = %v", nextVer)
 	}
 
-	if !isTaggable {
-		log.Logf("nothing to tag")
-		return nil
+	if nextVer == "" {
+		return fmt.Errorf(stderr.NothingToTag)
 	}
+
 	// Step 2: Publish a new tag on GitHub.
-	rr, e2 := wf.GitHubClient.TagAndRelease(branch, gitcliff.Bump(wd))
+	rr, e2 := wf.GitHubClient.TagAndRelease(branch, nextVer)
 	if e2 != nil {
 		return e2
 	}

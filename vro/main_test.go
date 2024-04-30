@@ -3,6 +3,7 @@
 package main
 
 import (
+	"bytes"
 	"github.com/kohirens/version-release-orb/vro/pkg/git"
 	"os"
 	"strings"
@@ -211,6 +212,48 @@ func Test_getRequiredEnvVars(t *testing.T) {
 						t.Errorf("got %s, want %s", v, k)
 					}
 				}
+			}
+		})
+	}
+}
+
+func TestPublishReleaseTagWorkflows(t *testing.T) {
+	_ = os.Setenv("CIRCLE_REPOSITORY_URL", "git@github.com:kohirens/version-release-orb.git")
+	defer os.Unsetenv("CIRCLE_REPOSITORY_URL")
+
+	fixedArgs := []string{"publish-release-tag", "main"}
+	tests := []struct {
+		name     string
+		bundle   string
+		args     []string
+		wantCode int
+		contains string
+	}{
+		{"no-commits-to-tag", "repo-03", fixedArgs, 1, "version is empty"},
+		{"no-commits-to-tag-2", "repo-05", fixedArgs, 1, "version is empty"},
+		{"first-release", "repo-07", fixedArgs, 0, "releasing 0.1.0"},
+		{"has-commits-to-tag", "repo-08", fixedArgs, 0, "releasing 0.1.2"},
+		{"specify-a-release", "repo-08", []string{"publish-release-tag", "--semver", "1.0.0", "main"}, 0, "releasing 1.0.0"},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			repo := help.SetupARepository(tt.bundle, tmpDir, fixtureDir, ps)
+
+			tt.args = append(tt.args, repo)
+
+			cmd := help.GetTestBinCmd(subEnvVarName, tt.args)
+
+			out, _ := help.VerboseSubCmdOut(cmd.CombinedOutput())
+
+			// get exit code.
+			got := cmd.ProcessState.ExitCode()
+
+			if got != tt.wantCode {
+				t.Errorf("PublishReleaseTagWorkflow got %d, want %d", got, tt.wantCode)
+			}
+
+			if !bytes.Contains(out, []byte(tt.contains)) {
+				t.Errorf("PublishReleaseTagWorkflow got %d, want %d", got, tt.wantCode)
 			}
 		})
 	}

@@ -6,12 +6,14 @@ import (
 	"flag"
 	"fmt"
 	"github.com/kohirens/stdlib/log"
+	"github.com/kohirens/version-release-orb/vro/internal/util"
 	"github.com/kohirens/version-release-orb/vro/pkg/circleci"
 	"github.com/kohirens/version-release-orb/vro/pkg/git"
 	"github.com/kohirens/version-release-orb/vro/pkg/github"
 	"github.com/kohirens/version-release-orb/vro/pkg/gittoolbelt"
 	"net/http"
 	"os"
+	"regexp"
 	"strconv"
 	"time"
 )
@@ -28,6 +30,10 @@ type appFlags struct {
 	version        bool
 	CommitHash     string
 	CurrentVersion string
+	TagAndRelease  struct {
+		Flags  flag.FlagSet
+		SemVer string
+	}
 }
 
 // envVars Values pulled from their environment variables equivalent. See GetRequiredEnvVars
@@ -38,6 +44,14 @@ var af = &appFlags{}
 func init() {
 	flag.BoolVar(&af.help, "help", false, um["help"])
 	flag.BoolVar(&af.version, "version", false, um["version"])
+
+	af.TagAndRelease.Flags = flag.FlagSet{}
+	af.TagAndRelease.Flags.StringVar(
+		&af.TagAndRelease.SemVer,
+		"semver",
+		"",
+		um["semver"],
+	)
 }
 
 func main() {
@@ -83,32 +97,50 @@ func main() {
 
 	switch ca[0] {
 	case publishReleaseTagWorkflow:
-		log.Logf(stdout.StartWorkflow, publishChgLogWorkflow)
+		log.Logf(stdout.StartWorkflow, publishReleaseTagWorkflow)
 		// Grab all the environment variables and alert if any are not set.
-		eVars, err1 := getRequiredEnvVars([]string{
+		eVars, e1 := getRequiredEnvVars([]string{
 			"CIRCLE_TOKEN",
 			"GH_TOKEN",
 			"CIRCLE_REPOSITORY_URL",
 			"PARAM_GH_SERVER",
 		})
-		if err1 != nil {
-			mainErr = err1
+		if e1 != nil {
+			mainErr = e1
 			return
 		}
 
 		if len(ca) < 3 {
-			log.Logf(stderr.PublishReleaseTagArgs)
-			os.Exit(1)
+			mainErr = fmt.Errorf(stderr.PublishReleaseTagArgs)
 			return
 		}
 
-		branch := ca[2]
-		wd := ca[3]
+		if e := af.TagAndRelease.Flags.Parse(ca[1:]); e != nil {
+			af.TagAndRelease.Flags.Usage()
+			mainErr = e
+			return
+		}
+
+		subCa := af.TagAndRelease.Flags.Args()
+
+		branch := subCa[0]
+		wd := subCa[1]
+		semVer := ""
+
+		if af.TagAndRelease.SemVer != "" {
+			if regexp.MustCompile(util.CheckSemVer).MatchString(af.TagAndRelease.SemVer) {
+				semVer = af.TagAndRelease.SemVer
+			} else {
+				mainErr = fmt.Errorf(stderr.InvalidSemVer, af.TagAndRelease.SemVer)
+				return
+			}
+		}
 
 		gh := github.NewClient(eVars["CIRCLE_REPOSITORY_URL"], eVars["GH_TOKEN"], eVars["PARAM_GH_SERVER"], client)
+
 		wf := NewWorkflow(eVars["CIRCLE_TOKEN"], gh)
 
-		mainErr = wf.PublishReleaseTag2(branch, wd)
+		mainErr = wf.PublishReleaseTag2(branch, wd, semVer)
 
 	case publishChgLogWorkflow:
 		log.Logf(stdout.StartWorkflow, publishChgLogWorkflow)

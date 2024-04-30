@@ -73,6 +73,8 @@ type tmplVars struct {
 	Data map[string]string
 }
 
+type postData map[string]string
+
 func LoadMock(w http.ResponseWriter, r *http.Request) {
 	vars := &tmplVars{
 		Data: map[string]string{
@@ -105,9 +107,15 @@ func LoadMock(w http.ResponseWriter, r *http.Request) {
 		vars.Data["Mock"] = mock
 		w.WriteHeader(201)
 	case "/repos/kohirens/version-release-orb/releases":
+		b, _ := io.ReadAll(r.Body)
+		var data postData
+
+		_ = json.Unmarshal(b, &data)
+		log.Logf("post data = %v", data)
 		w.WriteHeader(201)
 		vars.Data["TagNameDate"] = time.Now().Format("2006-01-02")
-		mock = "releases.json"
+
+		mock = fmt.Sprintf("%v-releases.json", data["tag_name"])
 		vars.Data["Mock"] = mock
 	case "/kohirens/repo-01/info/refs":
 		// Setup fixture

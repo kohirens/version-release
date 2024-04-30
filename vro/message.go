@@ -8,6 +8,7 @@ var stderr = struct {
 	CouldNotUpdateChglog  string
 	FiveArgsRequired      string
 	GitStatus             string
+	InvalidSemVer         string
 	MissingEnv            string
 	NoSemverInfo          string
 	NoChangelogChanges    string
@@ -25,6 +26,7 @@ var stderr = struct {
 	CouldNotUpdateChglog:  "could not update changelog: %s; %v",
 	FiveArgsRequired:      "5 arguments are required to run this command, see -help",
 	GitStatus:             "git status failed: %s; %s",
+	InvalidSemVer:         "invalid semantic version given %v",
 	MissingEnv:            "%s environment variable is not set",
 	NoChangelogChanges:    "the changelog has no changes to be committed",
 	NoSemverInfo:          "could not get version info; %s",
@@ -62,4 +64,5 @@ var stdout = struct {
 var um = map[string]string{
 	"help":    "display this help",
 	"version": "display version information",
+	"semver":  "provide a semantic version to tag and release",
 }

@@ -7,6 +7,7 @@ import (
 	"github.com/kohirens/stdlib"
 	"github.com/kohirens/stdlib/cli"
 	"github.com/kohirens/stdlib/log"
+	"github.com/kohirens/version-release-orb/vro/internal/util"
 	"regexp"
 	"strings"
 )
@@ -39,7 +40,10 @@ func BuildChangelog(wd, chgLogFile string) error {
 	return nil
 }
 
-// Bump Returns the next semantic version
+// Bump Returns the next semantic version if there are unreleased changes.
+//
+//	This will return an empty string if there are no released changes, however
+//	that does NOT mean the changelog is up-to-date.
 func Bump(wd string) string {
 	so, se, _, cs := cli.RunCommand(
 		wd,
@@ -54,14 +58,18 @@ func Bump(wd string) string {
 		return ""
 	}
 
-	re := regexp.MustCompile(`^v?\d\.\d\.\d`)
+	if bytes.Contains(so, []byte("There is nothing to bump")) { // every thing is up-to-date
+		return ""
+	}
+
+	re := regexp.MustCompile(util.CheckSemVer)
 
 	var found []byte
 	out := bytes.Split(bytes.Trim(so, "\n"), []byte("\n"))
 
-	if len(out) > 1 {
+	if len(out) > 1 { // this means no previous releases found and there are unreleased changes to bump
 		found = re.Find(out[1])
-	} else {
+	} else { // this means a previous release exist and there are unreleased changes to bump
 		found = re.Find(out[0])
 	}
 
