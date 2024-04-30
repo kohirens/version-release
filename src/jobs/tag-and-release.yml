@@ -11,9 +11,9 @@ parameters:
     type: string
     default: "CHANGELOG.md"
   do_attach_workspace:
-    description: Set to `false` to skip attaching the workspace.
+    description: Set to `true` to perform attach_workspace.
     type: boolean
-    default: true
+    default: false
   do_checkout:
     description: Set to `false` to skip performing a checkout.
     type: boolean

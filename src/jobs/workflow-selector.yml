@@ -2,6 +2,10 @@ description: |2
   Selects a workflow to execute when code is merged into main.
 
 parameters:
+  attach_workspace_path:
+    default: "."
+    description: Set where to attach the workspace.
+    type: string
   circleci_api_host:
     type: string
     default: "https://circleci.com"
@@ -18,6 +22,11 @@ parameters:
     description: Location to output/update the CHANGELOG file.
     type: string
     default: "CHANGELOG.md"
+  do_attach_workspace:
+    default: false
+    description: |2
+      Set this to `true` to attaching the workspace or false to skip this step.
+    type: boolean
   do_checkout:
     description: In case you need to customize.
     type: boolean
@@ -62,6 +71,11 @@ steps:
       condition: << parameters.do_checkout >>
       steps:
         - checkout
+  - when:
+      condition: << parameters.do_attach_workspace >>
+      steps:
+         - attach_workspace:
+             at: << parameters.attach_workspace_path >>
   - add_ssh_keys:
       fingerprints:
         - << parameters.ssh_finger >>
