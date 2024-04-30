@@ -23,7 +23,7 @@ parameters:
     type: boolean
     default: true
   exec_img_tag:
-    default: "latest"
+    default: "3.1.0"
     description: Version of the executor image to pull.
     type: string
   git_chglog_config_file:
