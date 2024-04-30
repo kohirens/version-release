@@ -6,10 +6,6 @@ parameters:
     description: Set where to attach the workspace.
     type: string
     default: "."
-  changelog_file:
-    description: Location to output/update the CHANGELOG file.
-    type: string
-    default: "CHANGELOG.md"
   do_attach_workspace:
     description: Set to `true` to perform attach_workspace.
     type: boolean
@@ -38,6 +34,18 @@ parameters:
     description: Environment variable to get the semver tag, will override tagged.txt.
     type: string
     default: "CIRCLE_TAG"
+  tag_cmd:
+    description: Environment variable to get the semver tag, will override tagged.txt.
+    type: string
+    default: ""
+  tag_env_var:
+    description: Environment variable to get the semver tag, will override tagged.txt.
+    type: string
+    default: ""
+  tag_file:
+    description: Environment variable to get the semver tag, will override tagged.txt.
+    type: string
+    default: "CIRCLE_TAG"
   working_directory:
     description: In case you need to customize, defaults to the current dir.
     type: string
@@ -59,10 +67,12 @@ steps:
             at: "<< parameters.attach_workspace_path >>"
   - run:
       environment:
-        PARAM_CHANGELOG_FILE: "<< parameters.changelog_file >>"
         PARAM_GH_SERVER: "<< parameters.github_server >>"
         PARAM_GH_TOKEN_VAR: "<< parameters.gh_token_var >>"
         PARAM_MAIN_TRUNK_BRANCH: "<< parameters.main_trunk_branch >>"
+        PARAM_TAG_CMD: "<< parameters.tag_cmd >>"
+        PARAM_TAG_ENV_VAR: "<< parameters.tag_env_var >>"
+        PARAM_TAG_FILE: "<< parameters.tag_file >>"
         PARAM_WORKING_DIRECTORY: "<< parameters.working_directory >>"
       name: Make A New Release
       command: << include(scripts/tag-and-release.sh) >>

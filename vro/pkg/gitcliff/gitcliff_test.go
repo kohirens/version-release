@@ -98,7 +98,7 @@ func TestBump(t *testing.T) {
 		want   string
 	}{
 		{"has-unreleased-commits", "repo-04", "0.1.0"},
-		{"no-unreleased", "repo-05", "0.1.0"},
+		{"no-unreleased", "repo-05", ""},
 		{"major-release", "repo-06", "1.0.0"},
 		{"minor-release", "repo-07", "0.2.0"},
 		{"patch-release", "repo-08", "0.1.1"},

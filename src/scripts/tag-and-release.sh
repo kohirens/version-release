@@ -1,6 +1,33 @@
 publish_tag_and_release() {
-    vro publish-release-tag \
-        "${PARAM_CHANGELOG_FILE}" \
+
+    # Get the value of the semantic version tag in 1 of 3 way.
+    # If more than 1 is set, the last wins.
+    semver=""
+    if [ -n "${PARAM_TAG_CMD}" ]; then
+        semver="$("${PARAM_TAG_CMD}")"
+        echo "semantic version ${semver} was set by command"
+    fi
+
+    if [ -n "${PARAM_TAG_ENV_VAR}" ]; then
+        semver="${!PARAM_TAG_ENV_VAR}"
+        echo "semantic version ${semver} was extracted from environment variable ${PARAM_TAG_ENV_VAR}"
+    fi
+
+    if [ -n "${PARAM_TAG_FILE}" ]; then
+        semver="$(cat ${PARAM_TAG_FILE})"
+        echo "semantic version ${semver} was pull from file ${PARAM_TAG_FILE}"
+    fi
+
+    if [ -n "${PARAM_TAG_FILE}" ]; then
+        semver="$(cat ${PARAM_TAG_FILE})"
+        echo "semantic version ${semver} was pull from file ${PARAM_TAG_FILE}"
+    fi
+
+    if [ -n "${semver}" ]; then
+        tag_flag="--semver ${semver}"
+    fi
+
+    vro publish-release-tag "${tag_flag}" \
         "${PARAM_MAIN_TRUNK_BRANCH}" \
         "${PARAM_WORKING_DIRECTORY}"
 }

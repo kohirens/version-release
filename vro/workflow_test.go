@@ -25,7 +25,7 @@ func TestWorkflow_PublishReleaseTag(t *testing.T) {
 	repo := test.SetupARepository("repo-06", "tmp", "testdata", string(os.PathSeparator))
 	wf := NewWorkflow("citoken", mc)
 
-	err1 := wf.PublishReleaseTag2("main", repo)
+	err1 := wf.PublishReleaseTag2("main", repo, "")
 	if err1 != nil {
 		t.Errorf("PublishReleaseTag() error = %v", err1)
 	}
