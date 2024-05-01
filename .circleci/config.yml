@@ -82,6 +82,8 @@ jobs:
                 default: "dev:alpha"
                 description: version tag for the image
                 type: string
+            image_tag:
+                type: string
         executor: cli/default
         steps:
             - attach_workspace: { at: "." }
@@ -89,10 +91,10 @@ jobs:
                   name: "Publish Orb"
                   command: |
                       # Update the placeholders in these files
-                      sed -i -e "s/VERSION_RELEASE_IMAGE/<<parameters.ver_tag>>/g" src/executors/default.yml
-                      sed -i -e "s/VERSION_RELEASE_IMAGE/<<parameters.ver_tag>>/g" src/jobs/publish-changelog.yml
-                      sed -i -e "s/VERSION_RELEASE_IMAGE/<<parameters.ver_tag>>/g" src/jobs/tag-and-release.yml
-                      sed -i -e "s/VERSION_RELEASE_IMAGE/<<parameters.ver_tag>>/g" src/jobs/workflow-selector.yml
+                      sed -i -e "s/VERSION_RELEASE_IMAGE/<<parameters.image_tag>>/g" src/executors/default.yml
+                      sed -i -e "s/VERSION_RELEASE_IMAGE/<<parameters.image_tag>>/g" src/jobs/publish-changelog.yml
+                      sed -i -e "s/VERSION_RELEASE_IMAGE/<<parameters.image_tag>>/g" src/jobs/tag-and-release.yml
+                      sed -i -e "s/VERSION_RELEASE_IMAGE/<<parameters.image_tag>>/g" src/jobs/workflow-selector.yml
                       BUILD_VER=<<parameters.ver_tag>>
                       if [ -z "${BUILD_VER}" ]; then
                         echo "no tag found in order to publish Orb"
@@ -151,7 +153,8 @@ workflows:
                   name: "publish-dev-orb"
                   context: << pipeline.parameters.ctx_auto_release >>
                   requires: [ publish-dev-image ]
-                  ver_tag: "dev:alpha"
+                  ver_tag: "dev:<< pipeline.git.revision >>"
+                  image_tag: "dev"
             - ot/trigger-integration-tests-workflow:
                   name: trigger-integration-tests
                   context: << pipeline.parameters.ctx_auto_release >>
@@ -222,5 +225,6 @@ workflows:
                   context: << pipeline.parameters.ctx_auto_release >>
                   requires: [ publish-prod-image-semver ]
                   ver_tag: << pipeline.git.tag >>
+                  image_tag: "<< pipeline.git.tag >>"
                   filters:
                       <<: *filter-semantic-tag
