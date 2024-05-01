@@ -15,7 +15,7 @@ parameters:
     type: boolean
     default: true
   exec_img_tag:
-    default: "latest"
+    default: "VERSION_RELEASE_IMAGE"
     description: Version of the executor image to pull.
     type: string
   gh_token_var:
