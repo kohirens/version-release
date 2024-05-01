@@ -36,31 +36,31 @@ parameters:
     description: Version of the executor image to pull.
     type: string
   github_token_var:
+    default: GH_TOKEN
     description: Name of the environment variable holding the GitHub API token.
     type: env_var_name
-    default: GH_TOKEN
   github_server:
+    default: "github.com"
     description: Github server domain.
     type: string
-    default: "github.com"
   main_trunk_branch:
+    default: "main"
     description: Name of the main trunk branch to tag.
     type: string
-    default: "main"
   ssh_finger:
     description: |2
       Fingerprint of an SSH key that can be used to perform a merge into a
       branch.
     type: string
   vcs_type:
-    type: enum
     default: "gh"
-    enum: ["gh"]
     description: VCS type. Only Github `gh` is supported. No BitBucket `bb` yet.
+    enum: ["gh"]
+    type: enum
   working_directory:
+    default: .
     description: In case you need to customize, defaults to the current dir.
     type: string
-    default: .
 
 executor:
   name: default
