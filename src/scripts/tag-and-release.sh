@@ -24,7 +24,7 @@ publish_tag_and_release() {
     fi
 
     if [ -n "${semver}" ]; then
-        tag_flag="--semver ${semver}"
+        tag_flag="-semver ${semver}"
     fi
 
     vro publish-release-tag "${tag_flag}" \
