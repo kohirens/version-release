@@ -81,6 +81,11 @@ jobs:
             - run:
                   name: "Publish Orb"
                   command: |
+                      # Update the placeholders in these files
+                      sed -i -e "s/VERSION_RELEASE_IMAGE/<<parameters.ver_tag>>/g" src/executors/default.yml
+                      sed -i -e "s/VERSION_RELEASE_IMAGE/<<parameters.ver_tag>>/g" src/jobs/publish-changelog.yml
+                      sed -i -e "s/VERSION_RELEASE_IMAGE/<<parameters.ver_tag>>/g" src/jobs/tag-and-release.yml
+                      sed -i -e "s/VERSION_RELEASE_IMAGE/<<parameters.ver_tag>>/g" src/jobs/workflow-selector.yml
                       BUILD_VER=<<parameters.ver_tag>>
                       if [ -z "${BUILD_VER}" ]; then
                         echo "no tag found in order to publish Orb"
@@ -195,17 +200,6 @@ workflows:
                   filters:
                       <<: *filter-semantic-tag
             - vr/publish-docker-hub:
-                  name: "publish-prod-image-latest"
-                  context: << pipeline.parameters.ctx_docker_hub >>
-                  requires: [ co ]
-                  filters:
-                      <<: *filter-semantic-tag
-                  do_attach_workspace: true
-                  do_checkout: false
-                  dockerfile: ".docker/vr/Dockerfile"
-                  repository: << pipeline.parameters.orb_repo >>
-                  image_tag: "latest"
-            - vr/publish-docker-hub:
                   name: "publish-prod-image-semver"
                   context: << pipeline.parameters.ctx_docker_hub >>
                   requires: [ co ]
@@ -219,7 +213,7 @@ workflows:
             - orb-publish:
                   name: "publish-prod-orb"
                   context: << pipeline.parameters.ctx_auto_release >>
-                  requires: [ publish-prod-image-latest ]
+                  requires: [ publish-prod-image-semver ]
                   ver_tag: << pipeline.git.tag >>
                   filters:
                       <<: *filter-semantic-tag

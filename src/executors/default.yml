@@ -4,7 +4,7 @@ description: >
 parameters:
   exec_img_tag:
     type: string
-    default: "latest"
+    default: "VERSION_RELEASE_IMAGE"
 
 docker:
   - image: kohirens/version-release:<< parameters.exec_img_tag >>
