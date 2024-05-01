@@ -32,6 +32,7 @@ type appFlags struct {
 	CurrentVersion string
 	TagAndRelease  struct {
 		Flags  flag.FlagSet
+		Help   bool
 		SemVer string
 	}
 }
@@ -46,11 +47,17 @@ func init() {
 	flag.BoolVar(&af.version, "version", false, um["version"])
 
 	af.TagAndRelease.Flags = flag.FlagSet{}
+	af.TagAndRelease.Flags.BoolVar(
+		&af.TagAndRelease.Help,
+		"help",
+		false,
+		um["tag_and_release_help"],
+	)
 	af.TagAndRelease.Flags.StringVar(
 		&af.TagAndRelease.SemVer,
 		"semver",
 		"",
-		um["semver"],
+		um["tag_and_release_semver"],
 	)
 }
 
@@ -97,6 +104,16 @@ func main() {
 
 	switch ca[0] {
 	case publishReleaseTagWorkflow:
+		if e := af.TagAndRelease.Flags.Parse(ca[1:]); e != nil {
+			af.TagAndRelease.Flags.Usage()
+			mainErr = e
+			return
+		}
+
+		if af.TagAndRelease.Help {
+			af.TagAndRelease.Flags.PrintDefaults()
+			return
+		}
 		log.Logf(stdout.StartWorkflow, publishReleaseTagWorkflow)
 		// Grab all the environment variables and alert if any are not set.
 		eVars, e1 := getRequiredEnvVars([]string{
@@ -112,12 +129,6 @@ func main() {
 
 		if len(ca) < 3 {
 			mainErr = fmt.Errorf(stderr.PublishReleaseTagArgs)
-			return
-		}
-
-		if e := af.TagAndRelease.Flags.Parse(ca[1:]); e != nil {
-			af.TagAndRelease.Flags.Usage()
-			mainErr = e
 			return
 		}
 

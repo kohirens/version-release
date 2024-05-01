@@ -66,7 +66,8 @@ var stdout = struct {
 }
 
 var um = map[string]string{
-	"help":    "display this help",
-	"version": "display version information",
-	"semver":  "provide a semantic version to tag and release",
+	"help":                        "display this help",
+	"version":                     "display version information",
+	"tag_and_release_semver_help": "publish-release-tag -help displays this help",
+	"tag_and_release_semver":      "provide a semantic version to tag and release",
 }

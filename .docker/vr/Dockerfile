@@ -94,8 +94,9 @@ RUN rm /usr/local/bin/git-chglog
 USER ${USER_NAME}
 
 # Add build artifacts
-COPY --from=build --chown=${USER_NAME}:${USER_GROUP} "/home/${USER_NAME}/bin/vro" /bin/vro
+COPY --from=build --chown=${USER_NAME}:${USER_GROUP} "/home/${USER_NAME}/bin/vro" "/home/${USER_NAME}/bin/vro"
 
 ENV PATH="${PATH}:/home/${USER_NAME}/bin"
 
 ENTRYPOINT [ "vro" ]
+# docker build --rm -t kohirens/version-release:dev -f .docker/vr/Dockerfile .
