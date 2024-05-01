@@ -5,7 +5,6 @@ import (
 	"github.com/kohirens/stdlib/log"
 	"github.com/kohirens/version-release-orb/vro/pkg/circleci"
 	"github.com/kohirens/version-release-orb/vro/pkg/gitcliff"
-	"github.com/kohirens/version-release-orb/vro/pkg/gittoolbelt"
 )
 
 type Workflow struct {
@@ -46,26 +45,7 @@ func (wf *Workflow) PublishChangelog(wd, chgLogFile, branch string) error {
 }
 
 // PublishReleaseTag Publish a release on GitHub.
-func (wf *Workflow) PublishReleaseTag(branch, wd string) error {
-	// Step 1: Grab semantic version info.
-	si, err1 := gittoolbelt.Semver(wd)
-	if err1 != nil {
-		return fmt.Errorf(stderr.CouldNotGetVersion, err1)
-	}
-
-	// Step 2: Publish a new tag on GitHub.
-	rr, err2 := wf.GitHubClient.TagAndRelease(branch, si.NextVersion)
-	if err2 != nil {
-		return err2
-	}
-
-	log.Logf(stdout.ReleaseTag, rr.Name)
-
-	return nil
-}
-
-// PublishReleaseTag2 Publish a release on GitHub.
-func (wf *Workflow) PublishReleaseTag2(branch, wd, semVer string) error {
+func (wf *Workflow) PublishReleaseTag(branch, wd, semVer string) error {
 	// check if a version has been provided as input.
 	var nextVer string
 	if semVer != "" {

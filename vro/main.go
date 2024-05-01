@@ -140,7 +140,7 @@ func main() {
 
 		wf := NewWorkflow(eVars["CIRCLE_TOKEN"], gh)
 
-		mainErr = wf.PublishReleaseTag2(branch, wd, semVer)
+		mainErr = wf.PublishReleaseTag(branch, wd, semVer)
 
 	case publishChgLogWorkflow:
 		log.Logf(stdout.StartWorkflow, publishChgLogWorkflow)
