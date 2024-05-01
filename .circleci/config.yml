@@ -133,10 +133,17 @@ workflows:
                   requires: [ co ]
                   dir: ./src/scripts
                   exclude: SC2148
+            - vr/publish-docker-hub:
+                  name: "publish-dev-image"
+                  context: << pipeline.parameters.ctx_docker_hub >>
+                  requires: [ bats/run, shellcheck/check ]
+                  dockerfile: ".docker/vr/Dockerfile"
+                  image_tag: "dev"
+                  repository: << pipeline.parameters.orb_repo >>
             - orb-publish:
                   name: "publish-dev-orb"
                   context: << pipeline.parameters.ctx_auto_release >>
-                  requires: [ bats/run, shellcheck/check ]
+                  requires: [ publish-dev-image ]
                   ver_tag: "dev:<< pipeline.git.revision >>"
             - ot/trigger-integration-tests-workflow:
                   name: trigger-integration-tests
@@ -155,13 +162,6 @@ workflows:
                   context: <<pipeline.parameters.ctx_docker_hub>>
                   filters: *branches-to-skip
                   requires: [ co ]
-            - vr/publish-docker-hub:
-                  name: "publish-dev-image"
-                  context: << pipeline.parameters.ctx_docker_hub >>
-                  requires: [ co ]
-                  dockerfile: ".docker/vr/Dockerfile"
-                  image_tag: "dev"
-                  repository: << pipeline.parameters.orb_repo >>
         when: << pipeline.parameters.run_integration_tests >>
 
     workflow-selector:
