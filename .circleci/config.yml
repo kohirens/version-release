@@ -48,6 +48,13 @@ executors:
                   username: ${DH_USER}
                   password: ${DH_PASS}
         resource_class: small
+    base:
+        docker: # see https://circleci.com/docs/building-docker-images/#docker-version
+            - image: cimg/base:2023.04
+              auth:
+                  username: ${DH_USER}
+                  password: ${DH_PASS}
+        resource_class: small
 
 filter-semantic-tag: &filter-semantic-tag
     tags:
@@ -64,7 +71,7 @@ pre-attach: &pre-attach
 
 jobs:
     co:
-        executor: vr/default
+        executor: base
         steps:
             - checkout
             - persist_to_workspace: { root: ".",  paths: [ "*" ] }
@@ -144,7 +151,7 @@ workflows:
                   name: "publish-dev-orb"
                   context: << pipeline.parameters.ctx_auto_release >>
                   requires: [ publish-dev-image ]
-                  ver_tag: "dev:<< pipeline.git.revision >>"
+                  ver_tag: "dev:alpha"
             - ot/trigger-integration-tests-workflow:
                   name: trigger-integration-tests
                   context: << pipeline.parameters.ctx_auto_release >>
