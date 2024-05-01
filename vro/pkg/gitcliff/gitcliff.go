@@ -93,13 +93,17 @@ func HasUnreleasedChanges(wd string) (bool, error) {
 		return false, fmt.Errorf(stderr.UpdateChgLog, se.Error())
 	}
 
+	if len(so) < 1 || bytes.Equal(bytes.Trim(so, "\n"), []byte("[]")) {
+		return false, nil
+	}
+
 	var u []Unreleased
 
 	if e := json.Unmarshal(so, &u); e != nil {
 		return false, fmt.Errorf(stderr.CannotDecodeJson, e.Error())
 	}
 
-	return len(u) > 0, nil
+	return len(u[0].Commits) > 0, nil
 }
 
 // UnreleasedChangelogContext Indicate there are changes in the current branch that
