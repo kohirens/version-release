@@ -41,8 +41,10 @@ var stderr = struct {
 var stdout = struct {
 	Cs             string
 	CurrentVersion string
+	CurrentVer     string
 	FoundChgInFile string
 	GitStatus      string
+	Match          string
 	NoCommitsToTag string
 	NextVersion    string
 	NoTags         string
@@ -52,8 +54,10 @@ var stdout = struct {
 }{
 	Cs:             "cs: %s",
 	CurrentVersion: "%v, %v",
+	CurrentVer:     "current version %v",
 	FoundChgInFile: "running %s produced changes in the %s",
 	GitStatus:      "Git status: %v",
+	Match:          "match found",
 	NextVersion:    "next version %v",
 	NoCommitsToTag: "no commits to tag",
 	ReleaseTag:     "releasing %v",

@@ -28,6 +28,7 @@ func IsChangelogUpToDate(wd, chgLogFile string) (bool, error) {
 		log.Logf(stdout.NextVersion, version)
 	} else {
 		version = git.GetCurrentTag(wd)
+		log.Logf(stdout.CurrentVer, version)
 	}
 
 	if version == "" {
@@ -49,14 +50,12 @@ func IsChangelogUpToDate(wd, chgLogFile string) (bool, error) {
 
 	isUpToDate := false
 	re := regexp.MustCompile(`^## \[v?` + version + `]\s+-\s+\d+-\d+-\d+`)
-	res := re.String()
-	fmt.Printf("%v", res)
 	scanner := bufio.NewScanner(chgLogRdr)
 
 	for scanner.Scan() {
 		line := scanner.Text()
 		if re.MatchString(line) {
-			log.Logf("Match found!")
+			log.Logf(stdout.Match)
 			isUpToDate = true
 			break
 		}
