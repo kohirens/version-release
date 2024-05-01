@@ -13,7 +13,7 @@ import (
 )
 
 // IsChangelogUpToDate Indicate if there are any changes to be added to the
-// changelog. Side effect is that it will build the changelog.
+// changelog.
 func IsChangelogUpToDate(wd, chgLogFile string) (bool, error) {
 	var version string
 	// Check to see if the current changelog contains the unreleased tag.

@@ -105,12 +105,14 @@ func TestWorkflowSelector_TagRelease(t *testing.T) {
 }
 
 func TestTriggeredPublishReleaseTagWorkflow(t *testing.T) {
-	wantCode := 0
+	_ = os.Setenv("CIRCLE_REPOSITORY_URL", "git@github.com:kohirens/version-release-orb.git")
+	defer os.Unsetenv("CIRCLE_REPOSITORY_URL")
+
+	wantCode := 1
 
 	repo := help.SetupARepository("repo-03", tmpDir, fixtureDir, ps)
 	// This git commit has no changelog updates but there is a commit to tag
-	fixedArgs := []string{"publish-release-tag", "CHANGELOG.md", "main", repo}
-	_ = os.Setenv("CIRCLE_REPOSITORY_URL", "git@github.com:kohirens/version-release-orb.git")
+	fixedArgs := []string{"publish-release-tag", "main", repo}
 
 	cmd := help.GetTestBinCmd(subEnvVarName, fixedArgs)
 
