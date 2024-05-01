@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/kohirens/stdlib/cli"
 	"github.com/kohirens/stdlib/log"
+	"github.com/kohirens/version-release-orb/vro/internal/util"
 	"regexp"
 	"strings"
 )
@@ -119,18 +120,23 @@ func HasSemverTag(wd, commit string) bool {
 	so, se, _, _ := cli.RunCommand(
 		wd,
 		cmdGit,
-		[]string{"describe", commit},
+		[]string{"describe", "--contains", commit},
 	)
 
 	if se != nil {
-		log.Errf(stderr.NoTags, commit, se.Error())
+		if strings.Contains(se.Error(), "cannot describe") { // handle expected error
+			log.Logf(stdout.NoTags, commit)
+		} else {
+			log.Errf(stderr.GitDescribeContains, commit, se.Error())
+		}
 		return false
 	}
 
-	log.Logf(stdout.TagsFound, so)
+	log.Logf(stdout.TagsInfo, so)
 
-	re := regexp.MustCompile(`^v?\d.\d.\d`)
-	return re.MatchString(string(so))
+	re := regexp.MustCompile(util.CheckSemVer)
+
+	return re.Match(so)
 }
 
 // LastLog Return the last commit log.
