@@ -11,8 +11,8 @@ var stderr = struct {
 	CouldNotRemoveOrigin     string
 	CouldNotSetGlobalConfig  string
 	CouldNotSetRemoteUrl     string
+	GitDescribeContains      string
 	LastLog                  string
-	NoTags                   string
 }{
 	CouldNotAddOrigin:        "problem adding the origin %s: %s, %s",
 	CouldNotCheckoutBranch:   "could not checkout branch: %s; %v",
@@ -24,20 +24,22 @@ var stderr = struct {
 	CouldNotRemoveOrigin:     "problem removing the origin %s: %s, %s",
 	CouldNotSetGlobalConfig:  "could not set global config %s; %v",
 	CouldNotSetRemoteUrl:     "problem setting the remote push URL: %s, %s",
+	GitDescribeContains:      "cannot describe commit %v: %v\n",
 	LastLog:                  "could not get latest log: %s",
-	NoTags:                   "no tag for %s found: %v",
 }
 
 var stdout = struct {
 	FoundRemoteBranch  string
+	NoTags             string
 	SetGitGlobalConfig string
 	StagedFiles        string
 	Status             string
-	TagsFound          string
+	TagsInfo           string
 }{
 	FoundRemoteBranch:  "found remote branch %s\n",
+	NoTags:             "no tag for %v was found",
 	SetGitGlobalConfig: "set git config global %s\n",
 	StagedFiles:        "staged files %s\n",
 	Status:             "status: %s",
-	TagsFound:          "tag(s) found %s\n",
+	TagsInfo:           "tag(s) found %s\n",
 }
