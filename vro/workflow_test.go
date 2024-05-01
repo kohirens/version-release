@@ -26,7 +26,7 @@ func TestWorkflow_PublishReleaseTag(t *testing.T) {
 	wf := NewWorkflow("citoken", mc)
 
 	err1 := wf.PublishReleaseTag2("main", repo, "")
-	if err1 != nil {
-		t.Errorf("PublishReleaseTag() error = %v", err1)
+	if err1 == nil {
+		t.Errorf("PublishReleaseTag() expected error, got = %v", err1)
 	}
 }

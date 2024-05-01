@@ -37,6 +37,10 @@ func (wf *Workflow) PublishChangelog(wd, chgLogFile, branch string) error {
 		return fmt.Errorf(stderr.NoChangelogChanges)
 	}
 
+	if e := gitcliff.BuildChangelog(wd, chgLogFile); e != nil {
+		return e
+	}
+
 	// Step 4: Commit, push, and publish the changelog.
 	return wf.GitHubClient.PublishChangelog(wd, branch, chgLogFile)
 }
