@@ -21,12 +21,12 @@ parameters:
           `do_checkout` to true.
         type: boolean
     do_checkout:
+        default: true
         description: |
           Set this to true to perform a checkout step, or false to skip.
           If you do set this to false, then you may want to set
           `do_attach_workspace` to true.
         type: boolean
-        default: true
     docker_buildkit:
         default: "1"
         description: Set the Docker environment variable DOCKER_BUILDKIT

@@ -3,53 +3,49 @@ description: |2
 
 parameters:
   attach_workspace_path:
+    default: "."
     description: Set where to attach the workspace.
     type: string
-    default: "."
   do_attach_workspace:
+    default: false
     description: Set to `true` to perform attach_workspace.
     type: boolean
-    default: false
   do_checkout:
+    default: true
     description: Set to `false` to skip performing a checkout.
     type: boolean
-    default: true
   exec_img_tag:
     default: "VERSION_RELEASE_IMAGE"
     description: Version of the executor image to pull.
     type: string
   gh_token_var:
+    default: GH_TOKEN
     description: Name of the environment variable holding the GitHub API write token.
     type: env_var_name
-    default: GH_TOKEN
   github_server:
+    default: "github.com"
     description: Github server domain.
     type: string
-    default: "github.com"
   main_trunk_branch:
-      description: Name of the main trunk branch to tag.
-      type: string
-      default: "main"
-  tag:
-    description: Environment variable to get the semver tag, will override tagged.txt.
+    default: "main"
+    description: Name of the main trunk branch to tag.
     type: string
-    default: "CIRCLE_TAG"
   tag_cmd:
+    default: ""
     description: Environment variable to get the semver tag, will override tagged.txt.
     type: string
-    default: ""
   tag_env_var:
-    description: Environment variable to get the semver tag, will override tagged.txt.
-    type: string
     default: ""
-  tag_file:
     description: Environment variable to get the semver tag, will override tagged.txt.
     type: string
-    default: "CIRCLE_TAG"
+  tag_file:
+    default: ""
+    description: Environment variable to get the semver tag, will override tagged.txt.
+    type: string
   working_directory:
+    default: .
     description: In case you need to customize, defaults to the current dir.
     type: string
-    default: .
 
 executor:
     name: default

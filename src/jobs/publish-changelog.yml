@@ -11,51 +11,51 @@ description: |2
   We use a PR instead of a push in case the branch is protected from direct pushes.
 parameters:
   attach_workspace_path:
+    default: "."
     description: Set where to attach the workspace.
     type: string
-    default: "."
   changelog_file:
+    default: "CHANGELOG.md"
     description: Location to output/update the CHANGELOG file.
     type: string
-    default: "CHANGELOG.md"
   do_attach_workspace:
+    default: false
     description: >
       Set this to `true` to attaching the workspace or false to skip this step.
       If you do set this to false, then you may want to set `do_checkout` to
       true.
     type: boolean
-    default: false
   do_checkout:
+    default: true
     description: >
       Set this to true to perform a checkout step, or false to skip.
       If you do set this to false, then you may want to set
       `do_attach_workspace` to true.
     type: boolean
-    default: true
   exec_img_tag:
     default: "VERSION_RELEASE_IMAGE"
     description: Version of the executor image to pull.
     type: string
   github_server:
+    default: "github.com"
     description: Github server domain.
     type: string
-    default: "github.com"
   main_trunk_branch:
-      description: Name of the main trunk branch to tag.
-      type: string
-      default: "main"
+    default: "main"
+    description: Name of the main trunk branch to tag.
+    type: string
   merge_type:
+    default: "rebase"
     description: Type of merge to perform, choose between merge|squash|rebase.
     type: enum
     enum: [ "merge", "rebase", "squash" ]
-    default: "rebase"
   ssh_finger:
     description: Fingerprint of an SSH key that can be used to perform a merge into a branch.
     type: string
   working_directory:
+    default: .
     description: In case you need to customize, defaults to the current dir.
     type: string
-    default: .
 
 executor:
   name: default
