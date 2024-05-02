@@ -57,7 +57,7 @@ var stdout = struct {
 	CurrentVer:     "current version %v",
 	FoundChgInFile: "running %s produced changes in the %s",
 	GitStatus:      "Git status: %v",
-	Match:          "match found",
+	Match:          "entry for %v in the changelog was found, we assume this means the changelog is up-to-date",
 	NextVersion:    "next version %v",
 	NoCommitsToTag: "no commits to tag",
 	ReleaseTag:     "releasing %v",

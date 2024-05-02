@@ -55,7 +55,7 @@ func IsChangelogUpToDate(wd, chgLogFile string) (bool, error) {
 	for scanner.Scan() {
 		line := scanner.Text()
 		if re.MatchString(line) {
-			log.Logf(stdout.Match)
+			log.Logf(stdout.Match, version)
 			isUpToDate = true
 			break
 		}
