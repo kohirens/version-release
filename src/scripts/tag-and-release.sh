@@ -18,18 +18,13 @@ publish_tag_and_release() {
         echo "semantic version ${semver} was pull from file ${PARAM_TAG_FILE}"
     fi
 
-    if [ -n "${PARAM_TAG_FILE}" ]; then
-        semver="$(cat "${PARAM_TAG_FILE}")"
-        echo "semantic version ${semver} was pull from file ${PARAM_TAG_FILE}"
-    fi
-
     if [ -n "${semver}" ]; then
         tag_flag="-semver ${semver}"
     fi
 
-    vro publish-release-tag "${tag_flag}" \
-        "${PARAM_MAIN_TRUNK_BRANCH}" \
-        "${PARAM_WORKING_DIRECTORY}"
+    cmd_to_run="vro publish-release-tag ${tag_flag} ${PARAM_MAIN_TRUNK_BRANCH} ${PARAM_WORKING_DIRECTORY}"
+
+    $cmd_to_run
 }
 
 # Will not run if sourced for bats-core tests.
