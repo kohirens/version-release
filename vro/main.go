@@ -10,7 +10,6 @@ import (
 	"github.com/kohirens/version-release-orb/vro/pkg/circleci"
 	"github.com/kohirens/version-release-orb/vro/pkg/git"
 	"github.com/kohirens/version-release-orb/vro/pkg/github"
-	"github.com/kohirens/version-release-orb/vro/pkg/gittoolbelt"
 	"net/http"
 	"os"
 	"regexp"
@@ -249,10 +248,10 @@ func main() {
 
 		// Step 5: Verify that the range of commits contain a message to
 		// indicate they should be tagged.
-		if !gittoolbelt.IsTaggable(wd) {
-			log.Logf(stdout.NoCommitsToTag)
-			return
-		}
+		//if !gittoolbelt.IsTaggable(wd) {
+		//	log.Logf(stdout.NoCommitsToTag)
+		//	return
+		//}
 
 		// Step 6: Build pipeline parameters to trigger the tag-and-release
 		// workflow
