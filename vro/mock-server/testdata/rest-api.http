@@ -1,4 +1,4 @@
-GET https://github.com/kohirens/version-release-orb/info/refs?service=git-upload-pack
+GET https://github.com/kohirens/version-release/info/refs?service=git-upload-pack
 
 Accept: [*/*]
 Accept-Encoding: [deflate, gzip, br]

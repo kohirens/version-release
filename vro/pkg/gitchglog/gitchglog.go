@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"github.com/kohirens/stdlib/cli"
 	"github.com/kohirens/stdlib/log"
-	"github.com/kohirens/version-release-orb/vro/pkg/gittoolbelt"
+	"github.com/kohirens/version-release/vro/pkg/gittoolbelt"
 )
 
 // RebuildChangelog Runs git-chglog to update the change log file.

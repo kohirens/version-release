@@ -4,7 +4,7 @@ description: |2
   published for the main trunk branch in this example.
 
   There are some prerequisites, so please go to
-  https://github.com/kohirens/version-release-orb/blob/main/docs/how-to-release.md
+  https://github.com/kohirens/version-release/blob/VERSION_RELEASE_IMAGE/docs/how-to-release.md
   which provides details on how to setup the following:
 
     1. Allow CircleCI to write back to a Github repository on your behalf

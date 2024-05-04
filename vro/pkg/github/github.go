@@ -26,8 +26,8 @@ func NewRequest(uri, method, token string) (*http.Request, error) {
 }
 
 func parseRepositoryUri(uri string) (string, string, string) {
-	//https://github.com/kohirens/version-release-orb
-	//git@github.com:kohirens/version-release-orb.git
+	//https://github.com/kohirens/version-release
+	//git@github.com:kohirens/version-release.git
 	re := regexp.MustCompile(`^(https://|git@)([^/:]+)[/:]([^/]+)/(.+)`)
 	m := re.FindAllStringSubmatch(uri, -1)
 

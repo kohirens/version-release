@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"github.com/kohirens/stdlib/cli"
 	"github.com/kohirens/stdlib/log"
-	"github.com/kohirens/version-release-orb/vro/internal/util"
+	"github.com/kohirens/version-release/vro/internal/util"
 	"regexp"
 	"strings"
 )

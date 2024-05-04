@@ -3,7 +3,7 @@ package github
 import (
 	"fmt"
 	"github.com/kohirens/stdlib/log"
-	"github.com/kohirens/version-release-orb/vro/pkg/git"
+	"github.com/kohirens/version-release/vro/pkg/git"
 	"io"
 	"net/http"
 	"time"

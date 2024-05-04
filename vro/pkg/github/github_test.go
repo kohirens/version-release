@@ -10,8 +10,8 @@ func Test_parseRepositoryUri(t *testing.T) {
 		want1 string
 		want2 string
 	}{
-		{"https", "https://github.com/kohirens/version-release-orb", "github.com", "kohirens", "version-release-orb"},
-		{"git", "git@github.com:kohirens/version-release-orb.git", "github.com", "kohirens", "version-release-orb"},
+		{"https", "https://github.com/kohirens/version-release", "github.com", "kohirens", "version-release"},
+		{"git", "git@github.com:kohirens/version-release.git", "github.com", "kohirens", "version-release"},
 		{"git", "git@github.com:kohirens/git-tool-belt.git", "github.com", "kohirens", "git-tool-belt"},
 	}
 	for _, tt := range tests {
