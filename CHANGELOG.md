@@ -5,6 +5,83 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.0.0] - 2024-05-04
+
+### Added
+
+- Help Flag For Publish And Release Command
+- Unreleased Changes Detection
+
+### Changed
+
+- Renamed Repository To version-release
+- Detecting A Commit Is Tagged
+- Checking How The Changelog Is Up-To-Date
+- Attach Workspace To Jobs
+- Checking How The Changelog Is Up-To-Date
+- Semantic Version Tagging
+- Detecting Semantic Tag For a Commit
+- Distinguish Between A New/Existing Changelog
+- Dev Tag To Latest
+- Update Git Cliff Configuration
+- Calls To Build A Changelog
+- Updated Development Environment
+- Calls To Build A Changelog
+- Updated Development Environment
+- Phase Out Obsolete Tools
+- Configuring SSH Keys
+- Updated Formatting
+- Updated GitHub Integration
+- Updated the SSH Fingerprint
+- Switch To Git-Cliff
+- Default Orb Tag
+- Version Release Tool Base Image
+
+### Documentation
+
+- Updated How It Works
+- Improve User Output
+
+### Fixed
+
+- Executing Publish Release Tag Command
+- Publish Changlog Update Loop
+- Updating Changelog
+- Image Builds
+- Error Message
+
+### Miscellaneous Tasks
+
+- Add Clarity For Changelog IsUpToDate Message
+- Upgrade Version Release Orb
+- Message Output
+- Various Formatting Things
+- Fixed CI Checkout Image
+- Fixed CI Checkout Image
+- Fixed Building Dev Image in CI
+- Fixed Lint Errors
+- Code Refactoring
+- Function Checking Unreleased Changes
+- Building Changelog
+- Configure Changlog Section Types
+- Removed Unused CI Configuration
+- Updated Test Fixture
+- Updated Git Ignore for .ash_history File
+- Cleanup CI Configuration
+
+### Removed
+
+- Method of Detecting A Repository Needs A Tag
+- Hardcoded Value For Orb Image
+- Tag File References
+- Obsolete References
+- Removed Obsolete Configuration
+
+### Testing
+
+- Fixed Test Fixture
+- When Changes are Taggable
+
 <a name="3.1.0"></a>
 ## [3.1.0] - 2023-08-17
 ### Added
