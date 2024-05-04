@@ -3,8 +3,8 @@ package main
 import (
 	"fmt"
 	"github.com/kohirens/stdlib/log"
-	"github.com/kohirens/version-release-orb/vro/pkg/circleci"
-	"github.com/kohirens/version-release-orb/vro/pkg/gitcliff"
+	"github.com/kohirens/version-release/vro/pkg/circleci"
+	"github.com/kohirens/version-release/vro/pkg/gitcliff"
 )
 
 type Workflow struct {

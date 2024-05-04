@@ -4,7 +4,7 @@ Use in CircleCI pipeline to automatically update your CHANGELOG.md file based
 on [Conventional Commits] using a [git-cliff] configuration, then auto-publish
 a release.
 
-[![CircleCI](https://dl.circleci.com/status-badge/img/gh/kohirens/version-release-orb/tree/main.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/kohirens/version-release-orb/tree/main) [![CircleCI Orb Version](https://badges.circleci.com/orbs/kohirens/version-release.svg)](https://circleci.com/orbs/registry/orb/kohirens/version-release) [![GitHub License](https://img.shields.io/badge/license-MIT-lightgrey.svg)](https://raw.githubusercontent.com/kohirens/version-release-orb/master/LICENSE) [![CircleCI Community](https://img.shields.io/badge/community-CircleCI%20Discuss-343434.svg)](https://discuss.circleci.com/c/ecosystem/orbs)
+[![CircleCI](https://dl.circleci.com/status-badge/img/gh/kohirens/version-release/tree/main.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/kohirens/version-release/tree/main) [![CircleCI Orb Version](https://badges.circleci.com/orbs/kohirens/version-release.svg)](https://circleci.com/orbs/registry/orb/kohirens/version-release) [![GitHub License](https://img.shields.io/badge/license-MIT-lightgrey.svg)](https://raw.githubusercontent.com/kohirens/version-release/master/LICENSE) [![CircleCI Community](https://img.shields.io/badge/community-CircleCI%20Discuss-343434.svg)](https://discuss.circleci.com/c/ecosystem/orbs)
 
 Provides the following features:
 
@@ -30,10 +30,10 @@ along.
 
 ---
 
-[Generate An SSH Key for Circle CI]: https://github.com/kohirens/version-release-orb/blob/main/docs/setup-keys.md#generate-an-ssh-key-for-circle-ci
-[Setup A Personal Access Token on GitHub]: https://github.com/kohirens/version-release-orb/blob/main/docs/setup-keys.md#setup-a-personal-access-token-on-github
+[Generate An SSH Key for Circle CI]: /docs/setup-keyss.md#generate-an-ssh-key-for-circle-ci
+[Setup A Personal Access Token on GitHub]: /docs/setup-keys.md#setup-a-personal-access-token-on-github
 [Version Release Orb]: https://circleci.com/developer/orbs/orb/kohirens/version-release#usage-examples
-[Docs]: https://github.com/kohirens/version-release-orb/blob/main/docs/index.md
+[Docs]: /docs/index.md
 [Conventional Commits]: https://www.conventionalcommits.org/en/v1.0.0/
 [git-cliff]: https://git-cliff.org/docs/
 [Setup Deploy Keys]: /docs/setup-keys.md

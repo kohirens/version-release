@@ -8,7 +8,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/kohirens/stdlib/log"
-	"github.com/kohirens/version-release-orb/vro/pkg/github"
+	"github.com/kohirens/version-release/vro/pkg/github"
 	"io"
 	"net/http"
 	"time"

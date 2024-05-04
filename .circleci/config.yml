@@ -96,6 +96,8 @@ jobs:
                       sed -i -e "s/VERSION_RELEASE_IMAGE/<<parameters.image_tag>>/g" src/jobs/publish-changelog.yml
                       sed -i -e "s/VERSION_RELEASE_IMAGE/<<parameters.image_tag>>/g" src/jobs/tag-and-release.yml
                       sed -i -e "s/VERSION_RELEASE_IMAGE/<<parameters.image_tag>>/g" src/jobs/workflow-selector.yml
+                      sed -i -e "s/VERSION_RELEASE_IMAGE/<<parameters.image_tag>>/g" src/@orb.yml
+                      sed -i -e "s/VERSION_RELEASE_IMAGE/<<parameters.image_tag>>/g" src/examples/auto-release.yml
                       BUILD_VER=<<parameters.ver_tag>>
                       if [ -z "${BUILD_VER}" ]; then
                         echo "no tag found in order to publish Orb"

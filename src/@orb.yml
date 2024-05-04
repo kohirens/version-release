@@ -10,5 +10,5 @@ description: |2
 
 # This information will be displayed in the orb registry and is not mandatory.
 display:
-  home_url: "https://github.com/kohirens/version-release-orb/blob/main/README.md"
-  source_url: "https://github.com/kohirens/version-release-orb"
+  home_url: "https://github.com/kohirens/version-release/blob/VERSION_RELEASE_IMAGE/README.md"
+  source_url: "https://github.com/kohirens/version-release"

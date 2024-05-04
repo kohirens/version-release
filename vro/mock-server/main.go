@@ -90,7 +90,7 @@ func LoadMock(w http.ResponseWriter, r *http.Request) {
 	case "/":
 		mock = "health.json"
 
-	case "/api/v2/project/gh/kohirens/version-release-orb/pipeline":
+	case "/api/v2/project/gh/kohirens/version-release/pipeline":
 		bodyBytes, err1 := io.ReadAll(r.Body)
 		if err1 != nil {
 			vars.Data["Error1"] = err1.Error()
@@ -106,7 +106,7 @@ func LoadMock(w http.ResponseWriter, r *http.Request) {
 		mock = fmt.Sprintf("%s.json", pp.Parameters.TriggeredFlow)
 		vars.Data["Mock"] = mock
 		w.WriteHeader(201)
-	case "/repos/kohirens/version-release-orb/releases":
+	case "/repos/kohirens/version-release/releases":
 		b, _ := io.ReadAll(r.Body)
 		var data postData
 
@@ -173,11 +173,11 @@ func LoadMock(w http.ResponseWriter, r *http.Request) {
 		unsetEnv(cgiVars)
 
 		return
-	case "/repos/kohirens/version-release-orb/pulls":
+	case "/repos/kohirens/version-release/pulls":
 		mock = "make-pr.json"
 		vars.Data["Mock"] = mock
 		w.WriteHeader(http.StatusCreated)
-	case "/repos/kohirens/version-release-orb/pulls/1/merge":
+	case "/repos/kohirens/version-release/pulls/1/merge":
 		switch r.Method {
 		case "GET":
 			w.WriteHeader(http.StatusNoContent)

@@ -2,7 +2,7 @@ package main
 
 import (
 	"github.com/kohirens/stdlib/test"
-	"github.com/kohirens/version-release-orb/vro/pkg/github"
+	"github.com/kohirens/version-release/vro/pkg/github"
 	"os"
 	"testing"
 )

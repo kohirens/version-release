@@ -1,4 +1,4 @@
-ARG REPO='github.com/kohirens/version-release-orb'
+ARG REPO='github.com/kohirens/version-release'
 ARG GIT_CLIFF_VER="2.2.1"
 
 FROM golang:1.21-alpine3.19 AS base

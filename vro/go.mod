@@ -1,4 +1,4 @@
-module github.com/kohirens/version-release-orb/vro
+module github.com/kohirens/version-release/vro
 
 go 1.20
 
