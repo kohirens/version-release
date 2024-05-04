@@ -6,7 +6,7 @@ development life cycle, which the Version Release Orb provides.
 ## Prerequisites
 
 1. Read [Setup SSH Keys](/docs/setup-keys.md)
-2. Add a [git-chglog] config to your repo.
+2. Add an optional [git-cliff] config to your repo.
 3. Add the [auto-release] workflow to your CI config.
 4. When using a private CircleCI Server ensure you set the parameters
    `circleci_api_host` and `circleci_app_host` to the correct values. This will
@@ -16,7 +16,7 @@ development life cycle, which the Version Release Orb provides.
    circleci_api_host="https://api.example-circleci.com"
    circleci_app_host="https://app.example-circleci.com"
    ```
-   Otherwise the jobs will fail since it will look at public Circle CI server.
+   Otherwise, the jobs will fail since it will look at public Circle CI server.
 
 ## Get Started
 
@@ -33,27 +33,25 @@ an example Gitflow:
 
 ## Commit Message Guide
 
-When the auto-release workflow is reached it scours the git logs for messages
-skipping any without the tag prefixes mentioned below. It only goes back to the
-last tag, or the beginning if there are no tags.
+In order to have the changelog updated automatically, please format commits
+based on https://www.conventionalcommits.org.
 
-Prefix any of the keywords in the Descriptions below, an in any commit message,
-to increment the version number accordingly.
+The auto-release workflow depends on git-cliff tool to detect changes in the
+repository that need to be release. Please make sure you use a git-cliff
+configuration that suites your release needs.
+
+You should know that it only goes back to the last tag, or the beginning if
+there are no tags.
+
+For example, prefixing any commit with these commit tags (out-of-the-box) will
+cause the release tag to increment the version number accordingly.
 
 | Increment | Description                                                                        |
 |-----------|------------------------------------------------------------------------------------|
 | major     | Adding the words `BREAKING CHANGE` on a line by itself.                            |
-| minor     | Use the `add: ` tag at the beginning of any line.                                  |
+| minor     | Use the `feat: ` tag at the beginning of any line.                                 |
 | patch     | Use the `chg: ` or `rmv: ` or `fix:` or `dep: ` tags at the beginning of any line. |
-| skip      | Just make regular commit messages with no tags or the words `BREAKING CHANGE`      |
-
-**Precedence**
-
-| Manual       |     | Major           |     | Minor  |     | Patch                             |
-|--------------|-----|-----------------|-----|--------|-----|-----------------------------------|
-| rel: [x.x.x] | \>  | BREAKING CHANGE | \>  | `add:` | \>  | `chg:` or `dep:` `fix:` or `rmv:` |
-
-NOTE: This is an abomination and should never be used.
+| skip      | See [git-cliff] documentation.                                                     |
 
 ## Incrementing the Major
 
@@ -62,39 +60,32 @@ Example commit message of incrementing the major number:
 ```text
 Removed Update Check
 
-rmv: The command to perform an update check on the changelog since the
-update-changelog job handles that too.
+rmv: The API function Get().
 
-add: Ability to turn on/off checkout, as a first step, in the update-changelog
-job.
-
-chg: Optimized the ready-for-tagging workflow.
-
-Updated all corresponding documentation.
-
-BREAKING CHANGE
+BREAKING CHANGE: Removed functionality
 ```
-NOTE: the `add: `, `rmv: `, `chg: ` tags will be ignored in favor of the
-`BREAKING CHANGE` keywords.
+
+NOTE: All tags will be ignored in favor of the `BREAKING CHANGE` keywords.
 
 ## Incrementing the Minor
 
-Example commit message for incrementing the minor number:
+By default, git-cliff only allows `feat` to increment the minor number
+out-of-the-box. Example commit message for incrementing the minor number:
 
 ```text
-add: Parameter to turn on/off checkout, as a first step, in the update-changelog
+feat: Parameter to turn on/off checkout, as a first step, in the update-changelog
 job.
 ```
 
 ## Incrementing the Patch
 
+By default, any tag beside `feat` will increment the patch number.
 Example commit message for incrementing the patch number:
 
 ```text
 chg: Optimized the update-changelog job to be 2 line instead of 6 in your CI
 config.
 ```
-NOTE: The `fix:` and `rmv:` and `deps:` will also increment the patch number.
 
 Know that when the major number is incremented then the minor and patch numbers
 will reset to zero. Likewise, when the minor number is incremented, then only
@@ -103,4 +94,4 @@ the patch number will reset to zero.
 ---
 
 [auto-release]: https://circleci.com/developer/orbs/orb/kohirens/version-release#usage-auto-release
-[git-chglog]: https://github.com/git-chglog/git-chglog#table-of-contents
+[git-cliff]: https://git-cliff.org/docs/configuration
