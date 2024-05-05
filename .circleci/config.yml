@@ -17,7 +17,7 @@ parameters:
         description: Container automation
         type: string
     orb_version:
-        default: "dev:a4f51b44ad3d8aa313c2df20495abf90fb9af099"
+        default: "4.0.0"
         description: >
             The development version of the orb to test.
             This value is automatically adjusted by the "trigger-integration-tests-workflow" job to correspond with the specific version created by the commit and should not be edited.
