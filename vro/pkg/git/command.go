@@ -97,7 +97,7 @@ func GetCurrentTag(wd string) string {
 	so, se, _, _ := cli.RunCommand(
 		wd,
 		cmdGit,
-		[]string{"tag", "-l", "--sort", "creatordate"},
+		[]string{"tag", "-l", "--sort", "-creatordate"},
 	)
 
 	if se != nil {
