@@ -19,10 +19,10 @@ publish_tag_and_release() {
     fi
 
     if [ -n "${semver}" ]; then
-        tag_flag="-semver=${semver}"
+        vro publish-release-tag -semver "${semver}" "${PARAM_MAIN_TRUNK_BRANCH}" "${PARAM_WORKING_DIRECTORY}"
+    else
+        vro publish-release-tag "${PARAM_MAIN_TRUNK_BRANCH}" "${PARAM_WORKING_DIRECTORY}"
     fi
-
-    vro publish-release-tag "${tag_flag}" "${PARAM_MAIN_TRUNK_BRANCH}" "${PARAM_WORKING_DIRECTORY}"
 }
 
 # Will not run if sourced for bats-core tests.
