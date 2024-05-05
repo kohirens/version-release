@@ -251,13 +251,6 @@ func main() {
 			return
 		}
 
-		// Step 5: Verify that the range of commits contain a message to
-		// indicate they should be tagged.
-		//if !gittoolbelt.IsTaggable(wd) {
-		//	log.Logf(stdout.NoCommitsToTag)
-		//	return
-		//}
-
 		// Step 6: Build pipeline parameters to trigger the tag-and-release
 		// workflow
 		pp, errY1 := circleci.GetPipelineParameters(branch, publishReleaseTagWorkflow)
