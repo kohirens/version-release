@@ -51,10 +51,11 @@ func Bump(wd string) string {
 		[]string{"--bumped-version"},
 	)
 
+	log.Infof(stdout.Wd, wd)
 	log.Infof(stdout.Cs, cs)
 
 	if se != nil {
-		log.Errf(stderr.UpdateChgLog, se.Error())
+		log.Errf(stderr.BumpedVersion, se.Error())
 		return ""
 	}
 

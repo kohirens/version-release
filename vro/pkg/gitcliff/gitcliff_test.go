@@ -46,7 +46,7 @@ func TestBuildChangelog(t *testing.T) {
 
 			actual := loadFile(repo + ps + chgLogFile)
 			expected := loadFile(fixtureDir + ps + fmt.Sprintf("%v-expected-chglog.txt", tt.bundle))
-			expt := fmt.Sprintf(string(expected), time.Now().Format("2006-01-02"))
+			expt := fmt.Sprintf(string(expected), time.Now().UTC().Format("2006-01-02"))
 
 			if bytes.Compare(actual, []byte(expt)) != 0 {
 				t.Errorf("BuildChangelog() error %v does not match expected output", chgLogFile)

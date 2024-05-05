@@ -113,7 +113,9 @@ func main() {
 			af.TagAndRelease.Flags.PrintDefaults()
 			return
 		}
+
 		log.Logf(stdout.StartWorkflow, publishReleaseTagWorkflow)
+
 		// Grab all the environment variables and alert if any are not set.
 		eVars, e1 := getRequiredEnvVars([]string{
 			"CIRCLE_TOKEN",
@@ -126,16 +128,19 @@ func main() {
 			return
 		}
 
-		if len(ca) < 3 {
+		subCa := af.TagAndRelease.Flags.Args()
+
+		if len(subCa) < 2 {
 			mainErr = fmt.Errorf(stderr.PublishReleaseTagArgs)
 			return
 		}
 
-		subCa := af.TagAndRelease.Flags.Args()
-
 		branch := subCa[0]
 		wd := subCa[1]
 		semVer := ""
+
+		log.Infof("branch %v", branch)
+		log.Infof("working directory %v", wd)
 
 		if af.TagAndRelease.SemVer != "" {
 			if regexp.MustCompile(util.CheckSemVer).MatchString(af.TagAndRelease.SemVer) {
