@@ -155,6 +155,22 @@ func LastLog(wd string) string {
 	return string(so)
 }
 
+// Log Return a commit log.
+func Log(wd, refId string) string {
+	so, se, _, _ := cli.RunCommand(
+		wd,
+		cmdGit,
+		[]string{"log", refId, "-1"},
+	)
+
+	if se != nil {
+		log.Errf(stderr.CommitLog, se.Error())
+		return ""
+	}
+
+	return string(so)
+}
+
 // Push Pushes changes to an origin.
 // git push origin <branch_name>
 func Push(wd, origin, branch string) error {

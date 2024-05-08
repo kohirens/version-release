@@ -61,19 +61,20 @@ func TestHasSemverTag(t *testing.T) {
 	}
 }
 
-func TestLastLog(t *testing.T) {
+func TestLog(t *testing.T) {
 	tests := []struct {
 		name   string
 		bundle string
+		refID  string
 		want   string
 	}{
-		{"success", "repo-03", "test1234"},
+		{"success", "repo-03", "HEAD", "test1234"},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			repo := help.SetupARepository(tt.bundle, tmpDir, fixtureDir, ps)
 
-			if got := LastLog(repo); !strings.Contains(got, tt.want) {
+			if got := Log(repo, tt.refID); !strings.Contains(got, tt.want) {
 				t.Errorf("LastLog() = %v, want %v", got, tt.want)
 			}
 		})

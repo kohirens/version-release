@@ -251,6 +251,11 @@ func main() {
 			return
 		}
 
+		// if it has no tag, then also verify its not an changelog update commit
+		if IsChangeLogCommit(wd, commit) {
+			log.Logf(stdout.ChangelogCommit, commit)
+			return
+		}
 		// Step 6: Build pipeline parameters to trigger the tag-and-release
 		// workflow
 		pp, errY1 := circleci.GetPipelineParameters(branch, publishReleaseTagWorkflow)
