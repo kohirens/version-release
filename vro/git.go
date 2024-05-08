@@ -65,6 +65,11 @@ func IsChangelogUpToDate(wd, chgLogFile string) (bool, error) {
 }
 
 func lastUpdateWasAutoChangelog(wd string) bool {
-	lasLog := git.LastLog(wd)
-	return strings.Contains(lasLog, "An automated update of CHANGELOG.md")
+	lastLog := git.Log(wd, "HEAD")
+	return strings.Contains(lastLog, "An automated update of CHANGELOG.md")
+}
+
+func IsChangeLogCommit(wd, commit string) bool {
+	log := git.Log(wd, commit)
+	return strings.Contains(log, "An automated update of CHANGELOG.md")
 }

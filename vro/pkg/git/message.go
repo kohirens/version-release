@@ -1,6 +1,7 @@
 package git
 
 var stderr = struct {
+	CommitLog                string
 	CouldNotAddOrigin        string
 	CouldNotCheckoutBranch   string
 	CouldNotCommit           string
@@ -14,6 +15,7 @@ var stderr = struct {
 	GitDescribeContains      string
 	LastLog                  string
 }{
+	CommitLog:                "could not get commit log: %s",
 	CouldNotAddOrigin:        "problem adding the origin %s: %s, %s",
 	CouldNotCheckoutBranch:   "could not checkout branch: %s; %v",
 	CouldNotGetRemoteUrl:     "problem getting the remote push URL: %s, %s",
