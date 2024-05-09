@@ -18,7 +18,7 @@ func IsChangelogUpToDate(wd, chgLogFile string) (bool, error) {
 	var version string
 	// Check to see if the current changelog contains the unreleased tag.
 
-	u, e1 := gitcliff.UnreleasedChangelogContext(wd)
+	u, e1 := gitcliff.UnreleasedChanges(wd)
 	if e1 != nil {
 		return false, e1
 	}
@@ -69,7 +69,12 @@ func lastUpdateWasAutoChangelog(wd string) bool {
 	return strings.Contains(lastLog, "An automated update of CHANGELOG.md")
 }
 
-func IsChangeLogCommit(wd, commit string) bool {
-	log := git.Log(wd, commit)
-	return strings.Contains(log, "An automated update of CHANGELOG.md")
+func NoChangesToRelease(wd string) bool {
+	changes, e1 := gitcliff.UnreleasedChanges(wd)
+	if e1 != nil {
+		log.Errf(e1.Error())
+		return false
+	}
+
+	return len(changes) == 0
 }
