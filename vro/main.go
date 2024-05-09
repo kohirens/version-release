@@ -251,9 +251,9 @@ func main() {
 			return
 		}
 
-		// if it has no tag, then also verify its not an changelog update commit
-		if IsChangeLogCommit(wd, commit) {
-			log.Logf(stdout.ChangelogCommit, commit)
+		// Step 5: Verify there are not commits to release
+		if NoChangesToRelease(wd) {
+			log.Logf(stdout.NoChanges)
 			return
 		}
 		// Step 6: Build pipeline parameters to trigger the tag-and-release

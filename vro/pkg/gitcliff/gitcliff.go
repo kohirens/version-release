@@ -107,11 +107,11 @@ func HasUnreleasedChanges(wd string) (bool, error) {
 	return len(u[0].Commits) > 0, nil
 }
 
-// UnreleasedChangelogContext Indicate there are changes in the current branch that
+// UnreleasedChanges Indicate there are changes in the current branch that
 // needed to be added to the changelog and tagged.
 //
 //	This makes use of the --context flag to return any unreleased commit.
-func UnreleasedChangelogContext(wd string) ([]Unreleased, error) {
+func UnreleasedChanges(wd string) ([]Unreleased, error) {
 	so, se, _, cs := cli.RunCommand(
 		wd,
 		Cmd,
