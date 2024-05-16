@@ -37,11 +37,15 @@ parameters:
         type: string
     image_tag:
         default: ""
-        description: A tag to stamp the image in Docker Hub.
+        description: Obsolete, use tags parameter instead. This parameter will be removed in the next major release. A single tag to stamp the image in Docker Hub.
         type: string
     repository:
         description: |2
           Docker Hub image repository for example "kohirens/version-release".
+        type: string
+    tags:
+        default: ""
+        description: Tags to stamp the image and push to Docker Hub. Space delimited.
         type: string
     target:
         default: ""
@@ -58,6 +62,7 @@ environment:
     DOCKER_BUILDKIT: << parameters.docker_buildkit >>
     DOCKER_FILE: << parameters.dockerfile >>
     IMG_TAG: << parameters.image_tag >>
+    TAGS: << parameters.tags >>
     REPOSITORY: << parameters.repository >>
     TARGET: << parameters.target >>
 

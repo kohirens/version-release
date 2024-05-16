@@ -1,0 +1,80 @@
+#!/bin/sh
+
+set -e
+
+if [ "${1}" = "build" ]; then
+    tag_name="${4}"
+    build_file="${6}"
+    build_target="${8}"
+    build_args="${10}"
+    build_context="${11}"
+    e_tag_name="example/com:abc123"
+    e_build_file="path/to/Dockerfile"
+    e_build_target="test-target"
+    e_build_args="ARG1"
+    e_build_context="."
+
+    echo "checking docker build command input"
+    if [ "${tag_name}" != "${e_tag_name}" ]; then
+        echo "expected tag ${e_tag_name}, got ${tag_name}"
+        exit 1
+    fi
+
+    if [ "${build_file}" != "${e_build_file}" ]; then
+        echo "expected tag ${e_build_file}, got ${build_file}"
+        exit 1
+    fi
+
+    if [ "${build_target}" != "${e_build_target}" ]; then
+        echo "expected tag ${e_build_target}, got ${build_target}"
+        exit 1
+    fi
+
+    if [ "${build_args}" != "${e_build_args}" ]; then
+        echo "expected build args ${e_build_args}, got ${build_args}"
+        exit 1
+    fi
+
+    if [ "${build_context}" != "${e_build_context}" ]; then
+        echo "expected build args ${e_build_context}, got ${build_context}"
+        exit 1
+    fi
+fi
+
+
+if [ "${1}" = "tag" ]; then
+    image="${2}"
+    tag="${3}"
+    e_image="example/com:abc123"
+
+    echo "checking docker tag command input"
+    if [ "${image}" != "${e_image}" ]; then
+        echo "expected image ${e_image}, got ${image}"
+        exit 1
+    fi
+
+    if [ "${tag}" != "example/com:latest" ] && [ "${tag}" != "example/com:1.0.0" ]; then
+        echo "expected tags latest or 1.0.0, got ${tag}"
+        exit 1
+    fi
+fi
+
+if [ "${1}" = "push" ]; then
+    image="${2}"
+    echo "checking docker push command input"
+
+    if [ "${image}" != "example/com:latest" ] && [ "${image}" != "example/com:1.0.0" ]; then
+        echo "expected tags latest or 1.0.0, got ${image}"
+        exit 1
+    fi
+fi
+
+if [ "${1}" = "rmi" ]; then
+    image="${2}"
+    echo "checking docker rmi command input"
+
+    if [ "${image}" != "example/com:latest" ] && [ "${image}" != "example/com:1.0.0" ] && [ "${image}" != "example/com:abc123" ]; then
+        echo "expected tags latest or 1.0.0, abc123, got ${image}"
+        exit 1
+    fi
+fi
