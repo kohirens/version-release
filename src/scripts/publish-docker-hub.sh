@@ -24,6 +24,10 @@ if [ -z "${REPOSITORY}" ]; then
     exit 1
 fi
 
+if [ -n "${ENV_FILE}" ]; then
+    export "$(cat "${ENV_FILE}")"
+fi
+
 export DH_IMAGE="${REPOSITORY}:${CIRCLE_SHA1}"
 
 echo "${DH_PASS}" | docker login -u "${DH_USER}" --password-stdin

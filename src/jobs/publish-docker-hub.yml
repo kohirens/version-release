@@ -35,6 +35,10 @@ parameters:
         default: "Dockerfile"
         description: Path to the Docker environment variable DOCKER_BUILDKIT
         type: string
+    env_file:
+        default: ""
+        description: Environment file containing variable value pairs to export to the build environment.
+        type: string
     image_tag:
         default: ""
         description: Obsolete, use tags parameter instead. This parameter will be removed in the next major release. A single tag to stamp the image in Docker Hub.
@@ -61,6 +65,7 @@ environment:
     BUILD_CONTEXT: << parameters.build_context >>
     DOCKER_BUILDKIT: << parameters.docker_buildkit >>
     DOCKER_FILE: << parameters.dockerfile >>
+    ENV_FILE: << parameters.env_file >>
     IMG_TAG: << parameters.image_tag >>
     TAGS: << parameters.tags >>
     REPOSITORY: << parameters.repository >>
