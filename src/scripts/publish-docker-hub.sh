@@ -25,7 +25,7 @@ if [ -z "${REPOSITORY}" ]; then
 fi
 
 if [ -n "${ENV_FILE}" ]; then
-    export "$(cat "${ENV_FILE}")"
+    ./"${ENV_FILE}"
 fi
 
 export DH_IMAGE="${REPOSITORY}:${CIRCLE_SHA1}"
