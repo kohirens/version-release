@@ -1,4 +1,6 @@
-# git-cliff ~ configuration file
+package main
+
+const cliffConfig = `# git-cliff ~ configuration file
 # https://git-cliff.org/docs/configuration
 
 [changelog]
@@ -56,7 +58,6 @@ commit_parsers = [
   { message = "^(add|feat)(\\(.*\\))?:", group = "Added" },
   { message = "^chg(\\(.*\\))?:", group = "Changed" },
   { message = "^dep(\\(.*\\))?:", group = "Deprecated" },
-  { message = "^doc(\\(.*\\))?:", group = "Documentation" },
   { message = "^fix(\\(.*\\))?:", group = "Fixed" },
   { message = "^rmv(\\(.*\\))?:", group = "Removed" },
   { message = "^sec(\\(.*\\))?:", group = "Security" },
@@ -84,3 +85,4 @@ sort_commits = "newest"
 
 features_always_bump_minor = true
 breaking_always_bump_major = true
+`

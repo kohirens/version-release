@@ -1,5 +1,7 @@
 module github.com/kohirens/version-release/vro
 
-go 1.20
+go 1.21
 
-require github.com/kohirens/stdlib v0.0.0-20230613112909-1eeaa6ad3b30
+toolchain go1.21.6
+
+require github.com/kohirens/stdlib v0.0.0-20240502185502-1e7574337bb7

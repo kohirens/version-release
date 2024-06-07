@@ -1,67 +1,40 @@
 package main
 
 import (
-	"bufio"
-	"fmt"
-	"github.com/kohirens/stdlib"
+	"github.com/kohirens/stdlib/fsio"
 	"github.com/kohirens/stdlib/log"
 	"github.com/kohirens/version-release/vro/pkg/git"
 	"github.com/kohirens/version-release/vro/pkg/gitcliff"
 	"os"
-	"regexp"
 	"strings"
 )
 
 // IsChangelogUpToDate Indicate if there are any changes to be added to the
 // changelog.
 func IsChangelogUpToDate(wd, chgLogFile string) (bool, error) {
-	var version string
-	// Check to see if the current changelog contains the unreleased tag.
+	cliffConfigName := "cliff.toml"
+	configFile := wd + "/" + cliffConfigName
 
-	u, e1 := gitcliff.UnreleasedChanges(wd)
-	if e1 != nil {
-		return false, e1
-	}
-
-	if len(u) > 0 {
-		version = u[0].Version
-		log.Logf(stdout.NextVersion, version)
-	} else {
-		version = git.GetCurrentTag(wd)
-		log.Logf(stdout.CurrentVer, version)
-	}
-
-	if version == "" {
-		return false, fmt.Errorf(stderr.NoVersionTag)
-	}
-
-	filename := wd + string(os.PathSeparator) + chgLogFile
-	// there are unreleased changes and changelog does not exist
-	if !stdlib.PathExist(filename) {
-		return false, nil
-	}
-
-	chgLogRdr, e2 := os.Open(filename)
-	if e2 != nil {
-		return false, fmt.Errorf(stderr.OpenFile, chgLogFile, e2.Error())
-	}
-
-	defer chgLogRdr.Close()
-
-	isUpToDate := false
-	re := regexp.MustCompile(`^## \[v?` + version + `]\s+-\s+\d+-\d+-\d+`)
-	scanner := bufio.NewScanner(chgLogRdr)
-
-	for scanner.Scan() {
-		line := scanner.Text()
-		if re.MatchString(line) {
-			log.Logf(stdout.Match, version)
-			isUpToDate = true
-			break
+	if !fsio.Exist(configFile) { // make a config when none present.
+		if e := os.WriteFile(configFile, []byte(cliffConfig), 0776); e != nil {
+			return true, e
 		}
 	}
 
-	return isUpToDate, nil
+	if e := gitcliff.BuildChangelog(wd, chgLogFile); e != nil {
+		return true, e
+	}
+
+	// Check if the files for modification.
+	status, e2 := git.StatusWithOptions(wd, []string{"--porcelain", "--", chgLogFile, cliffConfigName})
+	if e2 != nil {
+		return true, e2
+	}
+
+	log.Dbugf("git status output = %v", status)
+	log.Logf("debug status = %v", status)
+
+	return len(status) == 0, nil
 }
 
 func lastUpdateWasAutoChangelog(wd string) bool {

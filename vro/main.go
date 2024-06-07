@@ -228,6 +228,7 @@ func main() {
 		}
 
 		if !upToDate {
+			// if you remove this, you MUST ensure that there is a cliff.toml in the repo.
 			if lastUpdateWasAutoChangelog(wd) { // do not perform updates consecutively
 				log.Errf(stderr.ChgLogAutoUpdate)
 				return
