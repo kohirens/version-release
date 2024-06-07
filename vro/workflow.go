@@ -40,8 +40,13 @@ func (wf *Workflow) PublishChangelog(wd, chgLogFile, branch string) error {
 		return e
 	}
 
+	msg, e2 := gitcliff.UnreleasedMessage(wd)
+	if e2 != nil {
+		log.Errf(e2.Error())
+	}
+
 	// Step 4: Commit, push, and publish the changelog.
-	return wf.GitHubClient.PublishChangelog(wd, branch, chgLogFile)
+	return wf.GitHubClient.PublishChangelog(wd, branch, chgLogFile, string(msg))
 }
 
 // PublishReleaseTag Publish a release on GitHub.

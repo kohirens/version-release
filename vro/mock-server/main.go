@@ -4,8 +4,8 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/kohirens/stdlib"
 	"github.com/kohirens/stdlib/cli"
+	"github.com/kohirens/stdlib/fsio"
 	"github.com/kohirens/stdlib/log"
 	help "github.com/kohirens/stdlib/test"
 	"io"
@@ -120,7 +120,7 @@ func LoadMock(w http.ResponseWriter, r *http.Request) {
 	case "/kohirens/repo-01/info/refs":
 		// Setup fixture
 		fixedRepo := "/tmp/repo-01"
-		if stdlib.PathExist(fixedRepo) {
+		if fsio.Exist(fixedRepo) {
 			if e := os.RemoveAll(fixedRepo); e != nil {
 				log.Logf("could not remove %s: %s", fixedRepo, e.Error())
 			}
@@ -200,7 +200,7 @@ func LoadMock(w http.ResponseWriter, r *http.Request) {
 }
 
 func LoadTemplate(tFile string, w io.Writer, vars *tmplVars) error {
-	if !stdlib.PathExist(tFile) {
+	if !fsio.Exist(tFile) {
 		return fmt.Errorf(Stderr.FileNotFound, tFile)
 	}
 

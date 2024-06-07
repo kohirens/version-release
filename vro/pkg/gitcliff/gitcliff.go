@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/kohirens/stdlib"
 	"github.com/kohirens/stdlib/cli"
+	"github.com/kohirens/stdlib/fsio"
 	"github.com/kohirens/stdlib/log"
 	"github.com/kohirens/version-release/vro/internal/util"
 	"regexp"
@@ -18,13 +19,15 @@ const (
 
 // BuildChangelog Runs git-cliff to update the change log file.
 func BuildChangelog(wd, chgLogFile string) error {
-	// Note footer links may not be generated with these methods.
 	// build new: git-cliff --output CHANGELOG.md
 	args := []string{"--bump", "--output", chgLogFile}
-	if stdlib.PathExist(wd + stdlib.PS + chgLogFile) {
+
+	// prepend changes.
+	if fsio.Exist(wd + stdlib.PS + chgLogFile) {
 		// update existing: git-cliff --unreleased --bump --prepend CHANGELOG.md
 		args = []string{"--bump", "--unreleased", "--prepend", chgLogFile}
 	}
+
 	_, se, _, cs := cli.RunCommand(
 		wd,
 		Cmd,
@@ -38,6 +41,25 @@ func BuildChangelog(wd, chgLogFile string) error {
 	}
 
 	return nil
+}
+
+// UnreleasedMessage Get unreleased commits changes without header and footer.
+func UnreleasedMessage(wd string) ([]byte, error) {
+	// git-cliff --bump --strip all -u
+	args := []string{"--bump", "--strip", "all", "--unreleased"}
+	so, se, _, cs := cli.RunCommand(
+		wd,
+		Cmd,
+		args,
+	)
+
+	log.Infof(stdout.Cs, cs)
+
+	if se != nil && strings.Contains(se.Error(), "WARN") {
+		return so, fmt.Errorf(stderr.UnreleasedMsg, se.Error())
+	}
+
+	return so, nil
 }
 
 // Bump Returns the next semantic version if there are unreleased changes.

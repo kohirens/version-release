@@ -78,7 +78,7 @@ func (gh *Client) DoesBranchExistRemotely(branch string) bool {
 // request and merge it containing:
 // 1. the git-chglog command config files if they are missing or first run.
 // 2. the CHANGELOG.md if it contains changes.
-func (gh *Client) PublishChangelog(wd, branch, chaneLogFile string) error {
+func (gh *Client) PublishChangelog(wd, branch, chaneLogFile, msgBody string) error {
 	if git.DoesBranchExistRemotely(wd, gh.RepositoryUri, GenBranchName) {
 		return fmt.Errorf(
 			stderr.BranchExists,
@@ -100,14 +100,13 @@ func (gh *Client) PublishChangelog(wd, branch, chaneLogFile string) error {
 	}
 
 	// Staging the CHANGELOG file.
-	if e := git.StageFiles(wd, chaneLogFile); e != nil {
+	if e := git.StageFiles(wd, "."); e != nil {
 		return e
 	}
 
 	// Commit the CHANGELOG file.
-	mergeBranchCommitMsg := "Updated the " + chaneLogFile
-	mergeBranchCommitDesc := "An automated update of " + chaneLogFile
-	if e := git.Commit(wd, mergeBranchCommitMsg, mergeBranchCommitDesc); e != nil {
+	mergeBranchCommitMsg := "auto: Changelog Update"
+	if e := git.Commit(wd, mergeBranchCommitMsg, msgBody); e != nil {
 		return e
 	}
 
@@ -115,7 +114,7 @@ func (gh *Client) PublishChangelog(wd, branch, chaneLogFile string) error {
 		return e
 	}
 
-	pr, err1 := gh.OpenPullRequest(branch, GenBranchName, mergeBranchCommitMsg, mergeBranchCommitDesc)
+	pr, err1 := gh.OpenPullRequest(branch, GenBranchName, mergeBranchCommitMsg, msgBody)
 	if err1 != nil {
 		return err1
 	}

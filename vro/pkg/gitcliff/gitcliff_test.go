@@ -3,7 +3,7 @@ package gitcliff
 import (
 	"bytes"
 	"fmt"
-	"github.com/kohirens/stdlib"
+	"github.com/kohirens/stdlib/fsio"
 	help "github.com/kohirens/stdlib/test"
 	"os"
 	"testing"
@@ -84,7 +84,7 @@ func TestUnreleasedChanges(t *testing.T) {
 }
 
 func loadFile(filename string) []byte {
-	if !stdlib.PathExist(filename) {
+	if !fsio.Exist(filename) {
 		panic(fmt.Sprintf("file %v not found", filename))
 	}
 	contents, _ := os.ReadFile(filename)

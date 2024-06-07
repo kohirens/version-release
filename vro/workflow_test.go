@@ -16,7 +16,7 @@ func (gh *ghMock) TagAndRelease(branch, tag string) (*github.ReleasesResponse, e
 	}, nil
 }
 
-func (gh *ghMock) PublishChangelog(wd, branch, chaneLogFile string) error {
+func (gh *ghMock) PublishChangelog(wd, branch, chaneLogFile, msg string) error {
 	return nil
 }
 
