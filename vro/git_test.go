@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/kohirens/stdlib/test"
+	"github.com/kohirens/stdlib/git"
 	"testing"
 )
 
@@ -18,7 +18,7 @@ func TestIsChangelogUpToDate(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			repoDir := test.SetupARepository(tt.repo, tmpDir, fixtureDir, ps)
+			repoDir := git.CloneFromBundle(tt.repo, tmpDir, fixtureDir, ps)
 
 			got, _ := IsChangelogUpToDate(repoDir, tt.chgLogFile)
 			if got != tt.want {

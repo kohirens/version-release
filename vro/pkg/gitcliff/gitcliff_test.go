@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"github.com/kohirens/stdlib/fsio"
+	"github.com/kohirens/stdlib/git"
 	help "github.com/kohirens/stdlib/test"
 	"os"
 	"testing"
@@ -37,7 +38,7 @@ func TestBuildChangelog(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			repo := help.SetupARepository(tt.bundle, tmpDir, fixtureDir, ps)
+			repo := git.CloneFromBundle(tt.bundle, tmpDir, fixtureDir, ps)
 
 			if err := BuildChangelog(repo, chgLogFile); (err != nil) != tt.wantErr {
 				t.Errorf("BuildChangelog() error = %v, wantErr %v", err, tt.wantErr)
@@ -68,7 +69,7 @@ func TestUnreleasedChanges(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			repo := help.SetupARepository(tt.bundle, tmpDir, fixtureDir, ps)
+			repo := git.CloneFromBundle(tt.bundle, tmpDir, fixtureDir, ps)
 			got, e1 := UnreleasedChanges(repo)
 			if (e1 != nil) != tt.wantErr {
 				t.Errorf("HasUnreleasedChanges() error = %v, wantErr %v", e1.Error(), tt.wantErr)
@@ -105,7 +106,7 @@ func TestBump(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			repo := help.SetupARepository(tt.bundle, tmpDir, fixtureDir, ps)
+			repo := git.CloneFromBundle(tt.bundle, tmpDir, fixtureDir, ps)
 
 			if got := Bump(repo); got != tt.want {
 				t.Errorf("Bump() = %v, want %v", got, tt.want)

@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"github.com/kohirens/stdlib/cli"
 	"github.com/kohirens/stdlib/fsio"
+	"github.com/kohirens/stdlib/git"
 	"github.com/kohirens/stdlib/log"
-	help "github.com/kohirens/stdlib/test"
 	"io"
 	"net/http"
 	"os"
@@ -125,7 +125,7 @@ func LoadMock(w http.ResponseWriter, r *http.Request) {
 				log.Logf("could not remove %s: %s", fixedRepo, e.Error())
 			}
 		}
-		help.SetupARepository("repo-01", "/tmp", "testdata", "/")
+		git.CloneFromBundle("repo-01", "/tmp", "testdata", "/")
 
 		service, _, cgiVars, _ := gitHttpBackendProxy("request-repo-01/git-receive-pack", w, r)
 

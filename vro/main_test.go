@@ -4,6 +4,7 @@ package main
 
 import (
 	"bytes"
+	git2 "github.com/kohirens/stdlib/git"
 	"github.com/kohirens/version-release/vro/pkg/git"
 	"os"
 	"strings"
@@ -68,7 +69,7 @@ func TestCallingMain(tester *testing.T) {
 func TestWorkflowSelector_PublishChangelog(t *testing.T) {
 	wantCode := 0
 
-	repo := help.SetupARepository("repo-01", tmpDir, fixtureDir, ps)
+	repo := git2.CloneFromBundle("repo-01", tmpDir, fixtureDir, ps)
 	// This git commit has changes where the change log needs updating and there is something to tag
 	fixedArgs := []string{"workflow-selector", "CHANGELOG.md", "main", repo, "e9daa3786634ae4ae1346c65dd46247c08eb8416"}
 
@@ -88,7 +89,7 @@ func TestWorkflowSelector_PublishChangelog(t *testing.T) {
 func TestWorkflowSelector_TagRelease(t *testing.T) {
 	wantCode := 0
 
-	repo := help.SetupARepository("repo-02", tmpDir, fixtureDir, ps)
+	repo := git2.CloneFromBundle("repo-02", tmpDir, fixtureDir, ps)
 	// This git commit has no changelog updates but there is a commit to tag
 	fixedArgs := []string{"workflow-selector", "CHANGELOG.md", "main", repo, "0541de58335c312459f0783aab09e0797fc824e5"}
 
@@ -110,7 +111,7 @@ func TestTriggeredPublishReleaseTagWorkflow(t *testing.T) {
 
 	wantCode := 1
 
-	repo := help.SetupARepository("repo-03", tmpDir, fixtureDir, ps)
+	repo := git2.CloneFromBundle("repo-03", tmpDir, fixtureDir, ps)
 	// This git commit has no changelog updates but there is a commit to tag
 	fixedArgs := []string{"publish-release-tag", "main", repo}
 
@@ -130,7 +131,7 @@ func TestTriggeredPublishReleaseTagWorkflow(t *testing.T) {
 func TestTriggeredPublishChangelogWorkflow(t *testing.T) {
 	wantCode := 0
 
-	repo := help.SetupARepository("repo-01", tmpDir, fixtureDir, ps)
+	repo := git2.CloneFromBundle("repo-01", tmpDir, fixtureDir, ps)
 	oldUrl, _ := git.RemoteGetUrl(repo, "origin")
 	_ = git.RemoteSetUrl(repo, "origin", "https://github.com/kohirens/repo-01", oldUrl)
 
@@ -159,7 +160,7 @@ func TestTriggeredPublishChangelogWorkflow(t *testing.T) {
 func TestTriggerPipeline_NoChangelogOrTaggableChanges(t *testing.T) {
 	wantCode := 0
 
-	repo := help.SetupARepository("repo-03", tmpDir, fixtureDir, ps)
+	repo := git2.CloneFromBundle("repo-03", tmpDir, fixtureDir, ps)
 
 	fixedArgs := []string{"workflow-selector", "CHANGELOG.md", "main", repo, "285543c691b57f334644d1c29f9288b52645cd08"}
 
@@ -239,7 +240,7 @@ func TestPublishReleaseTagWorkflows(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			repo := help.SetupARepository(tt.bundle, tmpDir, fixtureDir, ps)
+			repo := git2.CloneFromBundle(tt.bundle, tmpDir, fixtureDir, ps)
 
 			tt.args = append(tt.args, repo)
 
