@@ -31,10 +31,13 @@ func IsChangelogUpToDate(wd, chgLogFile string) (bool, error) {
 		return true, e2
 	}
 
-	log.Dbugf("git status output = %v", status)
-	log.Logf("debug status = %v", status)
+	log.Dbugf("git status output = %s", status)
 
-	return len(status) == 0, nil
+	utd := len(status) == 0
+
+	log.Dbugf("changelog is update to date = %v", utd)
+
+	return utd, nil
 }
 
 func lastUpdateWasAutoChangelog(wd string) bool {

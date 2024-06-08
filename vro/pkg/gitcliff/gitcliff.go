@@ -149,10 +149,15 @@ func UnreleasedChanges(wd string) ([]Unreleased, error) {
 	if len(so) < 1 {
 		return nil, nil
 	}
-	//Remove WARN  git_cliff_core::release > No releases found, using 0.1.0 as the next version.
-	re := regexp.MustCompile("WARN.*\n")
-	soClean := re.ReplaceAll(so, []byte{})
 
+	// remove extra INFO|WARN git-cliff output
+	soClean := so
+	idx := bytes.IndexByte(so, '[')
+	if idx == -1 {
+		return nil, nil
+	}
+
+	soClean = so[idx:]
 	var u []Unreleased
 
 	if e := json.Unmarshal(soClean, &u); e != nil {
