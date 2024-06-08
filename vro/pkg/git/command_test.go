@@ -1,6 +1,7 @@
 package git
 
 import (
+	"github.com/kohirens/stdlib/git"
 	help "github.com/kohirens/stdlib/test"
 	"os"
 	"strings"
@@ -32,7 +33,7 @@ func TestDoesBranchExistRemotely(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			repo := help.SetupARepository(tt.bundle, tmpDir, fixtureDir, ps)
+			repo := git.CloneFromBundle(tt.bundle, tmpDir, fixtureDir, ps)
 			if got := DoesBranchExistRemotely(".", repo, tt.branch); got != tt.want {
 				t.Errorf("DoesBranchExistRemotely() = %v, want %v", got, tt.want)
 			}
@@ -52,7 +53,7 @@ func TestHasSemverTag(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			repo := help.SetupARepository(tt.bundle, tmpDir, fixtureDir, ps)
+			repo := git.CloneFromBundle(tt.bundle, tmpDir, fixtureDir, ps)
 
 			if got := HasSemverTag(repo, tt.commit); got != tt.want {
 				t.Errorf("hasSemverTag() = %v, want %v", got, tt.want)
@@ -72,7 +73,7 @@ func TestLog(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			repo := help.SetupARepository(tt.bundle, tmpDir, fixtureDir, ps)
+			repo := git.CloneFromBundle(tt.bundle, tmpDir, fixtureDir, ps)
 
 			if got := Log(repo, tt.refID); !strings.Contains(got, tt.want) {
 				t.Errorf("LastLog() = %v, want %v", got, tt.want)

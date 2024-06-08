@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/kohirens/stdlib/test"
+	"github.com/kohirens/stdlib/git"
 	"github.com/kohirens/version-release/vro/pkg/github"
 	"os"
 	"testing"
@@ -22,7 +22,7 @@ func (gh *ghMock) PublishChangelog(wd, branch, chaneLogFile, msg string) error {
 
 func TestWorkflow_PublishReleaseTag(t *testing.T) {
 	mc := &ghMock{}
-	repo := test.SetupARepository("repo-06", "tmp", "testdata", string(os.PathSeparator))
+	repo := git.CloneFromBundle("repo-06", "tmp", "testdata", string(os.PathSeparator))
 	wf := NewWorkflow("citoken", mc)
 
 	err1 := wf.PublishReleaseTag("main", repo, "")

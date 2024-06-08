@@ -1,6 +1,7 @@
 package gittoolbelt
 
 import (
+	"github.com/kohirens/stdlib/git"
 	help "github.com/kohirens/stdlib/test"
 	"os"
 	"testing"
@@ -26,7 +27,7 @@ func TestIsTaggable(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			repo := help.SetupARepository(tt.bundle, tmpDir, fixtureDir, ps)
+			repo := git.CloneFromBundle(tt.bundle, tmpDir, fixtureDir, ps)
 			got := IsTaggable(repo)
 
 			if got != tt.want {
