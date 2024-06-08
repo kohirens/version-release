@@ -228,12 +228,6 @@ func main() {
 		}
 
 		if !upToDate {
-			// if you remove this, you MUST ensure that there is a cliff.toml in the repo.
-			if lastUpdateWasAutoChangelog(wd) { // do not perform updates consecutively
-				log.Errf(stderr.ChgLogAutoUpdate)
-				return
-			}
-
 			// Step 2.a: Set pipeline parameters and trigger the workflow: publish changelog.
 			pp, e1 := circleci.GetPipelineParameters(branch, publishChgLogWorkflow)
 			if e1 != nil {
@@ -241,6 +235,7 @@ func main() {
 				return
 			}
 
+			log.Logf(stdout.TriggerWorkflow, publishChgLogWorkflow)
 			mainErr = circleci.TriggerPipeline(pp, client, eVars)
 
 			return
@@ -265,6 +260,7 @@ func main() {
 			return
 		}
 
+		log.Logf(stdout.TriggerWorkflow, publishReleaseTagWorkflow)
 		// Step 7: Trigger the workflow
 		mainErr = circleci.TriggerPipeline(pp, client, eVars)
 	}
