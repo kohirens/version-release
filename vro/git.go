@@ -6,7 +6,6 @@ import (
 	"github.com/kohirens/version-release/vro/pkg/git"
 	"github.com/kohirens/version-release/vro/pkg/gitcliff"
 	"os"
-	"strings"
 )
 
 // IsChangelogUpToDate Indicate if there are any changes to be added to the
@@ -31,20 +30,18 @@ func IsChangelogUpToDate(wd, chgLogFile string) (bool, error) {
 		return true, e2
 	}
 
-	log.Dbugf("git status output = %s", status)
+	log.Dbugf(stdout.GitStatus, status)
 
 	utd := len(status) == 0
 
-	log.Dbugf("changelog is update to date = %v", utd)
+	if utd {
+		log.Logf(stdout.ChgLogUpToDate)
+	} else {
+		log.Logf(stdout.ChgLogNotUpToDate, status)
+	}
 
 	return utd, nil
 }
-
-func lastUpdateWasAutoChangelog(wd string) bool {
-	lastLog := git.Log(wd, "HEAD")
-	return strings.Contains(lastLog, "An automated update of CHANGELOG.md")
-}
-
 func NoChangesToRelease(wd string) bool {
 	changes, e1 := gitcliff.UnreleasedChanges(wd)
 	if e1 != nil {

@@ -27,21 +27,29 @@ var stderr = struct {
 }
 
 var stdout = struct {
-	CurrentVersion string
-	CurrentVer     string
-	Match          string
-	NextVersion    string
-	NoChanges      string
-	ReleaseTag     string
-	StartWorkflow  string
+	ChgLogUpToDate    string
+	ChgLogNotUpToDate string
+	CurrentVersion    string
+	CurrentVer        string
+	GitStatus         string
+	Match             string
+	NextVersion       string
+	NoChanges         string
+	ReleaseTag        string
+	StartWorkflow     string
+	TriggerWorkflow   string
 }{
-	CurrentVersion: "%v, %v",
-	CurrentVer:     "current version %v",
-	Match:          "entry for %v in the changelog was found, we assume this means the changelog is up-to-date",
-	NextVersion:    "next version %v",
-	NoChanges:      "no changes to release",
-	ReleaseTag:     "releasing %v",
-	StartWorkflow:  "starting %v workflow",
+	ChgLogUpToDate:    "the changelog is up to date",
+	ChgLogNotUpToDate: "the changelog is not up to date\nchangelog status:\n%s",
+	CurrentVersion:    "%v, %v",
+	CurrentVer:        "current version %v",
+	GitStatus:         "git status output = %s",
+	Match:             "entry for %v in the changelog was found, we assume this means the changelog is up-to-date",
+	NextVersion:       "next version %v",
+	NoChanges:         "no changes to release",
+	ReleaseTag:        "releasing %v",
+	StartWorkflow:     "starting %v workflow",
+	TriggerWorkflow:   "trigger workflow %v",
 }
 
 var um = map[string]string{
