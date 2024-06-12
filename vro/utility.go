@@ -2,6 +2,8 @@ package main
 
 import (
 	"fmt"
+	"github.com/kohirens/stdlib/log"
+	"github.com/kohirens/version-release/vro/pkg/gitcliff"
 	"os"
 )
 
@@ -27,4 +29,20 @@ func getRequiredEnvVars(eVarNames []string) (envVars, error) {
 	}
 
 	return eVars, nil
+}
+
+func nextVersion(semVer string, wd string) (string, error) {
+	// check if a version has been provided as input.
+	nextVer := semVer
+	if nextVer == "" {
+		nextVer = gitcliff.Bump(wd)
+	}
+
+	log.Infof("semVer = %v", nextVer)
+
+	if nextVer == "" {
+		return "", fmt.Errorf(stderr.NothingToTag)
+	}
+
+	return nextVer, nil
 }

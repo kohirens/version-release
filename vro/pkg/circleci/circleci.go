@@ -16,7 +16,7 @@ import (
 
 type GithubClient interface {
 	TagAndRelease(revision, tag string) (*github.ReleasesResponse, error)
-	PublishChangelog(wd, branch, chaneLogFile, msg string) error
+	PublishChangelog(wd, branch, header, msg string, files []string) error
 }
 
 type ParameterMap struct {

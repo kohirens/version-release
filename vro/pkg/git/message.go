@@ -1,6 +1,7 @@
 package git
 
 var stderr = struct {
+	CatFile                  string
 	CommitLog                string
 	CouldNotAddOrigin        string
 	CouldNotCheckoutBranch   string
@@ -15,6 +16,7 @@ var stderr = struct {
 	GitDescribeContains      string
 	LastLog                  string
 }{
+	CatFile:                  "git cat-file: %v",
 	CommitLog:                "could not get commit log: %s",
 	CouldNotAddOrigin:        "problem adding the origin %s: %s, %s",
 	CouldNotCheckoutBranch:   "could not checkout branch: %s; %v",
@@ -26,11 +28,12 @@ var stderr = struct {
 	CouldNotRemoveOrigin:     "problem removing the origin %s: %s, %s",
 	CouldNotSetGlobalConfig:  "could not set global config %s; %v",
 	CouldNotSetRemoteUrl:     "problem setting the remote push URL: %s, %s",
-	GitDescribeContains:      "cannot describe commit %v: %v\n",
+	GitDescribeContains:      "git describe %s %v",
 	LastLog:                  "could not get latest log: %s",
 }
 
 var stdout = struct {
+	CatFile            string
 	FoundRemoteBranch  string
 	NoTags             string
 	SetGitGlobalConfig string
@@ -38,10 +41,11 @@ var stdout = struct {
 	Status             string
 	TagsInfo           string
 }{
-	FoundRemoteBranch:  "found remote branch %s\n",
+	CatFile:            "git cat-file result: %s",
+	FoundRemoteBranch:  "found remote branch %s",
 	NoTags:             "no tag for %v was found",
-	SetGitGlobalConfig: "set git config global %s\n",
-	StagedFiles:        "staged files %s\n",
+	SetGitGlobalConfig: "set git config global %s",
+	StagedFiles:        "staged files %s",
 	Status:             "status: %s",
-	TagsInfo:           "tag(s) found %s\n",
+	TagsInfo:           "tag(s) found %s",
 }

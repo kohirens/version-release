@@ -5,19 +5,23 @@ package main
 import (
 	"flag"
 	"fmt"
+	"github.com/kohirens/stdlib/fsio"
 	"github.com/kohirens/stdlib/log"
 	"github.com/kohirens/version-release/vro/internal/util"
 	"github.com/kohirens/version-release/vro/pkg/circleci"
 	"github.com/kohirens/version-release/vro/pkg/git"
+	"github.com/kohirens/version-release/vro/pkg/gitcliff"
 	"github.com/kohirens/version-release/vro/pkg/github"
 	"net/http"
 	"os"
 	"regexp"
 	"strconv"
+	"strings"
 	"time"
 )
 
 const (
+	autoReleaseHeader         = "auto: Release %v"
 	maxRequestTimeout         = 5 * time.Second
 	publishChgLogWorkflow     = "publish-changelog"
 	publishReleaseTagWorkflow = "publish-release-tag"
@@ -29,6 +33,7 @@ type appFlags struct {
 	version        bool
 	CommitHash     string
 	CurrentVersion string
+	SemVer         string
 	TagAndRelease  struct {
 		Flags  flag.FlagSet
 		Help   bool
@@ -44,6 +49,7 @@ var af = &appFlags{}
 func init() {
 	flag.BoolVar(&af.help, "help", false, um["help"])
 	flag.BoolVar(&af.version, "version", false, um["version"])
+	flag.StringVar(&af.SemVer, "semver", "", um["semver"])
 
 	af.TagAndRelease.Flags = flag.FlagSet{}
 	af.TagAndRelease.Flags.BoolVar(
@@ -101,6 +107,17 @@ func main() {
 		Timeout: maxRequestTimeout,
 	}
 
+	semVer := ""
+	if af.SemVer != "" {
+		if regexp.MustCompile(util.CheckSemVer).MatchString(af.SemVer) {
+			semVer = af.SemVer
+		} else {
+			mainErr = fmt.Errorf(stderr.InvalidSemVer, af.SemVer)
+			return
+		}
+	}
+	log.Infof("semantic version set to %v", semVer)
+
 	switch ca[0] {
 	case publishReleaseTagWorkflow:
 		if e := af.TagAndRelease.Flags.Parse(ca[1:]); e != nil {
@@ -137,7 +154,6 @@ func main() {
 
 		branch := subCa[0]
 		wd := subCa[1]
-		semVer := ""
 
 		log.Infof("branch %v", branch)
 		log.Infof("working directory %v", wd)
@@ -155,7 +171,13 @@ func main() {
 
 		wf := NewWorkflow(eVars["CIRCLE_TOKEN"], gh)
 
-		mainErr = wf.PublishReleaseTag(branch, wd, semVer)
+		nextVer, e2 := nextVersion(semVer, wd)
+		if e2 != nil {
+			mainErr = e2
+			return
+		}
+
+		mainErr = wf.PublishReleaseTag(branch, nextVer)
 
 	case publishChgLogWorkflow:
 		log.Logf(stdout.StartWorkflow, publishChgLogWorkflow)
@@ -189,14 +211,14 @@ func main() {
 		gh.Username = eVars["CIRCLE_USERNAME"]
 		wf := NewWorkflow(eVars["CIRCLE_TOKEN"], gh)
 
-		mainErr = wf.PublishChangelog(wd, chgLogFile, branch)
+		mainErr = wf.PublishChangelog(wd, chgLogFile, branch, semVer)
 
 	case workflowSelector:
 		log.Logf(stdout.StartWorkflow, workflowSelector)
 
 		// Step 1: Grab all the environment variables and alert if any are not
 		// set. See https://circleci.com/docs/variables/#built-in-environment-variables
-		eVars, err1 := getRequiredEnvVars([]string{
+		eVars, e1 := getRequiredEnvVars([]string{
 			"CIRCLE_TOKEN",
 			"CIRCLE_PROJECT_REPONAME",
 			"CIRCLE_PROJECT_USERNAME",
@@ -204,8 +226,8 @@ func main() {
 			"PARAM_CIRCLECI_APP_HOST",
 			"PARAM_VCS_TYPE",
 		})
-		if err1 != nil {
-			mainErr = err1
+		if e1 != nil {
+			mainErr = e1
 			return
 		}
 
@@ -219,49 +241,75 @@ func main() {
 		wd := ca[3]
 		commit := ca[4]
 
-		// Step 2: When the changelog has updates, then trigger the changelog
-		// workflow and return.
-		upToDate, err5 := IsChangelogUpToDate(wd, chgLogFile)
-		if err5 != nil {
-			mainErr = err5
+		if !git.IsCommit(wd, commit) {
+			mainErr = fmt.Errorf(stderr.InvalidCommit, commit)
+			return
+		}
+		hasSemverTag := git.HasSemverTag(wd, commit)
+
+		// NOTE: nextVersion is equivalent to this check, so does it make sense to run this as it seems to be no benefit.
+		if hasSemverTag { // Do nothing when the commit is semver tagged.
+			log.Logf(stderr.CommitAlreadyTagged, commit)
+		}
+
+		// only consider tagging if HEAD has no tag and the commit message
+		// contains the expected auto-release header.
+		if !hasSemverTag {
+			nextVer, e2 := nextVersion(semVer, wd)
+			if e2 != nil {
+				mainErr = e2
+				return
+			}
+
+			// Skip commits that are NOT released and also should NOT be tagged.
+			if !strings.Contains(git.Log(wd, commit), fmt.Sprintf(autoReleaseHeader, nextVer)) {
+				return
+			}
+
+			// Build pipeline parameters to trigger the tag-and-release workflow.
+			pp, e3 := circleci.GetPipelineParameters(branch, publishReleaseTagWorkflow)
+			if e3 != nil {
+				mainErr = e3
+				return
+			}
+
+			log.Logf(stdout.TriggerWorkflow, publishReleaseTagWorkflow)
+
+			//  Trigger the workflow
+			mainErr = circleci.TriggerPipeline(pp, client, eVars)
 			return
 		}
 
-		if !upToDate {
-			// Step 2.a: Set pipeline parameters and trigger the workflow: publish changelog.
-			pp, e1 := circleci.GetPipelineParameters(branch, publishChgLogWorkflow)
-			if e1 != nil {
-				mainErr = e1
+		hasUnreleasedChanges, e4 := gitcliff.UnreleasedChanges(wd)
+		if e4 != nil {
+			mainErr = e4
+			return
+		}
+
+		if len(hasUnreleasedChanges) > 0 {
+			// Scan the changelog to verify it does not already contain the unreleased entries.
+			// git-cliff just blindly prepends commit to the CHANGELOG without verify they were already added. So we want to prevent duplicate entries.
+			if fsio.Exist(chgLogFile) {
+				// Exit when the change is update-to-date or an error occurred
+				if containUnreleased, e5 := changelogContains(&hasUnreleasedChanges[0], wd, chgLogFile); containUnreleased || e5 != nil {
+					mainErr = e5
+					return
+				}
+			}
+
+			// Build pipeline parameters for the publish-changelog workflow.
+			pp, e6 := circleci.GetPipelineParameters(branch, publishChgLogWorkflow)
+			if e6 != nil {
+				mainErr = e6
 				return
 			}
 
 			log.Logf(stdout.TriggerWorkflow, publishChgLogWorkflow)
+
+			// Trigger the publish-changelog workflow.
 			mainErr = circleci.TriggerPipeline(pp, client, eVars)
 
 			return
 		}
-
-		// Step 4: No changelog updates, then verify the commit is not tagged.
-		if git.HasSemverTag(wd, commit) {
-			log.Logf(stderr.CommitAlreadyTagged, commit)
-			return
-		}
-
-		// Step 5: Verify there are not commits to release
-		if NoChangesToRelease(wd) {
-			log.Logf(stdout.NoChanges)
-			return
-		}
-		// Step 6: Build pipeline parameters to trigger the tag-and-release
-		// workflow
-		pp, errY1 := circleci.GetPipelineParameters(branch, publishReleaseTagWorkflow)
-		if errY1 != nil {
-			mainErr = errY1
-			return
-		}
-
-		log.Logf(stdout.TriggerWorkflow, publishReleaseTagWorkflow)
-		// Step 7: Trigger the workflow
-		mainErr = circleci.TriggerPipeline(pp, client, eVars)
 	}
 }

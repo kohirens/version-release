@@ -115,7 +115,10 @@ func GetCurrentTag(wd string) string {
 	return string(tags[0])
 }
 
-// HasSemverTag Looks up tags for a commit
+// HasSemverTag Indicates when a commit is tagged.
+//
+//	Uses git describe to finds the most recent tag that is reachable from a
+//	commit. Only shows annotated tags.
 func HasSemverTag(wd, commit string) bool {
 	so, se, _, _ := cli.RunCommand(
 		wd,
@@ -124,10 +127,10 @@ func HasSemverTag(wd, commit string) bool {
 	)
 
 	if se != nil {
-		if strings.Contains(se.Error(), "cannot describe") { // handle expected error
+		if bytes.Contains(so, []byte("cannot describe")) { // handle expected error
 			log.Logf(stdout.NoTags, commit)
 		} else {
-			log.Errf(stderr.GitDescribeContains, commit, se.Error())
+			log.Errf(stderr.GitDescribeContains, so, se.Error())
 		}
 		return false
 	}
@@ -137,6 +140,24 @@ func HasSemverTag(wd, commit string) bool {
 	re := regexp.MustCompile(util.CheckSemVer)
 
 	return re.Match(so)
+}
+
+// IsCommit Verify a hash is a commit.
+func IsCommit(wd, commit string) bool {
+	so, se, _, _ := cli.RunCommand(
+		wd,
+		cmdGit,
+		[]string{"cat-file", "-t", commit},
+	)
+
+	if se != nil {
+		log.Errf(stderr.CatFile, commit, se.Error())
+		return false
+	}
+
+	log.Infof(stdout.CatFile, so)
+
+	return bytes.Contains(so, []byte("commit"))
 }
 
 // LastLog Return the last commit log.

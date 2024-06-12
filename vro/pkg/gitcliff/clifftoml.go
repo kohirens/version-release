@@ -1,4 +1,4 @@
-package main
+package gitcliff
 
 const cliffConfig = `# git-cliff ~ configuration file
 # https://git-cliff.org/docs/configuration

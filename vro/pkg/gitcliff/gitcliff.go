@@ -9,22 +9,31 @@ import (
 	"github.com/kohirens/stdlib/fsio"
 	"github.com/kohirens/stdlib/log"
 	"github.com/kohirens/version-release/vro/internal/util"
+	"os"
 	"regexp"
 	"strings"
 )
 
 const (
-	Cmd = "git-cliff"
+	CliffConfigName = "cliff.toml"
+	Cmd             = "git-cliff"
 )
 
 // BuildChangelog Runs git-cliff to update the change log file.
 func BuildChangelog(wd, chgLogFile string) error {
-	// build new: git-cliff --output CHANGELOG.md
-	args := []string{"--bump", "--output", chgLogFile}
+	configFile := wd + "/" + CliffConfigName
+
+	if !fsio.Exist(configFile) { // make a config when none present.
+		if e := os.WriteFile(configFile, []byte(cliffConfig), 0776); e != nil {
+			return e
+		}
+	}
+
+	// build new
+	args := []string{"--bump", "--unreleased", "--output", chgLogFile}
 
 	// prepend changes.
 	if fsio.Exist(wd + stdlib.PS + chgLogFile) {
-		// update existing: git-cliff --unreleased --bump --prepend CHANGELOG.md
 		args = []string{"--bump", "--unreleased", "--prepend", chgLogFile}
 	}
 
@@ -45,7 +54,6 @@ func BuildChangelog(wd, chgLogFile string) error {
 
 // UnreleasedMessage Get unreleased commits changes without header and footer.
 func UnreleasedMessage(wd string) ([]byte, error) {
-	// git-cliff --bump --strip all -u
 	args := []string{"--bump", "--strip", "all", "--unreleased"}
 	so, se, _, cs := cli.RunCommand(
 		wd,
@@ -97,6 +105,26 @@ func Bump(wd string) string {
 	}
 
 	return string(found)
+}
+
+// NextVersion Calculated semantic version.
+func NextVersion(wd string) (string, error) {
+	var version string
+
+	u, e1 := UnreleasedChanges(wd)
+	if e1 != nil {
+		return "", e1
+	}
+
+	if len(u) > 0 {
+		version = u[0].Version
+	}
+
+	if version == "" {
+		return "", fmt.Errorf(stderr.NoVersionTag)
+	}
+
+	return version, nil
 }
 
 // HasUnreleasedChanges Indicate there are changes in the current branch that

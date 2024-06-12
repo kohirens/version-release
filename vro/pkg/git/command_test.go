@@ -81,3 +81,26 @@ func TestLog(t *testing.T) {
 		})
 	}
 }
+
+func TestIsCommit(t *testing.T) {
+	type args struct {
+	}
+	tests := []struct {
+		name   string
+		bundle string
+		commit string
+		want   bool
+	}{
+		{"is-commit", "repo-03", "HEAD", true},
+		{"not-a-commit", "repo-03", "abcd123", false},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			repo := git.CloneFromBundle(tt.bundle, tmpDir, fixtureDir, ps)
+
+			if got := IsCommit(repo, tt.commit); got != tt.want {
+				t.Errorf("IsCommit() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
