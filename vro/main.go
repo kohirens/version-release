@@ -246,6 +246,7 @@ func main() {
 			mainErr = fmt.Errorf(stderr.InvalidCommit, commit)
 			return
 		}
+
 		hasSemverTag := git.HasSemverTag(wd, commit)
 
 		// NOTE: nextVersion is equivalent to this check, so does it make sense to run this as it seems to be no benefit.
@@ -264,7 +265,7 @@ func main() {
 
 			// Skip commits that are NOT released and also should NOT be tagged.
 			if !strings.Contains(git.Log(wd, commit), fmt.Sprintf(autoReleaseHeader, nextVer)) {
-				return
+				goto changLog
 			}
 
 			// Build pipeline parameters to trigger the tag-and-release workflow.
@@ -281,6 +282,7 @@ func main() {
 			return
 		}
 
+	changLog:
 		hasUnreleasedChanges, e4 := gitcliff.UnreleasedChanges(wd)
 		if e4 != nil {
 			mainErr = e4
