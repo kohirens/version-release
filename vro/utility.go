@@ -38,7 +38,7 @@ func nextVersion(semVer string, wd string) (string, error) {
 		nextVer = gitcliff.Bump(wd)
 	}
 
-	log.Infof("semVer = %v", nextVer)
+	log.Logf("semVer = %v", nextVer)
 
 	if nextVer == "" {
 		return "", fmt.Errorf(stderr.NothingToTag)
