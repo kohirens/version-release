@@ -6,7 +6,9 @@ import (
 	"bytes"
 	"fmt"
 	git2 "github.com/kohirens/stdlib/git"
+	"github.com/kohirens/version-release/vro/pkg/circleci"
 	"github.com/kohirens/version-release/vro/pkg/git"
+	"github.com/kohirens/version-release/vro/pkg/github"
 	"os"
 	"strings"
 	"testing"
@@ -112,8 +114,8 @@ func TestWorkflowSelector_TagRelease(t *testing.T) {
 }
 
 func TestTriggeredPublishReleaseTagWorkflow(t *testing.T) {
-	_ = os.Setenv("CIRCLE_REPOSITORY_URL", "git@github.com:kohirens/version-release.git")
-	defer os.Unsetenv("CIRCLE_REPOSITORY_URL")
+	_ = os.Setenv(circleci.EnvRepoUrl, "git@github.com:kohirens/version-release.git")
+	defer os.Unsetenv(circleci.EnvRepoUrl)
 
 	wantCode := 1
 
@@ -143,9 +145,9 @@ func TestTriggeredPublishChangelogWorkflow(t *testing.T) {
 
 	// This git commit has changes where the change log needs updating
 	fixedArgs := []string{"publish-changelog", "CHANGELOG.md", "main", repo}
-	_ = os.Setenv("CIRCLE_REPOSITORY_URL", "git@github.com:kohirens/version-release.git")
-	_ = os.Setenv("PARAM_MERGE_TYPE", "rebase")
-	_ = os.Setenv("CIRCLE_USERNAME", "test")
+	_ = os.Setenv(circleci.EnvRepoUrl, "git@github.com:kohirens/version-release.git")
+	_ = os.Setenv(github.EnvMergeType, "rebase")
+	_ = os.Setenv(circleci.EnvUsername, "test")
 
 	// run the test
 	cmd := help.GetTestBinCmd(subEnvVarName, fixedArgs)
@@ -227,8 +229,8 @@ func Test_getRequiredEnvVars(t *testing.T) {
 }
 
 func TestPublishReleaseTagWorkflows(t *testing.T) {
-	_ = os.Setenv("CIRCLE_REPOSITORY_URL", "git@github.com:kohirens/version-release.git")
-	defer os.Unsetenv("CIRCLE_REPOSITORY_URL")
+	_ = os.Setenv(circleci.EnvRepoUrl, "git@github.com:kohirens/version-release.git")
+	defer os.Unsetenv(circleci.EnvRepoUrl)
 
 	fixedArgs := []string{"publish-release-tag", "main"}
 	tests := []struct {

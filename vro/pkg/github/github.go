@@ -9,6 +9,12 @@ import (
 	"strings"
 )
 
+const (
+	EnvMergeType = "PARAM_MERGE_TYPE"
+	EnvToken     = "GH_TOKEN"
+	EnvServer    = "PARAM_GH_SERVER"
+)
+
 type HttpClient interface {
 	Do(req *http.Request) (*http.Response, error)
 }
