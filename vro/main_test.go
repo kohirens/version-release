@@ -4,6 +4,7 @@ package main
 
 import (
 	"bytes"
+	"fmt"
 	git2 "github.com/kohirens/stdlib/git"
 	"github.com/kohirens/version-release/vro/pkg/git"
 	"os"
@@ -65,7 +66,7 @@ func TestCallingMain(tester *testing.T) {
 	}
 }
 
-// Will pick the workflow to publish the changelog.
+// Will trigger the workflow to publish the changelog.
 func TestWorkflowSelector_PublishChangelog(t *testing.T) {
 	wantCode := 0
 
@@ -85,23 +86,28 @@ func TestWorkflowSelector_PublishChangelog(t *testing.T) {
 	}
 }
 
-// Should pick the workflow to publish a release tag
+// Will trigger the workflow to publish a release tag
 func TestWorkflowSelector_TagRelease(t *testing.T) {
 	wantCode := 0
 
 	repo := git2.CloneFromBundle("repo-02", tmpDir, fixtureDir, ps)
 	// This git commit has no changelog updates but there is a commit to tag
-	fixedArgs := []string{"workflow-selector", "CHANGELOG.md", "main", repo, "0541de58335c312459f0783aab09e0797fc824e5"}
+	fixedArgs := []string{"workflow-selector", "CHANGELOG.md", "main", repo, "9a9d4945706632b75f3ed6f1df93d8a166472455"}
 
 	cmd := help.GetTestBinCmd(subEnvVarName, fixedArgs)
 
-	_, _ = help.VerboseSubCmdOut(cmd.CombinedOutput())
+	so, _ := help.VerboseSubCmdOut(cmd.CombinedOutput())
 
 	// get exit code.
 	got := cmd.ProcessState.ExitCode()
 
 	if got != wantCode {
 		t.Errorf("got %d, want %d", got, wantCode)
+	}
+
+	expectSo := []byte(fmt.Sprintf(stdout.TriggerWorkflow, publishReleaseTagWorkflow))
+	if !bytes.Contains(so, expectSo) {
+		t.Errorf("stdout did not contain expected %q", expectSo)
 	}
 }
 
@@ -162,7 +168,7 @@ func TestTriggerPipeline_NoChangelogOrTaggableChanges(t *testing.T) {
 
 	repo := git2.CloneFromBundle("repo-03", tmpDir, fixtureDir, ps)
 
-	fixedArgs := []string{"workflow-selector", "CHANGELOG.md", "main", repo, "285543c691b57f334644d1c29f9288b52645cd08"}
+	fixedArgs := []string{"workflow-selector", "CHANGELOG.md", "main", repo, "ec1556c852c18794f749c5fd67e461e9a142cd03"}
 
 	// run the test
 	cmd := help.GetTestBinCmd(subEnvVarName, fixedArgs)
@@ -177,7 +183,7 @@ func TestTriggerPipeline_NoChangelogOrTaggableChanges(t *testing.T) {
 		t.Errorf("got %d, want %d", got, wantCode)
 	}
 
-	want2 := "commit 285543c691b57f334644d1c29f9288b52645cd08 is already tagged"
+	want2 := "commit ec1556c852c18794f749c5fd67e461e9a142cd03 is already tagged"
 	if !strings.Contains(string(so), want2) {
 		t.Errorf("did not find expected message %q in output", want2)
 	}
