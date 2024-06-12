@@ -158,6 +158,7 @@ func main() {
 		log.Infof("branch %v", branch)
 		log.Infof("working directory %v", wd)
 
+		// TODO: Remove -semver subcommand flag in favor of the parent -semver global flag.
 		if af.TagAndRelease.SemVer != "" {
 			if regexp.MustCompile(util.CheckSemVer).MatchString(af.TagAndRelease.SemVer) {
 				semVer = af.TagAndRelease.SemVer

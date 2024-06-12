@@ -242,7 +242,9 @@ func TestPublishReleaseTagWorkflows(t *testing.T) {
 		{"no-commits-to-tag-2", "repo-05", fixedArgs, 1, "version is empty"},
 		{"first-release", "repo-07", fixedArgs, 0, "releasing 0.1.0"},
 		{"has-commits-to-tag", "repo-08", fixedArgs, 0, "releasing 0.1.2"},
-		{"specify-a-release", "repo-08", []string{"publish-release-tag", "--semver", "1.0.0", "main"}, 0, "releasing 1.0.0"},
+		// TODO: Remove `publish-release-tag", "-semver` in the next major release.
+		{"specify-a-release", "repo-08", []string{"publish-release-tag", "-semver", "1.0.0", "main"}, 0, "releasing 1.0.0"},
+		{"semver-2.0.0", "repo-08", []string{"-semver", "2.0.0", "publish-release-tag", "main"}, 0, "releasing 2.0.0"},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
