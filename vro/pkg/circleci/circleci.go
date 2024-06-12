@@ -14,6 +14,17 @@ import (
 	"time"
 )
 
+const (
+	EnvApiHost         = "PARAM_CIRCLECI_API_HOST"
+	EnvAppHost         = "PARAM_CIRCLECI_APP_HOST"
+	EnvProjectReponame = "CIRCLE_PROJECT_REPONAME"
+	EnvProjectUsername = "CIRCLE_PROJECT_USERNAME"
+	EnvRepoUrl         = "CIRCLE_REPOSITORY_URL"
+	EnvToken           = "CIRCLE_TOKEN"
+	EnvUsername        = "CIRCLE_USERNAME"
+	EnvVcsType         = "PARAM_VCS_TYPE"
+)
+
 type GithubClient interface {
 	TagAndRelease(revision, tag string) (*github.ReleasesResponse, error)
 	PublishChangelog(wd, branch, header, msg string, files []string) error
@@ -63,13 +74,13 @@ func GetPipelineParameters(branch, flow string) ([]byte, error) {
 // are currently not supported on CircleCI API (v2) at this time.
 // see: https://circleci.com/docs/api/v2/#operation/triggerPipeline
 func TriggerPipeline(pp []byte, client *http.Client, eVars map[string]string) error {
-	VcsType := eVars["PARAM_VCS_TYPE"]
-	CircleProjectUsername := eVars["CIRCLE_PROJECT_USERNAME"]
-	CircleProjectReponame := eVars["CIRCLE_PROJECT_REPONAME"]
+	VcsType := eVars[EnvVcsType]
+	CircleProjectUsername := eVars[EnvProjectUsername]
+	CircleProjectReponame := eVars[EnvProjectReponame]
 
 	projectUrl := fmt.Sprintf(
 		"%s/api/v2/project/%s/%s/%s/pipeline",
-		eVars["PARAM_CIRCLECI_API_HOST"],
+		eVars[EnvApiHost],
 		VcsType,
 		CircleProjectUsername,
 		CircleProjectReponame,
@@ -83,10 +94,10 @@ func TriggerPipeline(pp []byte, client *http.Client, eVars map[string]string) er
 	}
 
 	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Circle-Token", eVars["CIRCLE_TOKEN"])
+	req.Header.Set("Circle-Token", eVars[EnvToken])
 	req.Header.Set(
 		"Authorization",
-		"Basic "+base64.StdEncoding.EncodeToString([]byte(eVars["CIRCLE_TOKEN"]+":")))
+		"Basic "+base64.StdEncoding.EncodeToString([]byte(eVars[EnvToken]+":")))
 
 	res, err2 := client.Do(req)
 	if err2 != nil {
@@ -110,7 +121,7 @@ func TriggerPipeline(pp []byte, client *http.Client, eVars map[string]string) er
 	}
 
 	log.Logf(stdout.TriggerPipeline,
-		eVars["PARAM_CIRCLECI_APP_HOST"],
+		eVars[EnvAppHost],
 		VcsType,
 		CircleProjectUsername,
 		CircleProjectReponame,

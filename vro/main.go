@@ -98,7 +98,7 @@ func main() {
 	ca := flag.Args()
 
 	if len(ca) < 2 {
-		fmt.Println("nothing to do, bye!")
+		fmt.Println(stdout.Nothing)
 		os.Exit(0)
 		return
 	}
@@ -116,7 +116,7 @@ func main() {
 			return
 		}
 	}
-	log.Infof("semantic version set to %v", semVer)
+	log.Infof(stdout.SemVer, semVer)
 
 	switch ca[0] {
 	case publishReleaseTagWorkflow:
@@ -135,10 +135,10 @@ func main() {
 
 		// Grab all the environment variables and alert if any are not set.
 		eVars, e1 := getRequiredEnvVars([]string{
-			"CIRCLE_TOKEN",
-			"GH_TOKEN",
-			"CIRCLE_REPOSITORY_URL",
-			"PARAM_GH_SERVER",
+			circleci.EnvToken,
+			github.EnvToken,
+			circleci.EnvRepoUrl,
+			github.EnvServer,
 		})
 		if e1 != nil {
 			mainErr = e1
@@ -155,8 +155,8 @@ func main() {
 		branch := subCa[0]
 		wd := subCa[1]
 
-		log.Infof("branch %v", branch)
-		log.Infof("working directory %v", wd)
+		log.Infof(stdout.Branch, branch)
+		log.Infof(stdout.Wd, wd)
 
 		// TODO: Remove -semver subcommand flag in favor of the parent -semver global flag.
 		if af.TagAndRelease.SemVer != "" {
@@ -168,9 +168,9 @@ func main() {
 			}
 		}
 
-		gh := github.NewClient(eVars["CIRCLE_REPOSITORY_URL"], eVars["GH_TOKEN"], eVars["PARAM_GH_SERVER"], client)
+		gh := github.NewClient(eVars[circleci.EnvRepoUrl], eVars[github.EnvToken], eVars[github.EnvServer], client)
 
-		wf := NewWorkflow(eVars["CIRCLE_TOKEN"], gh)
+		wf := NewWorkflow(eVars[circleci.EnvToken], gh)
 
 		nextVer, e2 := nextVersion(semVer, wd)
 		if e2 != nil {
@@ -185,12 +185,12 @@ func main() {
 
 		// Grab all the environment variables and alert if any are not set.
 		eVars, err1 := getRequiredEnvVars([]string{
-			"CIRCLE_REPOSITORY_URL",
-			"CIRCLE_TOKEN",
-			"CIRCLE_USERNAME",
-			"GH_TOKEN",
-			"PARAM_GH_SERVER",
-			"PARAM_MERGE_TYPE",
+			circleci.EnvRepoUrl,
+			circleci.EnvToken,
+			circleci.EnvUsername,
+			github.EnvToken,
+			github.EnvServer,
+			github.EnvMergeType,
 		})
 		if err1 != nil {
 			mainErr = err1
@@ -207,10 +207,10 @@ func main() {
 		branch := ca[2]
 		wd := ca[3]
 
-		gh := github.NewClient(eVars["CIRCLE_REPOSITORY_URL"], eVars["GH_TOKEN"], eVars["PARAM_GH_SERVER"], client)
-		gh.MergeMethod = eVars["PARAM_MERGE_TYPE"]
-		gh.Username = eVars["CIRCLE_USERNAME"]
-		wf := NewWorkflow(eVars["CIRCLE_TOKEN"], gh)
+		gh := github.NewClient(eVars[circleci.EnvRepoUrl], eVars[github.EnvToken], eVars[github.EnvServer], client)
+		gh.MergeMethod = eVars[github.EnvMergeType]
+		gh.Username = eVars[circleci.EnvUsername]
+		wf := NewWorkflow(eVars[circleci.EnvToken], gh)
 
 		mainErr = wf.PublishChangelog(wd, chgLogFile, branch, semVer)
 
@@ -220,12 +220,12 @@ func main() {
 		// Step 1: Grab all the environment variables and alert if any are not
 		// set. See https://circleci.com/docs/variables/#built-in-environment-variables
 		eVars, e1 := getRequiredEnvVars([]string{
-			"CIRCLE_TOKEN",
-			"CIRCLE_PROJECT_REPONAME",
-			"CIRCLE_PROJECT_USERNAME",
-			"PARAM_CIRCLECI_API_HOST",
-			"PARAM_CIRCLECI_APP_HOST",
-			"PARAM_VCS_TYPE",
+			circleci.EnvToken,
+			circleci.EnvProjectReponame,
+			circleci.EnvProjectUsername,
+			circleci.EnvApiHost,
+			circleci.EnvAppHost,
+			circleci.EnvVcsType,
 		})
 		if e1 != nil {
 			mainErr = e1

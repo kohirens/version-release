@@ -27,6 +27,7 @@ var stderr = struct {
 }
 
 var stdout = struct {
+	Branch            string
 	ChgLogUpToDate    string
 	ChgLogNotUpToDate string
 	CurrentVersion    string
@@ -34,10 +35,14 @@ var stdout = struct {
 	GitStatus         string
 	Match             string
 	NoChanges         string
+	Nothing           string
 	ReleaseTag        string
+	SemVer            string
 	StartWorkflow     string
 	TriggerWorkflow   string
+	Wd                string
 }{
+	Branch:            "branch %v",
 	ChgLogUpToDate:    "the changelog is up to date",
 	ChgLogNotUpToDate: "the changelog is not up to date\nchangelog status:\n%s",
 	CurrentVersion:    "%v, %v",
@@ -45,9 +50,12 @@ var stdout = struct {
 	GitStatus:         "git status output = %s",
 	Match:             "entry for %v in the changelog was found, we assume this means the changelog is up-to-date",
 	NoChanges:         "no changes to release",
+	Nothing:           "nothing to do, bye!",
 	ReleaseTag:        "releasing %v",
+	SemVer:            "semantic version set to %v",
 	StartWorkflow:     "starting %v workflow",
 	TriggerWorkflow:   "trigger workflow %v",
+	Wd:                "working directory %v",
 }
 
 var um = map[string]string{
