@@ -64,7 +64,8 @@ func changelogContains(unreleased *gitcliff.Unreleased, wd, chgLogFile string) (
 // Old_IsChangelogUpToDate Indicate if there are any changes to be added to the
 // changelog.
 func Old_IsChangelogUpToDate(wd, chgLogFile string) (bool, error) {
-	if e := gitcliff.BuildChangelog(wd, chgLogFile); e != nil {
+	_, e := gitcliff.BuildChangelog(wd, chgLogFile)
+	if e != nil {
 		return true, e
 	}
 

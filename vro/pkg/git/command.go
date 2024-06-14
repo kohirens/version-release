@@ -237,10 +237,10 @@ func Push(wd, origin, branch string) error {
 		[]string{"push", origin, branch},
 	)
 	if se != nil {
-		return fmt.Errorf(stderr.CouldNotPush, status, se.Error())
+		return fmt.Errorf(stderr.CouldNotPush, string(status), se.Error())
 	}
 
-	fmt.Println(status)
+	log.Logf(stdout.Push, string(status))
 
 	return nil
 }

@@ -187,6 +187,20 @@ func LoadMock(w http.ResponseWriter, r *http.Request) {
 			w.WriteHeader(http.StatusOK)
 		}
 		vars.Data["Mock"] = mock
+	case "/repos/kohirens/repo-01/pulls":
+		mock = "make-pr.json"
+		vars.Data["Mock"] = mock
+		w.WriteHeader(http.StatusCreated)
+	case "/repos/kohirens/repo-01/pulls/1/merge":
+		switch r.Method {
+		case "GET":
+			w.WriteHeader(http.StatusNoContent)
+			return
+		case "PUT":
+			mock = "merge-pr.json"
+			w.WriteHeader(http.StatusOK)
+		}
+		vars.Data["Mock"] = mock
 	}
 
 	log.Infof(Stdout.LoadingFile, "JSON", mock)

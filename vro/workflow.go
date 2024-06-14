@@ -23,8 +23,9 @@ func NewWorkflow(token string, ghClient circleci.GithubClient) *Workflow {
 
 // PublishChangelog Run automation to update the CHANGELOG.md
 func (wf *Workflow) PublishChangelog(wd, chgLogFile, branch, semVer string) error {
-	if e := gitcliff.BuildChangelog(wd, chgLogFile); e != nil {
-		return e
+	files, e1 := gitcliff.BuildChangelog(wd, chgLogFile)
+	if e1 != nil {
+		return e1
 	}
 
 	msg, e2 := gitcliff.UnreleasedMessage(wd)
@@ -32,7 +33,6 @@ func (wf *Workflow) PublishChangelog(wd, chgLogFile, branch, semVer string) erro
 		log.Errf(e2.Error())
 	}
 
-	files := []string{chgLogFile, gitcliff.CliffConfigName}
 	header := fmt.Sprintf(autoReleaseHeader, semVer)
 	// Commit, push, and rebase the changelog.
 	return wf.GitHubClient.PublishChangelog(wd, branch, header, string(msg), files)

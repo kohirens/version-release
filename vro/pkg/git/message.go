@@ -38,6 +38,7 @@ var stdout = struct {
 	CatFile            string
 	FoundRemoteBranch  string
 	NoTags             string
+	Push               string
 	SetGitGlobalConfig string
 	StagedFiles        string
 	Status             string
@@ -46,6 +47,7 @@ var stdout = struct {
 	CatFile:            "git cat-file result: %s",
 	FoundRemoteBranch:  "found remote branch %s",
 	NoTags:             "no tag for %v was found",
+	Push:               "pushing %v",
 	SetGitGlobalConfig: "set git config global %s",
 	StagedFiles:        "staged files %s",
 	Status:             "status: %s",
