@@ -15,6 +15,7 @@ var stderr = struct {
 	CouldNotSetRemoteUrl     string
 	GitDescribeContains      string
 	LastLog                  string
+	WriteCommit              string
 }{
 	CatFile:                  "git cat-file: %v",
 	CommitLog:                "could not get commit log: %s",
@@ -30,6 +31,7 @@ var stderr = struct {
 	CouldNotSetRemoteUrl:     "problem setting the remote push URL: %s, %s",
 	GitDescribeContains:      "git describe %s %v",
 	LastLog:                  "could not get latest log: %s",
+	WriteCommit:              "could not write commit message: %v",
 }
 
 var stdout = struct {

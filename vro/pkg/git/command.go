@@ -6,6 +6,9 @@ import (
 	"github.com/kohirens/stdlib/cli"
 	"github.com/kohirens/stdlib/log"
 	"github.com/kohirens/version-release/vro/internal/util"
+	"io"
+	"os"
+	"os/exec"
 	"regexp"
 	"strings"
 )
@@ -34,24 +37,57 @@ func CheckoutBranch(wd, branch string) error {
 
 // Commit Commits any current staged changes.
 // git commit -m "${mergeBranchCommitMsg}" -m "automated update of ${PARAM_CHANGELOG_FILE}"
-func Commit(wd string, messages ...string) error {
-	ms := []string{}
-	for _, m := range messages {
-		msg := fmt.Sprintf("-m %q", m)
-		ms = append(ms, msg)
-	}
+func Commit(wd string, messages string) error {
+	log.Dbugf("msg in length = %v", len(messages))
 
-	status, se, _, _ := cli.RunCommand(
+	// commit message via stdin
+	sop, sep, sip, e1 := RunCommandInteractive(
 		wd,
 		cmdGit,
-		append([]string{"commit"}, ms...),
+		[]string{"commit", "--file", "-"},
+	)
+	if e1 != nil {
+		return fmt.Errorf(stderr.CouldNotCommit, e1.Error())
+	}
+
+	if _, e := io.WriteString(sip, messages); e != nil {
+		return fmt.Errorf(stderr.WriteCommit, e.Error())
+	}
+
+	if e := sip.Close(); e != nil {
+		return fmt.Errorf(stderr.WriteCommit, e.Error())
+	}
+
+	se, e3 := io.ReadAll(sep)
+	if e3 != nil {
+		return fmt.Errorf(stderr.CouldNotCommit, e3.Error())
+	}
+	if len(se) > 0 {
+		return fmt.Errorf(stderr.CouldNotCommit, string(se))
+	}
+
+	status, _ := io.ReadAll(sop)
+	if len(status) > 0 {
+		log.Logf(stdout.Status, status)
+	}
+
+	return nil
+}
+
+// Config Set or return a config global value.
+// git config <key> <value>
+func Config(wd, key, val string) error {
+	so, se, _, _ := cli.RunCommand(
+		wd,
+		cmdGit,
+		[]string{"config", key, val},
 	)
 
 	if se != nil {
-		return fmt.Errorf(stderr.CouldNotCommit, status, se.Error())
+		return fmt.Errorf(stderr.CouldNotSetGlobalConfig, so, se.Error())
 	}
 
-	log.Logf(stdout.Status, status)
+	log.Logf(stdout.SetGitGlobalConfig, key)
 
 	return nil
 }
@@ -292,4 +328,44 @@ func StatusWithOptions(wd string, options []string) ([]byte, error) {
 	}
 
 	return status, nil
+}
+
+// RunCommandInteractive run an external program via CLI interactively, in a
+// sub process; passing environment variables along.
+//
+//	It will pass in the os.Environ(), overwriting key=value pairs from env map,
+//	comparison for the key (variable name) is case-sensitive.
+func RunCommandInteractive(
+	wd,
+	program string,
+	args []string,
+) (io.ReadCloser, io.ReadCloser, io.WriteCloser, error) {
+	cmd := exec.Command(program, args...)
+	cmd.Dir = wd
+	ce := os.Environ()
+
+	// overwrite or set environment variables
+
+	cmd.Env = ce
+
+	cmdIn, err1 := cmd.StdinPipe()
+	if err1 != nil {
+		return nil, nil, nil, err1
+	}
+
+	cmdOut, err2 := cmd.StdoutPipe()
+	if err2 != nil {
+		return nil, nil, nil, err2
+	}
+
+	cmdErr, err3 := cmd.StderrPipe()
+	if err3 != nil {
+		return nil, nil, nil, err3
+	}
+
+	if e := cmd.Start(); e != nil {
+		return nil, nil, nil, e
+	}
+
+	return cmdOut, cmdErr, cmdIn, nil
 }
