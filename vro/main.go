@@ -263,8 +263,11 @@ func main() {
 				return
 			}
 
+			l := git.Log(wd, commit)
+			log.Dbugf(stdout.DbgCommitLog, l)
+
 			// Skip commits that are NOT released and also should NOT be tagged.
-			if !strings.Contains(git.Log(wd, commit), fmt.Sprintf(autoReleaseHeader, nextVer)) {
+			if !strings.Contains(l, fmt.Sprintf(autoReleaseHeader, nextVer)) {
 				goto changLog
 			}
 
