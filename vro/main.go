@@ -212,7 +212,13 @@ func main() {
 		gh.Username = eVars[circleci.EnvUsername]
 		wf := NewWorkflow(eVars[circleci.EnvToken], gh)
 
-		mainErr = wf.PublishChangelog(wd, chgLogFile, branch, semVer)
+		nextVer, e2 := nextVersion(semVer, wd)
+		if e2 != nil {
+			mainErr = e2
+			return
+		}
+
+		mainErr = wf.PublishChangelog(wd, chgLogFile, branch, nextVer)
 
 	case workflowSelector:
 		log.Logf(stdout.StartWorkflow, workflowSelector)
