@@ -47,6 +47,18 @@ parameters:
         description: |2
           Docker Hub image repository for example "kohirens/version-release".
         type: string
+    tag_cmd:
+        default: ""
+        description: Command to run to get the semantic version tag, will override the auto generated value.
+        type: string
+    tag_env_var:
+        default: ""
+        description: Environment variable to get the semantic version tag, will override the auto generated value.
+        type: string
+    tag_file:
+        default: ""
+        description: File to get the semantic version tag, will override the auto generated value.
+        type: string
     tags:
         default: ""
         description: Tags to stamp the image and push to Docker Hub. Space delimited.
@@ -67,6 +79,9 @@ environment:
     DOCKER_FILE: << parameters.dockerfile >>
     ENV_FILE: << parameters.env_file >>
     IMG_TAG: << parameters.image_tag >>
+    PARAM_TAG_CMD: "<< parameters.tag_cmd >>"
+    PARAM_TAG_ENV_VAR: "<< parameters.tag_env_var >>"
+    PARAM_TAG_FILE: "<< parameters.tag_file >>"
     TAGS: << parameters.tags >>
     REPOSITORY: << parameters.repository >>
     TARGET: << parameters.target >>

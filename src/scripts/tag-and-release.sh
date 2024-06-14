@@ -19,7 +19,7 @@ publish_tag_and_release() {
     fi
 
     if [ -n "${semver}" ]; then
-        vro publish-release-tag -semver "${semver}" "${PARAM_MAIN_TRUNK_BRANCH}" "${PARAM_WORKING_DIRECTORY}"
+        vro -semver "${semver}" publish-release-tag "${PARAM_MAIN_TRUNK_BRANCH}" "${PARAM_WORKING_DIRECTORY}"
     else
         vro publish-release-tag "${PARAM_MAIN_TRUNK_BRANCH}" "${PARAM_WORKING_DIRECTORY}"
     fi
