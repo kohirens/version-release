@@ -32,8 +32,10 @@ var stdout = struct {
 	ChgLogNotUpToDate string
 	CurrentVersion    string
 	CurrentVer        string
+	DbgCommitLog      string
 	GitStatus         string
 	Match             string
+	NextSemVer        string
 	NoChanges         string
 	Nothing           string
 	ReleaseTag        string
@@ -47,8 +49,10 @@ var stdout = struct {
 	ChgLogNotUpToDate: "the changelog is not up to date\nchangelog status:\n%s",
 	CurrentVersion:    "%v, %v",
 	CurrentVer:        "current version %v",
+	DbgCommitLog:      "Debug commit log:\n%v",
 	GitStatus:         "git status output = %s",
 	Match:             "entry for %v in the changelog was found, we assume this means the changelog is up-to-date",
+	NextSemVer:        "next semVer = %v",
 	NoChanges:         "no changes to release",
 	Nothing:           "nothing to do, bye!",
 	ReleaseTag:        "releasing %v",
