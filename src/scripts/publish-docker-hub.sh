@@ -1,7 +1,3 @@
-#!/bin/sh
-
-set -e
-
 if [ -z "${BUILD_CONTEXT}" ]; then
     echo "cannot build the image, build_context parameter is empty"
     exit 1
@@ -12,8 +8,28 @@ if [ -z "${IMG_TAG}" ] && [ -z "${TAGS}" ]; then
     exit 1
 fi
 
+# Get the value of the semantic version tag in 1 of 3 way.
+# If more than 1 is set, the last wins.
+semver=""
+if [ -n "${PARAM_TAG_CMD}" ]; then
+    semver="$("${PARAM_TAG_CMD}")"
+    echo "semantic version ${semver} was set by command"
+fi
+
+if [ -n "${PARAM_TAG_ENV_VAR}" ]; then
+    semver="${!PARAM_TAG_ENV_VAR}"
+    echo "semantic version ${semver} was extracted from environment variable ${PARAM_TAG_ENV_VAR}"
+fi
+
+if [ -n "${PARAM_TAG_FILE}" ]; then
+    semver="$(cat "${PARAM_TAG_FILE}")"
+    echo "semantic version ${semver} was pull from file ${PARAM_TAG_FILE}"
+fi
+
 # For backward compatibility.
-if [ -n "${IMG_TAG}" ] && [ -z "${TAGS}" ]; then
+if [ -n "${semver}" ]; then
+    TAGS="${semver}"
+elif [ -n "${IMG_TAG}" ] && [ -z "${TAGS}" ]; then
     TAGS="${IMG_TAG}"
 elif [ -n "${IMG_TAG}" ] && [ -n "${TAGS}" ]; then
     TAGS="${TAGS} ${IMG_TAG}"

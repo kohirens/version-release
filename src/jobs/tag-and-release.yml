@@ -32,15 +32,15 @@ parameters:
     type: string
   tag_cmd:
     default: ""
-    description: Environment variable to get the semver tag, will override tagged.txt.
+    description: Command to run to get the semantic version tag, will override the auto generated value.
     type: string
   tag_env_var:
     default: ""
-    description: Environment variable to get the semver tag, will override tagged.txt.
+    description: Environment variable to get the semantic version tag, will override the auto generated value.
     type: string
   tag_file:
     default: ""
-    description: Environment variable to get the semver tag, will override tagged.txt.
+    description: File to get the semantic version tag, will override the auto generated value.
     type: string
   working_directory:
     default: .

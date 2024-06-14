@@ -52,6 +52,18 @@ parameters:
       Fingerprint of an SSH key that can be used to perform a merge into a
       branch.
     type: string
+  tag_cmd:
+      default: ""
+      description: Command to run to get the semantic version tag, will override the auto generated value.
+      type: string
+  tag_env_var:
+      default: ""
+      description: Environment variable to get the semantic version tag, will override the auto generated value.
+      type: string
+  tag_file:
+      default: ""
+      description: File to get the semantic version tag, will override the auto generated value.
+      type: string
   vcs_type:
     default: "gh"
     description: VCS type. Only Github `gh` is supported. No BitBucket `bb` yet.
@@ -86,6 +98,9 @@ steps:
         PARAM_CHANGELOG_FILE: "<< parameters.changelog_file >>"
         PARAM_GH_SERVER: "<< parameters.github_server >>"
         PARAM_MAIN_TRUNK_BRANCH: "<< parameters.main_trunk_branch >>"
+        PARAM_TAG_CMD: "<< parameters.tag_cmd >>"
+        PARAM_TAG_ENV_VAR: "<< parameters.tag_env_var >>"
+        PARAM_TAG_FILE: "<< parameters.tag_file >>"
         PARAM_VCS_TYPE: "<< parameters.vcs_type >>"
         PARAM_WORKING_DIRECTORY: "<< parameters.working_directory >>"
       name: Select which workflow to execute when code is merged into main.

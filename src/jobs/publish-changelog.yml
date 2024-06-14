@@ -52,6 +52,18 @@ parameters:
   ssh_finger:
     description: Fingerprint of an SSH key that can be used to perform a merge into a branch.
     type: string
+  tag_cmd:
+      default: ""
+      description: Command to run to get the semantic version tag, will override the auto generated value.
+      type: string
+  tag_env_var:
+      default: ""
+      description: Environment variable to get the semantic version tag, will override the auto generated value.
+      type: string
+  tag_file:
+      default: ""
+      description: File to get the semantic version tag, will override the auto generated value.
+      type: string
   working_directory:
     default: .
     description: In case you need to customize, defaults to the current dir.
@@ -80,6 +92,9 @@ steps:
         PARAM_CHANGELOG_FILE: "<< parameters.changelog_file >>"
         PARAM_GH_SERVER: "<< parameters.github_server >>"
         PARAM_MERGE_TYPE: "<< parameters.merge_type >>"
+        PARAM_TAG_CMD: "<< parameters.tag_cmd >>"
+        PARAM_TAG_ENV_VAR: "<< parameters.tag_env_var >>"
+        PARAM_TAG_FILE: "<< parameters.tag_file >>"
         PARAM_WORKING_DIRECTORY: "<< parameters.working_directory >>"
       name: Commit and merge the CHANGELOG updates
       command: << include(scripts/publish-changelog.sh) >>
