@@ -86,12 +86,12 @@ func (gh *Client) PublishChangelog(wd, branch, header, msgBody string, files []s
 		)
 	}
 
-	if e := git.ConfigGlobal(wd, "user.name", gh.Username); e != nil {
+	if e := git.Config(wd, "user.name", gh.Username); e != nil {
 		return e
 	}
 
 	email := fmt.Sprintf("%s@noreply.%s", gh.Username, gh.Domain)
-	if e := git.ConfigGlobal(wd, "user.email", email); e != nil {
+	if e := git.Config(wd, "user.email", email); e != nil {
 		return e
 	}
 
@@ -117,7 +117,6 @@ func (gh *Client) PublishChangelog(wd, branch, header, msgBody string, files []s
 	if err1 != nil {
 		return err1
 	}
-
 	merge, err2 := gh.MergePullRequest(pr.Number, gh.MergeMethod)
 	if err2 != nil {
 		return err2

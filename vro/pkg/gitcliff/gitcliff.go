@@ -20,13 +20,15 @@ const (
 )
 
 // BuildChangelog Runs git-cliff to update the change log file.
-func BuildChangelog(wd, chgLogFile string) error {
+func BuildChangelog(wd, chgLogFile string) ([]string, error) {
 	configFile := wd + "/" + CliffConfigName
+	files := []string{chgLogFile}
 
 	if !fsio.Exist(configFile) { // make a config when none present.
 		if e := os.WriteFile(configFile, []byte(cliffConfig), 0776); e != nil {
-			return e
+			return nil, e
 		}
+		files = append(files, CliffConfigName)
 	}
 
 	// build new
@@ -46,10 +48,10 @@ func BuildChangelog(wd, chgLogFile string) error {
 	log.Infof(stdout.Cs, cs)
 
 	if se != nil && strings.Contains(se.Error(), "WARN") {
-		return fmt.Errorf(stderr.UpdateChgLog, se.Error())
+		return nil, fmt.Errorf(stderr.UpdateChgLog, se.Error())
 	}
 
-	return nil
+	return files, nil
 }
 
 // UnreleasedMessage Get unreleased commits changes without header and footer.

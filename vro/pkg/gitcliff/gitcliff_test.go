@@ -39,8 +39,8 @@ func TestBuildChangelog(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			repo := git.CloneFromBundle(tt.bundle, tmpDir, fixtureDir, ps)
-
-			if err := BuildChangelog(repo, chgLogFile); (err != nil) != tt.wantErr {
+			_, err := BuildChangelog(repo, chgLogFile)
+			if (err != nil) != tt.wantErr {
 				t.Errorf("BuildChangelog() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
