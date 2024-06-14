@@ -105,7 +105,7 @@ func (gh *Client) PublishChangelog(wd, branch, header, msgBody string, files []s
 	}
 
 	// Commit the CHANGELOG file.
-	if e := git.Commit(wd, header, msgBody); e != nil {
+	if e := git.Commit(wd, header+"\n"+msgBody); e != nil {
 		return e
 	}
 

@@ -104,3 +104,33 @@ func TestIsCommit(t *testing.T) {
 		})
 	}
 }
+
+func TestCommit(t *testing.T) {
+	tests := []struct {
+		name    string
+		bundle  string
+		message string
+		wantErr bool
+	}{
+		{"multiline-commit-message", "repo-commit-message", "auto: Release 0.1.0\n\n## Added\n* README.md", false},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			repo := git.CloneFromBundle(tt.bundle, tmpDir, fixtureDir, ps)
+
+			_ = Config(repo, "user.name", "Robot Test")
+			_ = Config(repo, "user.email", "test@example.com")
+			_ = os.WriteFile(repo+ps+"testfile.txt", []byte("Salam"), 0664)
+			_ = StageFiles(repo, "testfile.txt")
+
+			if err := Commit(repo, tt.message); (err != nil) != tt.wantErr {
+				t.Errorf("Commit() error = %v, wantErr %v", err, tt.wantErr)
+			}
+
+			got := Log(repo, "HEAD")
+			if !strings.Contains(got, "auto: Release 0.1.0") {
+				t.Errorf("Commit()\n%v\n\tdoe NOT contain: %q", got, tt.message)
+			}
+		})
+	}
+}
