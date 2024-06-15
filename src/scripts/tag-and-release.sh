@@ -15,7 +15,7 @@ publish_tag_and_release() {
 
     if [ -n "${PARAM_TAG_FILE}" ]; then
         semver="$(cat "${PARAM_TAG_FILE}")"
-        echo "semantic version ${semver} was pull from file ${PARAM_TAG_FILE}"
+        echo "semantic version ${semver} was pulled from the file ${PARAM_TAG_FILE}"
     fi
 
     if [ -n "${semver}" ]; then
