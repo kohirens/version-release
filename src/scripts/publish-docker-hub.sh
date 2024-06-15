@@ -41,7 +41,8 @@ if [ -z "${REPOSITORY}" ]; then
 fi
 
 if [ -n "${ENV_FILE}" ]; then
-    ./"${ENV_FILE}"
+    # shellcheck disable=SC1090
+    source "${ENV_FILE}"
 fi
 
 export DH_IMAGE="${REPOSITORY}:${CIRCLE_SHA1}"
