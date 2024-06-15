@@ -3,11 +3,6 @@ if [ -z "${BUILD_CONTEXT}" ]; then
     exit 1
 fi
 
-if [ -z "${IMG_TAG}" ] && [ -z "${TAGS}" ]; then
-    echo "cannot build the image, image_tag and tags parameters are empty"
-    exit 1
-fi
-
 # Get the value of the semantic version tag in 1 of 3 way.
 # If more than 1 is set, the last wins.
 semver=""
@@ -24,6 +19,11 @@ fi
 if [ -n "${PARAM_TAG_FILE}" ]; then
     semver="$(cat "${PARAM_TAG_FILE}")"
     echo "semantic version ${semver} was pulled from the file ${PARAM_TAG_FILE}"
+fi
+
+if [ -z "${semver}" ] && [ -z "${IMG_TAG}" ] && [ -z "${TAGS}" ]; then
+    echo "cannot build the image, tag_cmd, tag_env_var, tag_fileimage_tag, tags parameters are all empty; at least 1 needs to be set"
+    exit 1
 fi
 
 # For backward compatibility.
