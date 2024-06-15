@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"github.com/kohirens/stdlib/fsio"
 	"github.com/kohirens/stdlib/log"
-	"github.com/kohirens/version-release/vro/pkg/git"
 	"github.com/kohirens/version-release/vro/pkg/gitcliff"
 	"os"
 	"regexp"
@@ -59,31 +58,4 @@ func changelogContains(unreleased *gitcliff.Unreleased, wd, chgLogFile string) (
 	}
 
 	return isUpToDate, nil
-}
-
-// Old_IsChangelogUpToDate Indicate if there are any changes to be added to the
-// changelog.
-func Old_IsChangelogUpToDate(wd, chgLogFile string) (bool, error) {
-	_, e := gitcliff.BuildChangelog(wd, chgLogFile)
-	if e != nil {
-		return true, e
-	}
-
-	// Check if the files for modification.
-	status, e2 := git.StatusWithOptions(wd, []string{"--porcelain", "--", chgLogFile, gitcliff.CliffConfigName})
-	if e2 != nil {
-		return true, e2
-	}
-
-	log.Dbugf(stdout.GitStatus, status)
-
-	utd := len(status) == 0
-
-	if utd {
-		log.Logf(stdout.ChgLogUpToDate)
-	} else {
-		log.Logf(stdout.ChgLogNotUpToDate, status)
-	}
-
-	return utd, nil
 }

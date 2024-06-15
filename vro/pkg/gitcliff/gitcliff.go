@@ -19,8 +19,10 @@ const (
 	Cmd             = "git-cliff"
 )
 
-// BuildChangelog Runs git-cliff to update the change log file.
-func BuildChangelog(wd, chgLogFile string) ([]string, error) {
+// BuildChangelog Update the change log file with any unreleased changes.
+//
+//	semVer allows you to set the tag manually
+func BuildChangelog(wd, chgLogFile, semVer string) ([]string, error) {
 	configFile := wd + "/" + CliffConfigName
 	files := []string{chgLogFile}
 
@@ -37,6 +39,9 @@ func BuildChangelog(wd, chgLogFile string) ([]string, error) {
 	// prepend changes.
 	if fsio.Exist(wd + stdlib.PS + chgLogFile) {
 		args = []string{"--bump", "--unreleased", "--prepend", chgLogFile}
+	}
+	if semVer != "" {
+		args = append(args, "--tag", semVer)
 	}
 
 	_, se, _, cs := cli.RunCommand(

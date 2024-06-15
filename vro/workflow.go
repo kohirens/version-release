@@ -23,7 +23,7 @@ func NewWorkflow(token string, ghClient circleci.GithubClient) *Workflow {
 
 // PublishChangelog Run automation to update the CHANGELOG.md
 func (wf *Workflow) PublishChangelog(wd, chgLogFile, branch, semVer string) error {
-	files, e1 := gitcliff.BuildChangelog(wd, chgLogFile)
+	files, e1 := gitcliff.BuildChangelog(wd, chgLogFile, semVer)
 	if e1 != nil {
 		return e1
 	}
