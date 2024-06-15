@@ -17,7 +17,7 @@ parameters:
         description: Container automation
         type: string
     orb_version:
-        default: "4.0.0"
+        default: "4.0.6"
         description: >
             The development version of the orb to test.
             This value is automatically adjusted by the "trigger-integration-tests-workflow" job to correspond with the specific version created by the commit and should not be edited.
@@ -186,7 +186,7 @@ workflows:
             - vr/workflow-selector:
                   context: << pipeline.parameters.ctx_auto_release >>
                   ssh_finger: << pipeline.parameters.ssh_finger >>
-                  exec_img_tag: "dev"
+                  exec_img_tag: "4.0.6"
 
     publish-changelog:
         when:
@@ -196,7 +196,7 @@ workflows:
             - vr/publish-changelog:
                   context: << pipeline.parameters.ctx_auto_release >>
                   ssh_finger: << pipeline.parameters.ssh_finger >>
-                  exec_img_tag: "dev"
+                  exec_img_tag: "4.0.6"
 
     publish-release-tag:
         when:
@@ -205,7 +205,7 @@ workflows:
         jobs:
             - vr/tag-and-release:
                   context: << pipeline.parameters.ctx_auto_release >>
-                  exec_img_tag: "dev"
+                  exec_img_tag: "4.0.6"
 
     on-tag-release:
         jobs:
@@ -222,7 +222,7 @@ workflows:
                   do_checkout: false
                   dockerfile: ".docker/vr/Dockerfile"
                   repository: << pipeline.parameters.orb_repo >>
-                  image_tag: "<< pipeline.git.tag >>"
+                  tags: "<< pipeline.git.tag >> latest"
             - orb-publish:
                   name: "publish-prod-orb"
                   context: << pipeline.parameters.ctx_auto_release >>
