@@ -1,8 +1,9 @@
 # Version Release
 
-Use in CircleCI pipeline to automatically update your CHANGELOG.md file based
-on [Conventional Commits] using a [git-cliff] configuration, then auto-publish
-a release.
+Automatically update your CHANGELOG and release a tag using
+[Conventional Commits].
+
+FYI: Changelog updates are performed using [git-cliff] tool.
 
 [![CircleCI](https://dl.circleci.com/status-badge/img/gh/kohirens/version-release/tree/main.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/kohirens/version-release/tree/main) [![CircleCI Orb Version](https://badges.circleci.com/orbs/kohirens/version-release.svg)](https://circleci.com/orbs/registry/orb/kohirens/version-release) [![GitHub License](https://img.shields.io/badge/license-MIT-lightgrey.svg)](https://raw.githubusercontent.com/kohirens/version-release/master/LICENSE) [![CircleCI Community](https://img.shields.io/badge/community-CircleCI%20Discuss-343434.svg)](https://discuss.circleci.com/c/ecosystem/orbs)
 
@@ -10,7 +11,8 @@ Provides the following features:
 
 1. Auto update the change log from Git commit messages based on conventional
    commits.
-2. Once the change log is merged, auto publish a release.
+2. Auto updated your CHANGELOG.md and merge it into the main trunk.
+3. Auto publish a release tag on GitHub.
 
 ## Prerequisites
 
@@ -25,8 +27,8 @@ along.
 
 ## Resources
 
-* See the [Version Release Orb] for examples.
-* Visit the [Docs] for development details.
+* See the [Version Release Orb] documentation.
+* For contributing, please visit the [Docs] for development details.
 
 ---
 
