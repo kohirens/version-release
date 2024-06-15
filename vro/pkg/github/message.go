@@ -11,6 +11,9 @@ var stderr = struct {
 	CouldNotPrepareRequest   string
 	CouldNotPostRequest      string
 	CouldNotReadResponse     string
+	GetMeta                  string
+	GetMetaBody              string
+	GetMetaUnmarshall        string
 	MergeWaitTimeout         string
 	ResponseStatusCode       string
 }{
@@ -24,6 +27,9 @@ var stderr = struct {
 	CouldNotPrepareRequest:   "could not prepare a request: %v",
 	CouldNotPostRequest:      "could not POST request: %v",
 	CouldNotReadResponse:     "could not read response body: %v",
+	GetMeta:                  "could not get github metadata: %v",
+	GetMetaBody:              "could not read github meta: %v",
+	GetMetaUnmarshall:        "could not decode response from github meta endpoint: %v",
 	MergeWaitTimeout:         "pr %d has not merged after %d seconds",
 	ResponseStatusCode:       "got a %d response from %v: %s",
 }

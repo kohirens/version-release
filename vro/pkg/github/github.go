@@ -3,7 +3,9 @@
 package github
 
 import (
+	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
 	"regexp"
 	"strings"
@@ -42,4 +44,36 @@ func parseRepositoryUri(uri string) (string, string, string) {
 	}
 
 	return "", "", ""
+}
+
+func KnownSshKeys(client *http.Client) (string, error) {
+	res, e1 := client.Get("https://api.github.com/meta")
+	if e1 != nil {
+		return "", fmt.Errorf(stderr.GetMeta, e1.Error())
+	}
+
+	if res.StatusCode != 200 {
+		return "", fmt.Errorf(stderr.GetMeta)
+	}
+
+	content, e2 := io.ReadAll(res.Body)
+	if e2 != nil {
+		return "", fmt.Errorf(stderr.GetMetaBody, e2.Error())
+	}
+
+	ghMeta := &Meta{}
+	if e := json.Unmarshal(content, ghMeta); e != nil {
+		return "", fmt.Errorf(stderr.MergeWaitTimeout, e.Error())
+	}
+
+	known := ""
+	for _, key := range ghMeta.SshKeys {
+		known += fmt.Sprintf("github.com %v\n", key)
+	}
+
+	return known, nil
+}
+
+type Meta struct {
+	SshKeys []string `json:"ssh_keys"`
 }

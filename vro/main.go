@@ -97,7 +97,7 @@ func main() {
 
 	ca := flag.Args()
 
-	if len(ca) < 2 {
+	if len(ca) < 1 {
 		fmt.Println(stdout.Nothing)
 		os.Exit(0)
 		return
@@ -323,5 +323,13 @@ func main() {
 
 			return
 		}
+	case "known-sshkeys":
+		known, e1 := github.KnownSshKeys(client)
+		if e1 != nil {
+			mainErr = e1
+			return
+		}
+
+		fmt.Print(known)
 	}
 }
