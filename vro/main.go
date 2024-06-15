@@ -115,8 +115,8 @@ func main() {
 			mainErr = fmt.Errorf(stderr.InvalidSemVer, af.SemVer)
 			return
 		}
+		log.Infof(stdout.SemVer, semVer)
 	}
-	log.Infof(stdout.SemVer, semVer)
 
 	switch ca[0] {
 	case publishReleaseTagWorkflow:
@@ -264,9 +264,9 @@ func main() {
 		// contains the expected auto-release header.
 		if !hasSemverTag {
 			nextVer, e2 := nextVersion(semVer, wd)
-			if e2 != nil {
-				mainErr = e2
-				return
+			if e2 != nil { // No version to tag, then check for changelog updates.
+				log.Logf(e2.Error())
+				goto changLog
 			}
 
 			l := git.Log(wd, commit)
