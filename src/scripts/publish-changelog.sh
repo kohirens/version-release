@@ -4,10 +4,10 @@ publish_changelog() {
     # the latest github.com public SSH keys to the known_hosts files to resolve
     # that issue.
     if [ -f ~/.ssh/known_hosts ]; then
-        vro known-sshkeys >> known_hosts
+        vro known-sshkeys >> ~/.ssh/known_hosts
     else
         mkdir -p ~/.ssh
-        vro known-sshkeys >> known_hosts
+        vro known-sshkeys > ~/.ssh/known_hosts
     fi
 
     # Get the value of the semantic version tag in 1 of 3 way.
