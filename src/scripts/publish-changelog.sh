@@ -1,4 +1,14 @@
 publish_changelog() {
+    # publishing a changelog branch uses git push, so we will run into
+    # known host issues with github.com servers from time to time, this adds
+    # the latest github.com public SSH keys to the known_hosts files to resolve
+    # that issue.
+    if [ -f ~/.ssh/known_hosts ]; then
+        vro known-sshkeys >> known_hosts
+    else
+        mkdir -p ~/.ssh
+        vro known-sshkeys >> known_hosts
+    fi
 
     # Get the value of the semantic version tag in 1 of 3 way.
     # If more than 1 is set, the last wins.
