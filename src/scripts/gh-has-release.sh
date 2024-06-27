@@ -1,7 +1,3 @@
-#!/bin/sh
-
-set -e
-
 has_release() {
     OWNER="${1}"
     REPO="${2}"
@@ -15,7 +11,7 @@ has_release() {
         -H "X-GitHub-Api-Version: 2022-11-28" \
         --url "https://api.github.com/repos/${OWNER}/${REPO}/releases/tags/${TAG}" \
         --output /dev/null \
-        -w '%{http_code}' )
+        -w '%{http_code}')
 
     if [ "${http_code}" = "200" ]; then
         echo "yes"
