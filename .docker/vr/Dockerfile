@@ -4,6 +4,7 @@ ARG USER_GID='1000'
 ARG USER_GROUP='app_users'
 ARG REPO='github.com/kohirens/version-release'
 ARG GIT_CLIFF_VER="2.2.1"
+
 FROM kohirens/go:1.21.0 AS build
 
 ARG USER_NAME
@@ -22,6 +23,7 @@ ENV SHELL=/bin/sh
 RUN echo "https://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories \
  && apk --no-progress --purge --no-cache upgrade \
  && apk add \
+    curl \
     git \
  && rm -vrf /var/cache/apk/* \
  && rm -rf /tmp/*
@@ -81,6 +83,13 @@ HEALTHCHECK --interval=5s --timeout=3s --start-period=3s --retries=4 \
     CMD vro -help || exit 1
 
 USER root
+
+RUN echo "https://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories \
+ && apk --no-progress --purge --no-cache upgrade \
+ && apk add \
+    curl \
+ && rm -vrf /var/cache/apk/* \
+ && rm -rf /tmp/*
 
 RUN wget https://github.com/orhun/git-cliff/releases/download/v${GIT_CLIFF_VER}/git-cliff-${GIT_CLIFF_VER}-x86_64-unknown-linux-musl.tar.gz \
  && tar -xz -f git-cliff-${GIT_CLIFF_VER}-x86_64-unknown-linux-musl.tar.gz \
