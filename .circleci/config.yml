@@ -131,12 +131,29 @@ jobs:
                           --env-file .docker/mock-server/integration-test.env \
                           mock-server
 
+    integration-test-vr-2:
+        executor: base
+        steps:
+            - attach_workspace: { at: "." }
+#            - vr/gh-has-release:
+#                  owner: "kohirens"
+#                  repo: "version-release"
+#                  tag: "4.2.4"
+            - run:
+                  name: "Test gh-has-release.sh Script"
+                  command: |
+                      chmod +x ./src/scripts/gh-has-release.sh
+                      source ./src/scripts/gh-has-release.sh
+                      result=$(has_release "kohirens" "version-release" "4.2.4")
+                      [ "${result} = "yes" ]
+
 workflows:
     quality-checks:
         jobs:
             - co:
                   filters: *branches-to-skip
             - bats/run:
+                  context: <<pipeline.parameters.ctx_auto_release>>
                   pre-steps: *pre-attach
                   requires: [ co ]
                   path: ./src/tests
@@ -175,7 +192,11 @@ workflows:
                   context: <<pipeline.parameters.ctx_docker_hub>>
                   filters: *branches-to-skip
                   requires: [ co ]
-        when: << pipeline.parameters.run_integration_tests >>
+            - integration-test-vr-2:
+                  context: <<pipeline.parameters.ctx_auto_release>>
+                  filters: *branches-to-skip
+                  requires: [ co ]
+        when: <<pipeline.parameters.run_integration_tests>>
 
     workflow-selector:
         when:
