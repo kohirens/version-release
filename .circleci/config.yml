@@ -133,18 +133,24 @@ jobs:
 
     integration-test-vr-2:
         executor: base
+        environment:
+            PARAM_FILE: "has-release.txt"
+            PARAM_OWNER: "kohirens"
+            PARAM_REPO: "version-release"
+            RELEASE_TAG: "4.2.4"
+            PARAM_TAG_ENV_VAR: "RELEASE_TAG"
         steps:
             - attach_workspace: { at: "." }
 #            - vr/gh-has-release:
 #                  owner: "kohirens"
 #                  repo: "version-release"
-#                  tag: "4.2.4"
+#                  tag_env_var: "RELEASE_TAG"
             - run:
                   name: "Test gh-has-release.sh Script"
                   command: |
                       chmod +x ./src/scripts/gh-has-release.sh
                       source ./src/scripts/gh-has-release.sh
-                      result=$(has_release "kohirens" "version-release" "4.2.4")
+                      result=$(cat "${PARAM_FILE}")
                       [ "${result}" = "yes" ]
 
 workflows:

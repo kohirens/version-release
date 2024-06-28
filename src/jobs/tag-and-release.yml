@@ -2,6 +2,10 @@ description: |2
   Publish a tag on a specified branch.
 
 parameters:
+  abort_dupe_release:
+    default: false
+    description: Gracefully abort publishing a release if it already exists.
+    type: boolean
   attach_workspace_path:
     default: "."
     description: Set where to attach the workspace.
@@ -30,6 +34,18 @@ parameters:
     default: "main"
     description: Name of the main trunk branch to tag.
     type: string
+  owner:
+      default: ""
+      description: GitHub organization containing the repository to check.
+      type: string
+  release_file:
+    default: "has-release.txt"
+    description: File containing the response for checking if the release was found or not.
+    type: string
+  repo:
+      default: ""
+      description: GitHub repository to check.
+      type: string
   tag_cmd:
     default: ""
     description: Command to run to get the semantic version tag, will override the auto generated value.
@@ -61,6 +77,16 @@ steps:
       steps:
         - attach_workspace:
             at: "<< parameters.attach_workspace_path >>"
+  - when:
+      condition: <<parameters.abort_dupe_release>>
+      steps:
+        - gh-has-release:
+           owner: <<parameters.owner>>
+           repo: <<parameters.repo>>
+           tag_cmd: <<parameters.tag_cmd>>
+           tag_env_var: <<parameters.tag_env_var>>
+           tag_file: <<parameters.tag_file>>
+           file: <<parameters.release_file>>
   - run:
       environment:
         PARAM_GH_SERVER: "<< parameters.github_server >>"
@@ -70,5 +96,5 @@ steps:
         PARAM_TAG_ENV_VAR: "<< parameters.tag_env_var >>"
         PARAM_TAG_FILE: "<< parameters.tag_file >>"
         PARAM_WORKING_DIRECTORY: "<< parameters.working_directory >>"
-      name: Make A New Release
+      name: Make a new release
       command: << include(scripts/tag-and-release.sh) >>

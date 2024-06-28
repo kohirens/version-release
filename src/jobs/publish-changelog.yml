@@ -96,5 +96,5 @@ steps:
         PARAM_TAG_ENV_VAR: "<< parameters.tag_env_var >>"
         PARAM_TAG_FILE: "<< parameters.tag_file >>"
         PARAM_WORKING_DIRECTORY: "<< parameters.working_directory >>"
-      name: Commit and merge the CHANGELOG updates
+      name: Commit and rebase the CHANGELOG updates
       command: << include(scripts/publish-changelog.sh) >>
