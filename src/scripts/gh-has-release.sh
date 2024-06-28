@@ -25,5 +25,5 @@ has_release() {
 # View src/tests for more information.
 ORB_TEST_ENV="bats-core"
 if [ "${0#*"${ORB_TEST_ENV}"}" = "$0" ]; then
-    has_release "${PARAM_OWNER}" "${PARAM_REPO}" "${PARAM_TAG}"
+    has_release "${PARAM_OWNER}" "${PARAM_REPO}" "${PARAM_TAG}" > "${PARAM_FILE}"
 fi

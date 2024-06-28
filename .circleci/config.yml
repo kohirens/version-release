@@ -145,7 +145,7 @@ jobs:
                       chmod +x ./src/scripts/gh-has-release.sh
                       source ./src/scripts/gh-has-release.sh
                       result=$(has_release "kohirens" "version-release" "4.2.4")
-                      [ "${result} = "yes" ]
+                      [ "${result}" = "yes" ]
 
 workflows:
     quality-checks:
