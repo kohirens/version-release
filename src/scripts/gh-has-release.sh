@@ -46,4 +46,12 @@ if [ "${0#*"${ORB_TEST_ENV}"}" = "$0" ]; then
     fi
 
     has_release "${PARAM_OWNER}" "${PARAM_REPO}" "${semver}" > "${PARAM_FILE}"
+
+    result=$(cat "${PARAM_FILE}")
+
+    if [ "${result}" = "yes" ]; then
+        echo "release tag ${result} was found"
+    else
+        echo "cannot find a release tag ${result} at github.com/${PARAM_OWNER}/${PARAM_REPO}"
+    fi
 fi
