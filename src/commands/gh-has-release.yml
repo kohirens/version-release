@@ -6,19 +6,6 @@ parameters:
     default: "."
     description: Set where to attach the workspace.
     type: string
-  do_attach_workspace:
-    default: false
-    description: |2
-      Set this to `true` to attaching the workspace or false to skip this step.
-    type: boolean
-  do_checkout:
-    description: In case you need to customize.
-    type: boolean
-    default: true
-  exec_img_tag:
-    default: "VERSION_RELEASE_IMAGE"
-    description: Version of the executor image to pull.
-    type: string
   file:
     default: "has-release.txt"
     description: File containing the response for checking if the release was found or not.
@@ -46,20 +33,7 @@ parameters:
       description: File to get the release tag, will override the auto generated value.
       type: string
 
-executor:
-  name: default
-  exec_img_tag: <<parameters.exec_img_tag>>
-
 steps:
-  - when:
-      condition: <<parameters.do_checkout>>
-      steps:
-        - checkout
-  - when:
-      condition: <<parameters.do_attach_workspace>>
-      steps:
-         - attach_workspace:
-             at: <<parameters.attach_workspace_path>>
   - run:
       environment:
         PARAM_FILE: <<parameters.file>>
@@ -70,4 +44,3 @@ steps:
         PARAM_TAG_FILE: << parameters.tag_file >>
       name: Check GitHub has a release
       command: << include(scripts/gh-has-release.sh) >>
-  - persist_to_workspace: { root: .,  paths: [ <<parameters.file>> ] }
