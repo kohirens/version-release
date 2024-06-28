@@ -17,7 +17,7 @@ parameters:
         description: Container automation
         type: string
     orb_version:
-        default: "4.2.4"
+        default: "4.3.0"
         description: >
             The development version of the orb to test.
             This value is automatically adjusted by the "trigger-integration-tests-workflow" job to correspond with the specific version created by the commit and should not be edited.
@@ -141,17 +141,14 @@ jobs:
             PARAM_TAG_ENV_VAR: "RELEASE_TAG"
         steps:
             - attach_workspace: { at: "." }
-#            - vr/gh-has-release:
-#                  owner: "kohirens"
-#                  repo: "version-release"
-#                  tag_env_var: "RELEASE_TAG"
+            - vr/gh-has-release:
+                  owner: "kohirens"
+                  repo: "version-release"
+                  tag_env_var: "RELEASE_TAG"
             - run:
                   name: "Test gh-has-release.sh Script"
                   command: |
-                      chmod +x ./src/scripts/gh-has-release.sh
-                      source ./src/scripts/gh-has-release.sh
-                      result=$(cat "${PARAM_FILE}")
-                      [ "${result}" = "yes" ]
+                      [ "$(cat "${PARAM_FILE}")" = "yes" ]
 
 workflows:
     quality-checks:
