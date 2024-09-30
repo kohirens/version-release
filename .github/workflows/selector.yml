@@ -1,0 +1,62 @@
+name: workflow-selector
+run-name: ${{ github.actor }} is checking which workflow to run
+on:
+    workflow_call:
+        inputs:
+            exec_img_tag:
+                default: "dev"
+                required: false
+                type: string
+
+concurrency:
+    group: qa-group
+    cancel-in-progress: false
+
+env:
+    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+jobs:
+    select-a-workflow:
+        runs-on: ubuntu-latest
+        name: Select which workflow to run
+        outputs:
+            workflow: ${{ steps.selector.outputs.workflow }}
+        steps:
+            -   name: Checkout
+                uses: actions/checkout@v4
+            -   name: Select a workflow
+                uses: kohirens/version-release/.github/actions/workflow-selector@github-actions # Uses an action in the root directory
+                id: selector
+                with:
+                    exec_img_tag: ${{ inputs.exec_img_tag }}
+    publish-changelog:
+        if: ${{ needs.select-a-workflow.outputs.workflow == 'publish-changelog' }}
+        runs-on: ubuntu-latest
+        name: Publish changelog workflow
+        steps:
+            -   name: Checkout
+                uses: actions/checkout@v4
+            -   name: Update and publish the changelog
+                uses: kohirens/version-release/.github/actions/publish-changelog@github-actions # Uses an action in the root directory
+                id: changelog
+        needs: select-a-workflow
+    publish-release-tag:
+        if: ${{ needs.select-a-workflow.outputs.workflow == 'publish-release-tag' }}
+        runs-on: ubuntu-latest
+        name: Publish release workflow
+        steps:
+            -   name: Checkout
+                uses: actions/checkout@v4
+            -   name: Update and publish the changelog
+                uses: kohirens/version-release/.github/actions/publish-release-tag@github-actions # Uses an action in the root directory
+                id: changelog
+        needs: select-a-workflow
+
+#permissions:
+#    attestations: write
+#    pull-requests: write
+#    contents: read
+#    statuses: read
+#    checks: read|write
+# https://docs.github.com/en/actions/writing-workflows/about-workflows#reusing-workflows
+# https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/storing-and-sharing-data-from-a-workflow
