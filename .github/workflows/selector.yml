@@ -1,0 +1,81 @@
+name: workflow-selector
+run-name: ${{ github.actor }} is checking which workflow to run
+on:
+    workflow_call:
+        inputs:
+            exec_img_tag:
+                default: "dev"
+                required: false
+                type: string
+        secrets:
+            access_token:
+                required: true
+                description: Personal GitHub access token to allow GitHub API request to trigger workflows.
+
+concurrency:
+    group: qa-group
+    cancel-in-progress: false
+
+env:
+    GH_TOKEN: ${{ secrets.access_token }}
+
+jobs:
+    select-a-workflow:
+        runs-on: ubuntu-latest
+        name: Select which workflow to run
+        outputs:
+            workflow: ${{ steps.selector.outputs.workflow }}
+            changelog_hash: ${{ steps.selector.outputs.changelog_hash }}
+            next_semver: ${{ steps.selector.outputs.next_semver }}
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+              with:
+                  fetch-tags: true
+                  fetch-depth: 0
+            - name: Select a workflow
+              uses: kohirens/version-release/.github/actions/workflow-selector@github-actions # Uses an action in the root directory
+              id: selector
+              with:
+                 exec_img_tag: ${{ inputs.exec_img_tag }}
+    publish-changelog:
+        if: ${{ needs.select-a-workflow.outputs.workflow == 'publish-changelog' }}
+        runs-on: ubuntu-latest
+        name: Publish changelog workflow
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+              with:
+                  fetch-tags: true
+                  fetch-depth: 0
+            - name: Update and publish the changelog
+              uses: kohirens/version-release/.github/actions/publish-changelog@github-actions # Uses an action in the root directory
+              id: changelog
+              with:
+                  changelog_hash: ${{ needs.select-a-workflow.outputs.changelog_hash }}
+        needs: select-a-workflow
+    publish-release-tag:
+        if: ${{ needs.select-a-workflow.outputs.workflow == 'publish-release-tag' }}
+        runs-on: ubuntu-latest
+        name: Publish release workflow
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+              with:
+                  fetch-tags: true
+                  fetch-depth: 0
+            - name: Publish a release
+              uses: kohirens/version-release/.github/actions/publish-release-tag@github-actions # Uses an action in the root directory
+              id: release
+              with:
+                  tag_cmd: 'echo "${{ needs.select-a-workflow.outputs.next_semver }}"'
+        needs: select-a-workflow
+
+#permissions:
+#    attestations: write
+#    pull-requests: write
+#    contents: read
+#    statuses: read
+#    checks: read|write
+# https://docs.github.com/en/actions/writing-workflows/about-workflows#reusing-workflows
+# https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/storing-and-sharing-data-from-a-workflow

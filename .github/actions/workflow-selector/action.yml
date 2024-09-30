@@ -1,0 +1,63 @@
+# https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/accessing-contextual-information-about-workflow-runs#context-availability
+name: workflow selector
+description: Select which workflow to execute when code is merged into main.
+inputs: # https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/accessing-contextual-information-about-workflow-runs#inputs-context
+    changelog_file:
+        description: Location to output/update the CHANGELOG file.
+        required: true
+        default: "CHANGELOG.md"
+    exec_img_tag:
+        default: "VERSION_RELEASE_IMAGE"
+        description: Version of the executor image to pull.
+        required: true
+    github_token_var:
+        default: GITHUB_TOKEN
+        description: Name of the environment variable holding the GitHub API token.
+        required: true
+    main_trunk_branch:
+        default: "main"
+        description: Name of the main trunk branch to tag.
+        required: true
+    tag_cmd:
+        default: ""
+        description: Command to run to get the semantic version tag, will override the auto generated value.
+        required: false
+    tag_env_var:
+        default: ""
+        description: Environment variable to get the semantic version tag, will override the auto generated value.
+        required: false
+    tag_file:
+        default: ""
+        description: File to get the semantic version tag, will override the auto generated value.
+        required: false
+    verbosity_level:
+        default: "6"
+        description: Set the logging verbosity level, a value between 1-6, 1 being the least and 6 being the most.
+        required: false
+    working_directory:
+        default: ${{ github.workspace }}
+        description: In case you need to customize, defaults to the current dir.
+        required: true
+
+outputs:
+    changelog_hash:
+        description: A checksum hash of the changelog from a the selector-workflow to compare against the current changelog, if they are different there are more changes to publish.
+    next_semver:
+        description: Next semantic version to tag a release.
+    workflow:
+        description: Selected workflow
+
+runs: # https://docs.github.com/en/actions/sharing-automations/creating-actions/metadata-syntax-for-github-actions#runs-for-docker-container-actions
+    using: docker
+    image: docker://kohirens/version-release:dev
+    env: # https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/store-information-in-variables#default-environment-variables
+        PARAM_CHANGELOG_FILE: ${{ inputs.changelog_file }}
+        PARAM_MAIN_TRUNK_BRANCH: ${{ inputs.main_trunk_branch }}
+        PARAM_TAG_CMD: ${{ inputs.tag_cmd }}
+        PARAM_TAG_ENV_VAR: ${{ inputs.tag_env_var }}
+        PARAM_TAG_FILE: ${{ inputs.tag_file }}
+        PARAM_WORKING_DIRECTORY: ${{ inputs.working_directory }}
+        VERBOSITY_LEVEL: ${{ inputs.verbosity_level }}
+    entrypoint: sh
+    args:
+        - /usr/local/bin/workflow-selector.sh
