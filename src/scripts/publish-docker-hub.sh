@@ -66,7 +66,17 @@ $build_cmd
 
 for tag in ${TAGS}; do
     stamp="${REPOSITORY}:${tag}"
-    docker tag "${DH_IMAGE}" "${stamp}"
+    # BEGIN flatten_image_layers
+    # 1. Run a container.
+    docker run --entrypoint sh --rm -dt --name vro "${DH_IMAGE}"
+    sleep 7
+    # 2. Export the container to an tar.
+    docker export vro > flat_image.tar
+    # 3. Stop the container.
+    docker stop vro
+    # 4. Import the image with desired tag.
+    docker import -c 'ENTRYPOINT [ "vro" ]' -c 'CMD [ "-help" ]' flat_image.tar "${stamp}"
+    # End flatten_image_layers
 
     printf "\nPushing %s\n" "${stamp}"
     docker push "${stamp}"
