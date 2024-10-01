@@ -109,7 +109,11 @@ RUN ls -la /usr/local/bin \
  && chmod +x /usr/local/bin/*.sh \
  && ls -la /usr/local/bin
 
-ENV PATH="${PATH}:/home/${USER_NAME}/bin"
+USER ${USER_NAME}
 
 ENTRYPOINT [ "vro" ]
 # docker build --rm -t kohirens/version-release:dev -f .docker/vr/Dockerfile .
+CMD [ "--help" ]
+# Flatten
+FROM scratch
+COPY --link / /
