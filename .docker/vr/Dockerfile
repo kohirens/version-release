@@ -101,10 +101,13 @@ RUN wget https://github.com/orhun/git-cliff/releases/download/v${GIT_CLIFF_VER}/
 RUN rm /usr/local/bin/git-chglog
 
 # Add build artifacts
-COPY --from=build "/home/${USER_NAME}/bin/vro" "/usr/local/bin/vro"
-COPY --chmod=+x ./src/scripts/ /usr/local/bin/
+COPY --link --from=build "/home/${USER_NAME}/bin/vro" "/usr/local/bin/vro"
+COPY --link --chmod=755 ./src/scripts/ /usr/local/bin/
 
-USER ${USER_NAME}
+# DEBUG
+RUN ls -la /usr/local/bin \
+ && chmod +x /usr/local/bin/*.sh \
+ && ls -la /usr/local/bin
 
 ENV PATH="${PATH}:/home/${USER_NAME}/bin"
 
