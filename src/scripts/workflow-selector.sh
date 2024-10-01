@@ -1,5 +1,5 @@
 trigger_workflow() {
-    # Get the value of the semantic version tag in 1 of 3 way.
+    # Get the value of the semantic version tag in 1 of 3 ways.
     # If more than 1 is set, the last wins.
     semver=""
     if [ -n "${PARAM_TAG_CMD}" ]; then
