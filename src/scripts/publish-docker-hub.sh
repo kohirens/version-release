@@ -47,7 +47,20 @@ fi
 
 export DH_IMAGE="${REPOSITORY}:${CIRCLE_SHA1}"
 
-echo "${DH_PASS}" | docker login -u "${DH_USER}" --password-stdin
+# Change variable name, but with backwards compatibility.
+# TODO: Remove this backward compatibility in the next major release.
+DH_API_TOKEN="${DH_PASS}"
+if [ -n "${DH_PASS}" ]; then
+    echo "Docker Hub API/password obtained from legacy the environment variable DH_PASS, please rename to DH_API_TOKEN environment variable as soon as you can"
+    DH_API_TOKEN="${DH_PASS}"
+fi
+
+if [ -n "${DH_PASS_ENV}" ]; then
+    echo "Docker Hub API/password obtained from a custom environment variable, but I'm not telling you the name of that variable because it's top-secret"
+    DH_API_TOKEN="${!DH_PASS_ENV}"
+fi
+
+echo "${DH_API_TOKEN}" | docker login -u "${DH_USER}" --password-stdin
 
 build_cmd="docker build --rm -t ${DH_IMAGE} -f ${DOCKER_FILE}"
 
