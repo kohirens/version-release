@@ -199,6 +199,17 @@ workflows:
                   context: <<pipeline.parameters.ctx_auto_release>>
                   filters: *branches-to-skip
                   requires: [ co ]
+#            - vr/publish-docker-hub:
+#                  name: "Integration test publish-docker-hub job"
+#                  context: << pipeline.parameters.ctx_docker_hub >>
+#                  filters: *branches-to-skip
+#                  requires: [ co ]
+#                  dockerfile: ".docker/vr/Dockerfile"
+#                  tags: "dummy"
+#                  repository: << pipeline.parameters.orb_repo >>
+#                  tag_env_var: "DUMMY_RELEASE_TAG" # this is defined in the CircleCI project environment settings.
+#                  do_attach_workspace: true
+#                  do_checkout: false
         when: <<pipeline.parameters.run_integration_tests>>
 
     workflow-selector:
