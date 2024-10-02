@@ -111,9 +111,13 @@ RUN ls -la /usr/local/bin \
 
 USER ${USER_NAME}
 
+# Flatten the release image to a few layers
+FROM scratch AS flattened-release
+
+COPY --from=release / /
+
 ENTRYPOINT [ "vro" ]
-# docker build --rm -t kohirens/version-release:dev -f .docker/vr/Dockerfile .
+
 CMD [ "--help" ]
-# Flatten
-FROM scratch
-COPY --link / /
+
+# docker build --rm -t kohirens/version-release:dev -f .docker/vr/Dockerfile .
