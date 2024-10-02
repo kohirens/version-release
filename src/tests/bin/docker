@@ -2,17 +2,80 @@
 
 set -e
 
+getopt --test > /dev/null && true
+if [ $? -ne 4 ]; then
+    echo 'sorry, getopts --test` failed in this environment'
+    exit 1
+fi
+
+LONG_OPTS=build-arg:,entrypoint:,name:,password-stdin,progress:,rm,target:
+OPTIONS=c:,d,f:,t:,u:
+
+PARSED=$(getopt --options=${OPTIONS} --longoptions=${LONG_OPTS} --name "$0" -- "${@}") || exit 1
+eval set -- "${PARSED}"
+
+while true; do
+    case "${1}" in
+        -c)
+            shift 2
+            ;;
+        -d)
+            shift
+            ;;
+        -f)
+            build_file="${2}"
+            shift 2
+            ;;
+        -t)
+            tag_name=${2}
+            shift 2
+            ;;
+        -u)
+            shift 2
+            ;;
+        --build-arg)
+            build_args="${2}"
+            shift 2
+            ;;
+        --entrypoint)
+            build_args="${2}"
+            shift 2
+            ;;
+        --name)
+            shift 2
+            ;;
+        --password-stdin)
+            read password_str
+            shift
+            ;;
+        --progress)
+            shift 2
+            ;;
+        --rm)
+            shift
+            ;;
+        --target)
+            build_target="${2}"
+            shift 2
+            ;;
+        --) shift; break;;
+#        *) echo "unknown option '${1}'"; exit 1;;
+    esac
+done
+
+
+if [ "$#" -lt 1 ]; then
+    echo "the subcommand is a required first argument"
+    exit 1
+fi
+
+if [ "${1}" = "build" ] && [ "$#" -lt 2 ]; then
+    echo "missing required second argument conext for the build command"
+    exit 1
+fi
+
 if [ "${1}" = "build" ]; then
-    tag_name="${4}"
-    build_file="${6}"
-    build_target="${8}"
-    build_args="${10}"
-    build_context="${11}"
-    e_tag_name="example/com:abc123"
-    e_build_file="path/to/Dockerfile"
-    e_build_target="test-target"
-    e_build_args="ARG1"
-    e_build_context="."
+    build_context="${2}"
 
     echo "checking docker build command input"
     if [ "${tag_name}" != "${e_tag_name}" ]; then
@@ -21,12 +84,12 @@ if [ "${1}" = "build" ]; then
     fi
 
     if [ "${build_file}" != "${e_build_file}" ]; then
-        echo "expected tag ${e_build_file}, got ${build_file}"
+        echo "expected file ${e_build_file}, got ${build_file}"
         exit 1
     fi
 
     if [ "${build_target}" != "${e_build_target}" ]; then
-        echo "expected tag ${e_build_target}, got ${build_target}"
+        echo "expected target ${e_build_target}, got ${build_target}"
         exit 1
     fi
 
@@ -36,7 +99,7 @@ if [ "${1}" = "build" ]; then
     fi
 
     if [ "${build_context}" != "${e_build_context}" ]; then
-        echo "expected build args ${e_build_context}, got ${build_context}"
+        echo "expected context ${e_build_context}, got ${build_context}"
         exit 1
     fi
 fi
@@ -45,7 +108,6 @@ fi
 if [ "${1}" = "tag" ]; then
     image="${2}"
     tag="${3}"
-    e_image="example/com:abc123"
 
     echo "checking docker tag command input"
     if [ "${image}" != "${e_image}" ]; then
