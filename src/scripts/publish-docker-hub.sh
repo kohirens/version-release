@@ -59,6 +59,12 @@ if [ -n "${BUILD_ARGS}" ]; then
     build_cmd="${build_cmd} ${BUILD_ARGS}"
 fi
 
+# Add the version LABEL
+if [ -n "${semver}" ]; then
+    echo "adding build argument semver to build command"
+    build_cmd="${build_cmd} --build-arg SEMVER=${semver}"
+fi
+
 build_cmd="${build_cmd} ${BUILD_CONTEXT}"
 
 printf "\nBuilding %s\n" "${DH_IMAGE}"

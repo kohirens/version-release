@@ -4,6 +4,7 @@ ARG USER_GID='1000'
 ARG USER_GROUP='app_users'
 ARG REPO='github.com/kohirens/version-release'
 ARG GIT_CLIFF_VER="2.2.1"
+ARG SEMVER
 
 FROM kohirens/go:1.21.0 AS build
 
@@ -114,6 +115,8 @@ USER ${USER_NAME}
 # Flatten the release image to a few layers
 FROM scratch AS flattened-release
 
+ARG SEMVER
+
 COPY --from=release / /
 
 ENTRYPOINT [ "vro" ]
@@ -121,3 +124,8 @@ ENTRYPOINT [ "vro" ]
 CMD [ "--help" ]
 
 # docker build --rm -t kohirens/version-release:dev -f .docker/vr/Dockerfile .
+
+LABEL "com.kohirens.vendor"="Kohirens LLC"
+LABEL version="${SEMVER}"
+LABEL description="Auto Version Release. \
+Automatically update your CHANGELOG and a release on GitHub using."
