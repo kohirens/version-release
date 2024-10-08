@@ -1,0 +1,63 @@
+package git
+
+var stderr = struct {
+	CatFile,
+	CatFileExit,
+	CommitLog,
+	CouldNotAddOrigin,
+	CouldNotCheckoutBranch,
+	CouldNotCheckoutFile,
+	CouldNotCommit,
+	CouldNotDisplayGitStatus,
+	CouldNotGetRemoteUrl,
+	GitListRemote,
+	CouldNotPush,
+	CouldNotRemoveOrigin,
+	CouldNotSetGlobalConfig,
+	CouldNotSetRemoteUrl,
+	GitDescribeContains,
+	NotACommit,
+	LastLog,
+	WriteCommit string
+}{
+	CatFile:                  "git cat-file -t %v: %v",
+	CatFileExit:              "git cat-file %v exit code %v",
+	CommitLog:                "could not get commit log: %s",
+	CouldNotAddOrigin:        "problem adding the origin %s: %s, %s",
+	CouldNotCheckoutBranch:   "could not checkout branch: %s; %v",
+	CouldNotCheckoutFile:     "could not checkout file: %v; %v",
+	CouldNotGetRemoteUrl:     "problem getting the remote push URL: %s, %s",
+	CouldNotDisplayGitStatus: "cannot display git status: %s; %v",
+	GitListRemote:            "git ls-remote exit(%v): %v",
+	CouldNotCommit:           "could not commit: %s; %s",
+	CouldNotPush:             "cannot push changes: %s; %s",
+	CouldNotRemoveOrigin:     "problem removing the origin %s: %s, %s",
+	CouldNotSetGlobalConfig:  "could not set global config %s; %v",
+	CouldNotSetRemoteUrl:     "problem setting the remote push URL: %s, %s",
+	GitDescribeContains:      "git describe %s %v",
+	NotACommit:               "%v is not a commit",
+	LastLog:                  "could not get latest log: %s",
+	WriteCommit:              "could not write commit message: %v",
+}
+
+var stdout = struct {
+	CatFile,
+	Cs,
+	FoundRemoteBranch,
+	NoTags,
+	Push,
+	SetGitGlobalConfig,
+	StagedFiles,
+	Status,
+	TagsInfo string
+}{
+	CatFile:            "git cat-file -t result: %s",
+	Cs:                 "exec command string: %s",
+	FoundRemoteBranch:  "found remote branch %v",
+	NoTags:             "no tag for %v was found",
+	Push:               "pushing %v",
+	SetGitGlobalConfig: "set git config global %v",
+	StagedFiles:        "staged files %v",
+	Status:             "status: %v",
+	TagsInfo:           "tag(s) found %v",
+}

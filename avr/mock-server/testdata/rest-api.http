@@ -1,0 +1,9 @@
+GET https://github.com/kohirens/version-release/info/refs?service=git-upload-pack
+
+Accept: [*/*]
+Accept-Encoding: [deflate, gzip, br]
+
+<> 2023-06-05T105138.200.git-upload-pack-advertisement
+<> 2023-06-05T101636.403.txt
+
+###
