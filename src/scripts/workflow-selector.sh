@@ -30,6 +30,10 @@ trigger_workflow() {
             "${PARAM_WORKING_DIRECTORY}" \
             "${CIRCLE_SHA1}"
     fi
+
+    echo "BEGIN GITHUB_OUTPUT contents:"
+    cat "${GITHUB_OUTPUT}"
+    echo "END GITHUB_OUTPUT contents:"
 }
 
 # Will not run if sourced for bats-core tests.
