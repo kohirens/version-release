@@ -19,6 +19,8 @@ trigger_workflow() {
 
     if [ -n "${CIRCLE_SHA1}" ]; then
         GIT_SHA="${CIRCLE_SHA1}"
+    elif [ -n "${GITHUB_SHA}" ]; then
+        GIT_SHA="${GITHUB_SHA}"
     fi
 
     if [ -n "${semver}" ]; then
