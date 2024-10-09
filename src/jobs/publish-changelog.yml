@@ -36,9 +36,9 @@ parameters:
     default: "VERSION_RELEASE_IMAGE"
     description: Version of the executor image to pull.
     type: string
-  github_server:
-    default: "github.com"
-    description: Github server domain.
+  github_api_url:
+    default: "https://api.github.com"
+    description: Github API URL.
     type: string
   main_trunk_branch:
     default: "main"
@@ -90,7 +90,7 @@ steps:
       environment:
         PARAM_MAIN_TRUNK_BRANCH: "<< parameters.main_trunk_branch >>"
         PARAM_CHANGELOG_FILE: "<< parameters.changelog_file >>"
-        PARAM_GH_SERVER: "<< parameters.github_server >>"
+        GITHUB_API_URL: "<< parameters.github_api_url >>"
         PARAM_MERGE_TYPE: "<< parameters.merge_type >>"
         PARAM_TAG_CMD: "<< parameters.tag_cmd >>"
         PARAM_TAG_ENV_VAR: "<< parameters.tag_env_var >>"
