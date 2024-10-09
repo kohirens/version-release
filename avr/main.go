@@ -8,11 +8,12 @@ import (
 	"github.com/kohirens/stdlib/fsio"
 	"github.com/kohirens/stdlib/log"
 	"github.com/kohirens/version-release/avr/pkg/circleci"
+	"github.com/kohirens/version-release/avr/pkg/git"
 	"github.com/kohirens/version-release/avr/pkg/github"
-	"github.com/kohirens/version-release/vro/pkg/git"
 	"github.com/kohirens/version-release/vro/pkg/gitcliff"
 	"net/http"
 	"os"
+	"path/filepath"
 	"regexp"
 	"strconv"
 	"strings"
@@ -60,13 +61,13 @@ func init() {
 	flag.BoolVar(&clo.help, "help", false, um["help"])
 	flag.BoolVar(&clo.version, "version", false, um["version"])
 	flag.StringVar(&clo.Branch, "branch", "main", um["branch"])
-	flag.StringVar(&clo.GitHubServer, "gh-server", github.Server, um["gh_server"])
-	flag.StringVar(&clo.SemVer, "semver", "", um["semver"])
-	flag.StringVar(&clo.WorkDir, "wd", "./", um["wd"])
 	flag.StringVar(&clo.CiCd, "cicd", circleci.Name, um["cicd"])
-	flag.StringVar(&clo.Username, "username", "", um["username"])
-	flag.StringVar(&clo.Project, "project", "", um["project"])
+	flag.StringVar(&clo.GitHubServer, "gh-server", github.Server, um["gh_server"])
 	flag.StringVar(&clo.GitHubToken, "gh-token", "", um["gh_token"])
+	flag.StringVar(&clo.Project, "project", "", um["project"])
+	flag.StringVar(&clo.SemVer, "semver", "", um["semver"])
+	flag.StringVar(&clo.Username, "username", "", um["username"])
+	flag.StringVar(&clo.WorkDir, "wd", ".", um["wd"])
 
 	clo.TagAndRelease.Flags = flag.FlagSet{}
 	clo.TagAndRelease.Flags.BoolVar(
@@ -150,6 +151,16 @@ func main() {
 		}
 		log.Infof(stdout.SemVer, semVer)
 	}
+
+	log.Dbugf(stdout.Wd, clo.WorkDir)
+	// clean up the working directory
+	workDir, e1 := filepath.Abs(clo.WorkDir)
+	if e1 != nil {
+		mainErr = fmt.Errorf(stderr.WorkDir, e1.Error())
+		return
+	}
+	clo.WorkDir = workDir
+	log.Dbugf(stdout.Wd, workDir)
 
 	// An HTTP client is also required for everything below.
 	client := &http.Client{

@@ -43,3 +43,11 @@ avr \
   -cicd "circleci" \
   publish-release-tag "0.1.0" "${CIRCLE_REPOSITORY_URL}"
 ```
+
+## References
+
+* [Default environment variables]
+
+---
+
+[Default environment variables]: https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/store-information-in-variables#default-environment-variables

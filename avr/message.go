@@ -13,6 +13,7 @@ var stderr = struct {
 	OpenFile              string
 	PublishChangelogArgs  string
 	PublishReleaseTagArgs string
+	WorkDir               string
 }{
 	ChgLogAutoUpdate:      "abort, the last commit contains an auto update to the CHANGELOG.md",
 	CommitAlreadyTagged:   "commit %v is already tagged",
@@ -26,6 +27,7 @@ var stderr = struct {
 	OpenFile:              "could not open file %v: %v",
 	PublishChangelogArgs:  "3 arguments are required to run this command, see -help",
 	PublishReleaseTagArgs: "3 arguments are required to run this command, see -help",
+	WorkDir:               "working directory: %v",
 }
 
 var stdout = struct {
