@@ -1,0 +1,34 @@
+name: workflow-selector
+run-name: ${{ github.actor }} is checking which workflow to run
+on:
+    workflow_call:
+        inputs:
+            exec_img_tag:
+                required: false
+                type: string
+
+concurrency:
+    group: qa-group
+    cancel-in-progress: false
+
+jobs:
+    select-a-workflow:
+        runs-on: ubuntu-latest
+        name: Select which workflow to run
+        steps:
+            -   name: Checkout
+                uses: actions/checkout@v4
+            -   name: Select a workflow
+                uses: kohirens/version-release/.github/actions/workflow-selector@github-actions # Uses an action in the root directory
+                id: selector
+                with:
+                    exec_img_tag: ${{ inputs.exec_img_tag }}
+
+#permissions:
+#    attestations: write
+#    pull-requests: write
+#    contents: read
+#    statuses: read
+#    checks: read|write
+# https://docs.github.com/en/actions/writing-workflows/about-workflows#reusing-workflows
+# https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/storing-and-sharing-data-from-a-workflow

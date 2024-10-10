@@ -17,18 +17,27 @@ trigger_workflow() {
         echo "semantic version ${semver} was pulled from the file ${PARAM_TAG_FILE}"
     fi
 
+    if [ -n "${CIRCLE_SHA1}" ]; then
+        GIT_SHA="${CIRCLE_SHA1}"
+    elif [ -n "${GITHUB_SHA}" ]; then
+        GIT_SHA="${GITHUB_SHA}"
+    fi
+
     if [ -n "${semver}" ]; then
-        vro -semver "${semver}" workflow-selector \
-            "${PARAM_CHANGELOG_FILE}" \
-            "${PARAM_MAIN_TRUNK_BRANCH}" \
-            "${PARAM_WORKING_DIRECTORY}" \
-            "${CIRCLE_SHA1}"
+        avr \
+            -semver "${semver}" \
+            -wd "${PARAM_WORKING_DIRECTORY}" \
+            -branch "${PARAM_MAIN_TRUNK_BRANCH}" \
+            workflow-selector \
+                -changelog "${PARAM_CHANGELOG_FILE}" \
+                "${GIT_SHA}"
     else
-        vro workflow-selector \
-            "${PARAM_CHANGELOG_FILE}" \
-            "${PARAM_MAIN_TRUNK_BRANCH}" \
-            "${PARAM_WORKING_DIRECTORY}" \
-            "${CIRCLE_SHA1}"
+        avr \
+            -wd "${PARAM_WORKING_DIRECTORY}" \
+            -branch "${PARAM_MAIN_TRUNK_BRANCH}" \
+            workflow-selector \
+                -changelog "${PARAM_CHANGELOG_FILE}" \
+                "${GIT_SHA}"
     fi
 }
 
