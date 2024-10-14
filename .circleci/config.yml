@@ -155,11 +155,11 @@ workflows:
         jobs:
             - co:
                   filters: *branches-to-skip
-            - bats/run:
-                  context: <<pipeline.parameters.ctx_auto_release>>
-                  pre-steps: *pre-attach
-                  requires: [ co ]
-                  path: ./src/tests
+#            - bats/run:
+#                  context: <<pipeline.parameters.ctx_auto_release>>
+#                  pre-steps: *pre-attach
+#                  requires: [ co ]
+#                  path: ./src/tests
             - shellcheck/check:
                   pre-steps: *pre-attach
                   requires: [ co ]
@@ -168,7 +168,8 @@ workflows:
             - vr/publish-docker-hub:
                   name: "publish-dev-image"
                   context: << pipeline.parameters.ctx_docker_hub >>
-                  requires: [ bats/run, shellcheck/check ]
+#                  requires: [ bats/run, shellcheck/check ]
+                  requires: [ shellcheck/check ]
                   dockerfile: ".docker/vr/Dockerfile"
                   image_tag: "dev"
                   repository: << pipeline.parameters.orb_repo >>

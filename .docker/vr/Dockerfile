@@ -63,6 +63,15 @@ RUN go mod tidy \
  && go generate \
  && go install
 
+# Build 2
+# Add source files
+COPY --chown=${USER_NAME}:${USER_GROUP} ./avr/ ./avr
+
+RUN cd avr \
+ && go mod tidy \
+ && go generate \
+ && go install
+
 COPY --chmod=+x .docker/vr/start.sh /usr/local/bin
 COPY --chown=${USER_NAME}:${USER_NAME} .docker/.gitconfig /home/${USER_NAME}
 
@@ -103,6 +112,7 @@ RUN rm /usr/local/bin/git-chglog
 
 # Add build artifacts
 COPY --link --from=build "/home/${USER_NAME}/bin/vro" "/usr/local/bin/vro"
+COPY --link --from=build "/home/${USER_NAME}/bin/avr" "/usr/local/bin/avr"
 COPY --link --chmod=755 ./src/scripts/ /usr/local/bin/
 
 # DEBUG

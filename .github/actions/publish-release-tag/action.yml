@@ -1,0 +1,82 @@
+# https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/accessing-contextual-information-about-workflow-runs#context-availability
+name: 'publish-release-tag'
+description: |2
+  Publish a tag on a specified branch.
+inputs: # https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/accessing-contextual-information-about-workflow-runs#inputs-context
+    abort_dupe_release:
+        default: false
+        description: Gracefully abort publishing a release if it already exists.
+        type: boolean
+    exec_img_tag:
+        default: "VERSION_RELEASE_IMAGE"
+        description: Version of the executor image to pull.
+        required: true
+    github_token_var:
+        default: GITHUB_TOKEN
+        description: Name of the environment variable holding the GitHub API token.
+        required: true
+    github_server:
+        default: "github.com"
+        description: Github server domain.
+        required: true
+    main_trunk_branch:
+        default: "main"
+        description: Name of the main trunk branch to tag.
+        required: true
+    owner:
+        default: ""
+        description: GitHub organization containing the repository to check.
+        required: false
+    release_file:
+        default: "has-release.txt"
+        description: File containing the response for checking if the release was found or not.
+        required: false
+    repo:
+        default: ""
+        description: GitHub repository to check.
+        type: string
+    tag_cmd:
+        default: ""
+        description: Command to run to get the semantic version tag, will override the auto generated value.
+        required: false
+    tag_env_var:
+        default: ""
+        description: Environment variable to get the semantic version tag, will override the auto generated value.
+        required: false
+    tag_file:
+        default: ""
+        description: File to get the semantic version tag, will override the auto generated value.
+        required: false
+    working_directory:
+        default: ${{ github.workspace }}
+        description: In case you need to customize, defaults to the current dir.
+        required: true
+
+runs: # https://docs.github.com/en/actions/sharing-automations/creating-actions/metadata-syntax-for-github-actions#runs-for-docker-container-actions
+    using: composite
+    steps:
+        - if: inputs.abort_dupe_release
+          name: Check GitHub has a release
+          id: gh-has-release
+          env:
+            PARAM_FILE: <<parameters.file>>
+            PARAM_OWNER: <<parameters.owner>>
+            PARAM_REPO: <<parameters.repo>>
+            PARAM_TAG_CMD: << parameters.tag_cmd >>
+            PARAM_TAG_ENV_VAR: << parameters.tag_env_var >>
+            PARAM_TAG_FILE: << parameters.tag_file >>
+          runs: /usr/local/bin/gh-has-release.sh
+        - using: docker
+          image: docker://kohirens/version-release:dev
+          env: # https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/store-information-in-variables#default-environment-variables
+            VERBOSITY_LEVEL: 6
+            PARAM_GH_SERVER: ${{ inputs.github_server }}
+            PARAM_MAIN_TRUNK_BRANCH: ${{ inputs.main_trunk_branch }}
+            PARAM_TAG_CMD: ${{ inputs.tag_cmd }}
+            PARAM_TAG_ENV_VAR: ${{ inputs.tag_env_var }}
+            PARAM_TAG_FILE: ${{ inputs.tag_file }}
+            PARAM_VCS_TYPE: ${{ inputs.vcs_type }}
+            PARAM_WORKING_DIRECTORY: ${{ inputs.working_directory }}
+          entrypoint: sh
+          args:
+              - /usr/local/bin/tag-and-release.sh
