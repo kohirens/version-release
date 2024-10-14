@@ -35,7 +35,10 @@ type Client struct {
 
 func NewClient(vcs, project, username string, client *http.Client) *Client {
 	if token == "" {
-		panic(stderr.TokenNotSet)
+		token, _ = env[EnvToken]
+		if token == "" {
+			panic(stderr.TokenNotSet)
+		}
 	}
 
 	return &Client{
@@ -49,14 +52,22 @@ func NewClient(vcs, project, username string, client *http.Client) *Client {
 	}
 }
 
-// TriggerWorkflow Trigger a pipeline based on parameters set. See docs
+// RunWorkflow Trigger a pipeline based on parameters set. See docs
 // https://circleci.com/docs/api/v2/index.html#tag/Pipeline; also see an
 // example:
 // https://circleci.com/docs/triggers-overview/#run-a-pipeline-using-the-api
 // Note: keep in mind that you have to use a personal API token; project tokens
 // are currently not supported on CircleCI API (v2) at this time.
 // see: https://circleci.com/docs/api/v2/#operation/triggerPipeline
-func (c *Client) TriggerWorkflow(pp []byte) error {
+func (c *Client) RunWorkflow(branch, nameWorkflow string) error {
+	// Build pipeline parameters to trigger the tag-and-release workflow.
+	pp, e1 := PipelineParameters(branch, nameWorkflow)
+	if e1 != nil {
+		return e1
+	}
+
+	log.Logf(stdout.TriggerWorkflow, nameWorkflow)
+
 	projectUrl := fmt.Sprintf(
 		pipelineFmt,
 		c.ApiHost,

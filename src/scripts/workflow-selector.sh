@@ -63,6 +63,10 @@ trigger_workflow() {
                 -changelog "${PARAM_CHANGELOG_FILE}" \
                 "${GIT_SHA}"
     fi
+
+    echo "BEGIN GITHUB_OUTPUT contents:"
+    cat "${GITHUB_OUTPUT}"
+    echo "END GITHUB_OUTPUT contents:"
 }
 
 # Will not run if sourced for bats-core tests.

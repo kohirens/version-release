@@ -246,7 +246,7 @@ type PullRequestMergeResponse struct {
 
 // MergePullRequest Merge a pull request.
 func (gh *Client) MergePullRequest(prNumber int, mergeMethod string) (*PullRequestMergeResponse, error) {
-	uri := fmt.Sprintf(epPullMerge, gh.Host, gh.Org, gh.Repository, prNumber)
+	uri := fmt.Sprintf(epPullMerge, gh.Host, gh.Owner, gh.Repository, prNumber)
 
 	body := &PullRequestMergeBody{
 		PullNumber:  prNumber,
@@ -286,7 +286,7 @@ func (gh *Client) MergePullRequest(prNumber int, mergeMethod string) (*PullReque
 // OpenPullRequest Opens a pull request against the base branch.
 // gh pr create --base "${PARAM_MAIN_TRUNK_BRANCH}" --head "${GEN_BRANCH_NAME}" --fill
 func (gh *Client) OpenPullRequest(base, branch, title, summary string) (*PullRequest, error) {
-	uri := fmt.Sprintf(epPulls, gh.Host, gh.Org, gh.Repository)
+	uri := fmt.Sprintf(epPulls, gh.Host, gh.Owner, gh.Repository)
 	body := &PullRequestBody{
 		Base:  base,
 		Body:  summary,

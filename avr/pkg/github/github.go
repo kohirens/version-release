@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"os"
 	"regexp"
 	"strings"
 )
@@ -24,31 +23,7 @@ type HttpClient interface {
 	Do(req *http.Request) (*http.Response, error)
 }
 
-var (
-	envToken = ""
-)
-
-func init() {
-	// set the token from the environment.
-	val, k := os.LookupEnv(EnvToken)
-	if k {
-		envToken = val
-	}
-}
-
-func NewRequest(uri, method, token string) (*http.Request, error) {
-	req, err1 := http.NewRequest(method, uri, nil)
-	if err1 != nil {
-		return nil, fmt.Errorf(stderr.CouldNotPrepareRequest, err1.Error())
-	}
-
-	req.Header.Set("Authorization", "Bearer "+token)
-	req.Header.Set("Accept", "application/vnd.github+json")
-
-	return req, nil
-}
-
-func parseRepositoryUri(uri string) (string, string, string) {
+func ParseRepositoryUri(uri string) (string, string, string) {
 	//https://github.com/kohirens/version-release
 	//git@github.com:kohirens/version-release.git
 	re := regexp.MustCompile(`^(https://|git@)([^/:]+)[/:]([^/]+)/(.+)`)

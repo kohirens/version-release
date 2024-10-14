@@ -18,23 +18,21 @@ const (
 	epReleaseLatest = BaseUri + "/releases/latest"
 	GenBranchName   = "auto-update-changelog"
 	publicServer    = "github.com"
+	repoUrl         = "git@%v:%v/%v.git"
 )
 
 type Client struct {
-	Client        HttpClient
-	Domain        string
-	MergeMethod   string
-	Org           string
-	RepositoryUri string
-	Repository    string
-	Token         string
-	Username      string
-	Host          string
+	Client      HttpClient
+	Domain      string
+	MergeMethod string
+	Owner       string
+	Repository  string
+	Token       string
+	Username    string
+	Host        string
 }
 
-func NewClient(repositoryUri, token, host string, client HttpClient) *Client {
-	dom, org, repo := parseRepositoryUri(repositoryUri)
-
+func NewClient(owner, repo, token, host string, client HttpClient) *Client {
 	if host == publicServer { // patch for public GitHub
 		host = "api." + host
 	} else {
@@ -42,25 +40,17 @@ func NewClient(repositoryUri, token, host string, client HttpClient) *Client {
 		host = host + "/api/v3"
 	}
 
-	// Use the environment token nothing passed in.
-	if token == "" {
-		token = envToken
-	}
-
 	return &Client{
-		Client:        client,
-		Domain:        dom,
-		Org:           org,
-		Repository:    repo,
-		RepositoryUri: repositoryUri,
-		Token:         token,
-		Username:      "git",
-		Host:          host,
+		Client:     client,
+		Owner:      owner,
+		Repository: repo,
+		Token:      token,
+		Host:       host,
 	}
 }
 
 func (gh *Client) DoesBranchExistRemotely(branch string) bool {
-	uri := fmt.Sprintf(epBranches, gh.Host, gh.Org, gh.Repository, branch)
+	uri := fmt.Sprintf(epBranches, gh.Host, gh.Owner, gh.Repository, branch)
 
 	res, err1 := gh.Send(uri, "GET", nil)
 	if err1 != nil {
@@ -80,14 +70,13 @@ func (gh *Client) DoesBranchExistRemotely(branch string) bool {
 }
 
 // PublishChangelog Stage, commit, and push local changes, then make a pull
-// request and merge it containing:
-// 1. the git-chglog command config files if they are missing or first run.
-// 2. the CHANGELOG.md if it contains changes.
+// request and merge it containing the CHANGELOG.md if it contains changes.
 func (gh *Client) PublishChangelog(wd, branch, header, msgBody string, files []string) error {
-	if git.DoesBranchExistRemotely(wd, gh.RepositoryUri, GenBranchName) {
+	uri := fmt.Sprintf(repoUrl, gh.Host, gh.Owner, gh.Repository)
+	if git.DoesBranchExistRemotely(wd, uri, GenBranchName) {
 		return fmt.Errorf(
 			stderr.BranchExists,
-			GenBranchName, gh.RepositoryUri,
+			GenBranchName, uri,
 		)
 	}
 
@@ -95,8 +84,7 @@ func (gh *Client) PublishChangelog(wd, branch, header, msgBody string, files []s
 		return e
 	}
 
-	email := fmt.Sprintf("%s@noreply.%s", gh.Username, gh.Domain)
-	if e := git.Config(wd, "user.email", email); e != nil {
+	if e := git.Config(wd, "user.email", "<>"); e != nil {
 		return e
 	}
 
@@ -160,7 +148,7 @@ func (gh *Client) Send(uri, method string, body io.Reader) (*http.Response, erro
 }
 
 func (gh *Client) waitForPrToMerge(prNumber int, waitSeconds int) error {
-	uri := fmt.Sprintf(epPullMerge, gh.Host, gh.Org, gh.Repository, prNumber)
+	uri := fmt.Sprintf(epPullMerge, gh.Host, gh.Owner, gh.Repository, prNumber)
 
 	log.Logf(stdout.CheckMergeStatus, prNumber)
 

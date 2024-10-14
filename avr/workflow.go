@@ -11,13 +11,11 @@ type Workflow struct {
 	// GitHubClient GitHub API client
 	GitHubClient circleci.GithubClient
 	// Token A CircleCI API token
-	Token string
 }
 
-func NewWorkflow(token string, ghClient circleci.GithubClient) *Workflow {
+func NewWorkflow(ghClient circleci.GithubClient) *Workflow {
 	return &Workflow{
 		GitHubClient: ghClient,
-		Token:        token,
 	}
 }
 

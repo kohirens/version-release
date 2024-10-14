@@ -6,6 +6,7 @@ import (
 	"bytes"
 	"fmt"
 	git2 "github.com/kohirens/stdlib/git"
+	"github.com/kohirens/version-release/avr/pkg/lib"
 	"github.com/kohirens/version-release/vro/pkg/circleci"
 	"github.com/kohirens/version-release/vro/pkg/git"
 	"github.com/kohirens/version-release/vro/pkg/github"
@@ -205,10 +206,10 @@ func Test_getRequiredEnvVars(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := getRequiredEnvVars(tt.eVarNames)
+			got, err := lib.GetRequiredEnvVars(tt.eVarNames)
 
 			if tt.wantErr != (err != nil) {
-				t.Errorf("getRequiredEnvVars() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("GetRequiredEnvVars() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
 

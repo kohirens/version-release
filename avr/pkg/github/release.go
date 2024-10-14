@@ -97,7 +97,7 @@ type ReleasesResponse struct {
 }
 
 func (gh *Client) TagAndRelease(branch, tag string) (*ReleasesResponse, error) {
-	uri := fmt.Sprintf(epRelease, gh.Host, gh.Org, gh.Repository)
+	uri := fmt.Sprintf(epRelease, gh.Host, gh.Owner, gh.Repository)
 	body := &Release{
 		Name:         tag + " - " + time.Now().Format("2006-01-02"),
 		TagName:      tag,

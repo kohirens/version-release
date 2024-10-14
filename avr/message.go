@@ -11,6 +11,7 @@ var stderr = struct {
 	NoChangelogChanges    string
 	NothingToTag          string
 	OpenFile              string
+	ParseGitHubRepoEnvVar string
 	PublishChangelogArgs  string
 	PublishReleaseTagArgs string
 	WorkDir               string
@@ -25,6 +26,7 @@ var stderr = struct {
 	NoChangelogChanges:    "the changelog has no changes to be committed",
 	NothingToTag:          "next semantic version is empty, so we cannot release a tag",
 	OpenFile:              "could not open file %v: %v",
+	ParseGitHubRepoEnvVar: "could not parse %v",
 	PublishChangelogArgs:  "3 arguments are required to run this command, see -help",
 	PublishReleaseTagArgs: "3 arguments are required to run this command, see -help",
 	WorkDir:               "working directory: %v",
@@ -65,14 +67,14 @@ var stdout = struct {
 }
 
 var um = map[string]string{
-	"help":                   "display this help",
-	"version":                "display version information",
-	"cicd":                   "set the CI/CD platform, options are circleci|github (default: circleci).",
-	"branch":                 "set the branch to evaluate commit message and or tag",
-	"wd":                     "set the working directory of the Git repository to evaluate",
-	"gh_server":              "github server, ex github.com",
-	"gh_token":               "github token for API access",
-	"semver":                 "set the semantic version for the automated release",
-	"tag_and_release_help":   "publish-release-tag -help displays this help",
-	"workflow_selector_help": "workflow-selector -help displays this help",
+	"help":                         "display this help",
+	"version":                      "display version information",
+	"cicd":                         "set the CI/CD platform, options are circleci|github (default: circleci).",
+	"branch":                       "set the branch to evaluate commit message and or tag",
+	"wd":                           "set the working directory of the Git repository to evaluate",
+	"gh_server":                    "github server, ex github.com",
+	"gh_token":                     "github token for API access",
+	"semver":                       "set the semantic version for the automated release",
+	"changelog":                    "name of the changelog file (default: CHANGELOG.md)",
+	"publish_changelog_merge_type": "type of merge to perform when closing the changelog pull request",
 }

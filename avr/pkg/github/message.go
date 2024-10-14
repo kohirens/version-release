@@ -15,6 +15,7 @@ var stderr = struct {
 	GetMetaBody              string
 	GetMetaUnmarshall        string
 	MergeWaitTimeout         string
+	OpenFile                 string
 	ResponseStatusCode       string
 }{
 	BranchExists:             "the branch %q exists on %s, please delete it manually, then re-run this job so it can complete successfully",
@@ -31,6 +32,7 @@ var stderr = struct {
 	GetMetaBody:              "could not read github meta: %v",
 	GetMetaUnmarshall:        "could not decode response from github meta endpoint: %v",
 	MergeWaitTimeout:         "pr %d has not merged after %d seconds",
+	OpenFile:                 "could not open file %v: %v",
 	ResponseStatusCode:       "got a %d response from %v: %s",
 }
 

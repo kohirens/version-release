@@ -43,7 +43,7 @@ func TestClient_PublishChangelog(t *testing.T) {
 				},
 				Domain:        "github.com",
 				MergeMethod:   "rebase",
-				Org:           "kohirens",
+				Owner:         "kohirens",
 				RepositoryUri: "https://github.com/kohirens/repo-01",
 				Repository:    "repo-01",
 				Token:         "fakegithubtoken",
