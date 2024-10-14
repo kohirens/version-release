@@ -36,6 +36,7 @@ jobs:
             -   name: Update and publish the changelog
                 uses: kohirens/version-release/.github/actions/publish-changelog@github-actions # Uses an action in the root directory
                 id: changelog
+        needs: select-a-workflow
     publish-release-tag:
         if: ${{ needs.select-a-workflow.outputs.workflow == 'publish-release-tag' }}
         runs-on: ubuntu-latest
@@ -46,6 +47,7 @@ jobs:
             -   name: Update and publish the changelog
                 uses: kohirens/version-release/.github/actions/publish-release-tag@github-actions # Uses an action in the root directory
                 id: changelog
+        needs: select-a-workflow
 
 #permissions:
 #    attestations: write
