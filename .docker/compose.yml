@@ -2,51 +2,52 @@ services:
     cli:
         build:
             args:
-                USER_NAME: '${USER_NAME}'
-                REPO: '${REPO}'
-            dockerfile: '.docker/vr/Dockerfile'
-            context: '..'
-            target: 'build'
+                USER_NAME: ${USER_NAME}
+                REPO: ${REPO}
+            dockerfile: .docker/vr/Dockerfile
+            context: ..
+            target: build
         env_file:
-            - 'vr/app.env'
-        image: 'kohirens/version-release:dev'
+            - vr/app.env
+        image: kohirens/version-release:dev
         networks:
             default:
         volumes:
-            - '../:/home/${USER_NAME}/src/${REPO}'
-            - '~/.ssh/known_hosts:/home/${USER_NAME}/.ssh/known_hosts'
-            - 'vscode:/home/${USER_NAME}/.vscode-server'
-            - './vr/.ash_history:/home/circleci/.ash_history'
+            - ../:/home/${USER_NAME}/src/${REPO}
+            - ~/.ssh/known_hosts:/home/${USER_NAME}/.ssh/known_hosts
+            - vscode:/home/${USER_NAME}/.vscode-server
+            - ./vr/.ash_history:/home/circleci/.ash_history
 
     web:
         build:
             args:
-                REPO: '${REPO}'
-            dockerfile: '.docker/mock-server/Dockerfile'
-            context: '..'
+                REPO: ${REPO}
+            dockerfile: .docker/mock-server/Dockerfile
+            context: ..
         environment:
             KEEP_RUNNING: 1
+            VERBOSITY_LEVEL: 6
         env_file:
-            - 'mock-server/integration-test.env'
+            - mock-server/integration-test.env
 
         develop:
             watch:
                 - action: rebuild
-                  path: ../vro/
-                  target: /root/src/${REPO}/vro/
+                  path: ../avr/
+                  target: /root/src/${REPO}/avr/
                   ignore:
                       - tmp/
-        image: 'mock-server'
+        image: mock-server
         networks:
             default:
                 aliases: # set hosts name so that request do NOT leave the container when test are run
-                    - "circleci.com"
-                    - "api.circleci.com"
-                    - "app.circleci.com"
-                    - "github.com"
-                    - "api.github.com"
+                    - circleci.com
+                    - api.circleci.com
+                    - app.circleci.com
+                    - github.com
+                    - api.github.com
         volumes:
-            - './mock-server/.ash_history:/root/.ash_history'
+            - ./mock-server/.ash_history:/root/.ash_history
 
 volumes:
     vscode: null

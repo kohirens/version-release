@@ -1,7 +1,9 @@
 ARG REPO='github.com/kohirens/version-release'
 ARG GIT_CLIFF_VER="2.2.1"
 
-FROM golang:1.21-alpine3.19 AS base
+FROM golang:1.23-alpine3.20 AS base
+
+WORKDIR /tmp
 
 ARG REPO
 ARG GIT_CLIFF_VER
@@ -25,32 +27,37 @@ RUN echo "https://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repo
  && rm -vrf /var/cache/apk/* \
  && cp /usr/share/zoneinfo/America/Detroit /etc/localtime
 
+HEALTHCHECK --interval=5s --timeout=3s \
+  CMD curl -f https://127.0.0.1/ || exit 1
+
+COPY --chmod=755 .docker/mock-server/start.sh /usr/local/bin
+
+RUN chmod 755 /usr/local/bin/start.sh
+
+ENTRYPOINT [ "start.sh" ]
+
+CMD []
+
 # Make directories with current user permissions
 RUN mkdir -p ~/bin ~/src
 
 ENV PATH=${PATH}:/root/bin
 
-COPY --from=kohirens/git-tool-belt:2.1.2 /usr/local/bin/git-tool-belt /root/bin
+COPY --from=kohirens/git-tool-belt:2.1.2 /usr/local/bin/git-tool-belt /usr/local/bin
 
-COPY --chown=root:root --chmod=+x .docker/mock-server/gen-ss-cert.sh /usr/bin/
-COPY --chown=root:root .docker/.gitconfig /root
+COPY --chmod=755 .docker/mock-server/gen-ss-cert.sh /usr/local/bin/
+COPY .docker/.gitconfig /root
 
-RUN chmod +x /usr/bin/gen-ss-cert.sh \
+RUN chmod 755 /usr/local/bin/gen-ss-cert.sh \
  && gen-ss-cert.sh --company="mock-server" \
     --sans="DNS:github.com, DNS:*.github.com, DNS:*.circleci.com" \
     --out-dir="./ssl" \
     "circleci.com"
 
-HEALTHCHECK --interval=5s --timeout=3s \
-  CMD curl -f https://127.0.0.1/ || exit 1
-
-WORKDIR /tmp
-
-COPY vro/testdata/repo-01.bundle ./
+COPY vro/testdata/repo-01.bundle /root/testdata
+COPY vro/ /root/src/${REPO}/vro/
 
 WORKDIR "/root/src/${REPO}/vro"
-
-COPY ./vro/ ./
 
 # Build the mock server app
 RUN cd mock-server \
@@ -60,10 +67,17 @@ RUN cd mock-server \
  && go build \
  && go install
 
-COPY --chmod=+x .docker/mock-server/start.sh /usr/local/bin
+COPY avr/testdata/repo-01.bundle /tmp/testdata/repo-01.bundle
+COPY avr /root/src/${REPO}/avr/
 
-RUN chmod +x /usr/local/bin/start.sh
+# Go build rules require the repo to be in the GOPATH
+# We also need to have docker watch for changes to any file in the avr directory
+# so that it can rebuild and restart the mock-server on file changes.
+WORKDIR /root/src/${REPO}/avr
 
-ENTRYPOINT [ "start.sh" ]
-
-CMD []
+RUN cd mock-server \
+ && mkdir -p request tmp \
+ && go mod tidy \
+ && go generate \
+ && go build \
+ && go install
