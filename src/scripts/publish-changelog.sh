@@ -4,10 +4,10 @@ publish_changelog() {
     # the latest github.com public SSH keys to the known_hosts files to resolve
     # that issue.
     if [ -f ~/.ssh/known_hosts ]; then
-        vro known-sshkeys >> ~/.ssh/known_hosts
+        vro known-sshkeys "${GITHUB_API_URL}/meta" "github.com" >> ~/.ssh/known_hosts
     else
         mkdir -p ~/.ssh
-        vro known-sshkeys > ~/.ssh/known_hosts
+        vro known-sshkeys "${GITHUB_API_URL}/meta" "github.com" > ~/.ssh/known_hosts
     fi
 
     # Get the value of the semantic version tag in 1 of 3 way.
@@ -28,17 +28,36 @@ publish_changelog() {
         echo "semantic version ${semver} was pulled from the file ${PARAM_TAG_FILE}"
     fi
 
+    # Allow git command to work
+    git config --global --add safe.directory /github/workspace
+    git config user.name "GitHub Actions Bot"
+    git config user.email "<>"
+
+    if [ "${CIRCLECI}" = "true" ]; then
+        CICD_PLATFORM="circleci"
+    fi
+
+    if [ "${GITHUB_ACTIONS}" = "true" ]; then
+        CICD_PLATFORM="github"
+    fi
+
     if [ -n "${semver}" ]; then
-        vro -semver "${semver}" \
+        avr -branch "${PARAM_MAIN_TRUNK_BRANCH}" \
+            -cicd "${CICD_PLATFORM}" \
+            -semver "${semver}" \
+            -wd "${PARAM_WORKING_DIRECTORY}" \
             publish-changelog \
-            "${PARAM_CHANGELOG_FILE}" \
-            "${PARAM_MAIN_TRUNK_BRANCH}" \
-            "${PARAM_WORKING_DIRECTORY}"
+                -gh-server "${PARAM_GITHUB_SERVER}" \
+                -merge-type "${PARAM_MERGE_TYPE}" \
+                "${PARAM_CHANGELOG_FILE}"
     else
-        vro publish-changelog \
-            "${PARAM_CHANGELOG_FILE}" \
-            "${PARAM_MAIN_TRUNK_BRANCH}" \
-            "${PARAM_WORKING_DIRECTORY}"
+        avr -branch "${PARAM_MAIN_TRUNK_BRANCH}" \
+            -cicd "${CICD_PLATFORM}" \
+            -wd "${PARAM_WORKING_DIRECTORY}" \
+            publish-changelog \
+                -gh-server "${PARAM_GITHUB_SERVER}" \
+                -merge-type "${PARAM_MERGE_TYPE}" \
+                "${PARAM_CHANGELOG_FILE}"
     fi
 }
 

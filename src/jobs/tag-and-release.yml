@@ -26,9 +26,9 @@ parameters:
     default: GH_TOKEN
     description: Name of the environment variable holding the GitHub API write token.
     type: env_var_name
-  github_server:
-    default: "github.com"
-    description: Github server domain.
+  github_api_url:
+    default: "https://api.github.com"
+    description: Github API URL.
     type: string
   main_trunk_branch:
     default: "main"
@@ -89,7 +89,7 @@ steps:
            file: <<parameters.release_file>>
   - run:
       environment:
-        PARAM_GH_SERVER: "<< parameters.github_server >>"
+        GITHUB_API_URL: "<< parameters.github_api_url >>"
         PARAM_GH_TOKEN_VAR: "<< parameters.gh_token_var >>"
         PARAM_MAIN_TRUNK_BRANCH: "<< parameters.main_trunk_branch >>"
         PARAM_TAG_CMD: "<< parameters.tag_cmd >>"
