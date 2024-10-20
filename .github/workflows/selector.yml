@@ -7,13 +7,17 @@ on:
                 default: "dev"
                 required: false
                 type: string
+        secrets:
+            access_token:
+                required: true
+                description: Personal GitHub access token to allow GitHub API request to trigger workflows.
 
 concurrency:
     group: qa-group
     cancel-in-progress: false
 
 env:
-    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    GITHUB_TOKEN: ${{ secrets.access_token }}
 
 jobs:
     select-a-workflow:
