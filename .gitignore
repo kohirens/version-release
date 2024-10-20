@@ -1,7 +1,9 @@
 # Directories
 # -----------
 /.idea/
-/src/tests/data/repo-*/
+/avr/mock-server/request/
+/avr/mock-server/*.log
+/avr/mock-server/ssl/
 /vro/mock-server/request/
 /vro/mock-server/*.log
 /vro/mock-server/ssl/
@@ -13,10 +15,12 @@ tmp/
 *.exe
 /build-version.json
 /really-i-need-a-file.txt
+/avr/info.go
+/avr/mock-server/mock-server.exe
 /vro/info.go
 /vro/mock-server/mock-server.exe
-/vro/vro.exe
-/vro/vro
+/vro/vro$
+/avr/avr$
 .ash_history
 app.env
 orb.yml
