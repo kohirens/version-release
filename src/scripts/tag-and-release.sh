@@ -1,9 +1,11 @@
+#!/bin/bash
+
 publish_tag_and_release() {
     # Get the value of the semantic version tag in 1 of 3 way.
     # If more than 1 is set, the last wins.
     semver=""
     if [ -n "${PARAM_TAG_CMD}" ]; then
-        semver="$("${PARAM_TAG_CMD}")"
+        semver="$(eval "${PARAM_TAG_CMD}")"
         echo "semantic version ${semver} was set by command"
     fi
 
@@ -17,10 +19,25 @@ publish_tag_and_release() {
         echo "semantic version ${semver} was pulled from the file ${PARAM_TAG_FILE}"
     fi
 
+    if [ "${CIRCLECI}" = "true" ]; then
+        CICD_PLATFORM="circleci"
+    fi
+
+    if [ "${GITHUB_ACTIONS}" = "true" ]; then
+        CICD_PLATFORM="github"
+    fi
+
     if [ -n "${semver}" ]; then
-        vro -semver "${semver}" publish-release-tag "${PARAM_MAIN_TRUNK_BRANCH}" "${PARAM_WORKING_DIRECTORY}"
+        avr -branch "${PARAM_MAIN_TRUNK_BRANCH}" \
+            -cicd "${CICD_PLATFORM}" \
+            -semver "${semver}" \
+            -wd "${PARAM_WORKING_DIRECTORY}" \
+            publish-release-tag "${PARAM_MAIN_TRUNK_BRANCH}"
     else
-        vro publish-release-tag "${PARAM_MAIN_TRUNK_BRANCH}" "${PARAM_WORKING_DIRECTORY}"
+        avr -branch "${PARAM_MAIN_TRUNK_BRANCH}" \
+            -cicd "${CICD_PLATFORM}" \
+            -wd "${PARAM_WORKING_DIRECTORY}" \
+            publish-release-tag "${PARAM_MAIN_TRUNK_BRANCH}"
     fi
 }
 

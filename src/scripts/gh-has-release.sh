@@ -1,7 +1,8 @@
+#!/bin/bash
+
 has_release() {
-    OWNER="${1}"
-    REPO="${2}"
-    TAG="${3}"
+    owner_slash_repo="${1}"
+    semver_tag="${2}"
 
     http_code=$(curl -kL \
         --show-error \
@@ -9,24 +10,25 @@ has_release() {
         -H "Accept: application/vnd.github+json" \
         -H "Authorization: Bearer ${GH_TOKEN}" \
         -H "X-GitHub-Api-Version: 2022-11-28" \
-        --url "https://api.github.com/repos/${OWNER}/${REPO}/releases/tags/${TAG}" \
+        --url "https://api.github.com/repos/${owner_slash_repo}/releases/tags/${semver_tag}" \
         --output /dev/null \
         -w '%{http_code}')
 
-    if [ "${http_code}" = "200" ]; then
-        echo "yes"
-    else
-        echo "no"
-    fi
+    echo "${http_code}"
 }
 
 # Will not run if sourced for bats-core tests.
 # View src/tests for more information.
 ORB_TEST_ENV="bats-core"
 if [ "${0#*"${ORB_TEST_ENV}"}" = "$0" ]; then
+    if [ "${GITHUB_ACTIONS}" != "true" ]; then
+        echo "only gitHub actions should run this script, abort!"
+        exit 1
+    fi
+
     semver=""
     if [ -n "${PARAM_TAG_CMD}" ]; then
-        semver="$("${PARAM_TAG_CMD}")"
+        semver="$(eval "${PARAM_TAG_CMD}")"
         echo "release tag ${semver} was set by command"
     fi
 
@@ -45,13 +47,14 @@ if [ "${0#*"${ORB_TEST_ENV}"}" = "$0" ]; then
         exit 1
     fi
 
-    has_release "${PARAM_OWNER}" "${PARAM_REPO}" "${semver}" > "${PARAM_FILE}"
+    result="$(has_release "${PARAM_OWNER_SLASH_REPO}" "${semver}")"
 
-    result=$(cat "${PARAM_FILE}")
+    echo "has_release result: \"${result}\""
 
-    if [ "${result}" = "yes" ]; then
-        echo "release tag ${result} was found"
+    if [ "${result}" = "200" ]; then
+        printf "aborting... there is already a release tag at https://github.com/%s/releases/tag/%s\n" "${PARAM_OWNER_SLASH_REPO}" "${semver}"
+        exit 1
     else
-        echo "cannot find a release tag ${result} at github.com/${PARAM_OWNER}/${PARAM_REPO}"
+        printf "will proceed since no exiting release tag was found at https://github.com/%s/releases/tag/%s\n" "${PARAM_OWNER_SLASH_REPO}" "${semver}"
     fi
 fi
