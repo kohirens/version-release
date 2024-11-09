@@ -2,6 +2,7 @@ trigger_workflow() {
     # Get the value of the semantic version tag in 1 of 3 ways.
     # If more than 1 is set, the last wins.
     semver=""
+
     if [ -n "${PARAM_TAG_CMD}" ]; then
         semver="$("${PARAM_TAG_CMD}")"
         echo "semantic version ${semver} was set by command"
@@ -17,18 +18,42 @@ trigger_workflow() {
         echo "semantic version ${semver} was pulled from the file ${PARAM_TAG_FILE}"
     fi
 
+    if [ -n "${CIRCLE_SHA1}" ]; then
+        GIT_SHA="${CIRCLE_SHA1}"
+    elif [ -n "${GITHUB_SHA}" ]; then
+        GIT_SHA="${GITHUB_SHA}"
+    fi
+
+    # Allow git command to work
+    git config --global --add safe.directory /github/workspace
+    git config user.name "GitHub Actions Bot"
+    git config user.email "<>"
+
+    if [ "${CIRCLECI}" = "true" ]; then
+        CICD_PLATFORM="circleci"
+    fi
+
+    if [ "${GITHUB_ACTIONS}" = "true" ]; then
+        CICD_PLATFORM="github"
+    fi
+
     if [ -n "${semver}" ]; then
-        vro -semver "${semver}" workflow-selector \
-            "${PARAM_CHANGELOG_FILE}" \
-            "${PARAM_MAIN_TRUNK_BRANCH}" \
-            "${PARAM_WORKING_DIRECTORY}" \
-            "${CIRCLE_SHA1}"
+        avr \
+            -branch "${PARAM_MAIN_TRUNK_BRANCH}" \
+            -cicd "${CICD_PLATFORM}" \
+            -semver "${semver}" \
+            -wd "${PARAM_WORKING_DIRECTORY}" \
+            workflow-selector \
+                "${PARAM_CHANGELOG_FILE}" \
+                "${GIT_SHA}"
     else
-        vro workflow-selector \
-            "${PARAM_CHANGELOG_FILE}" \
-            "${PARAM_MAIN_TRUNK_BRANCH}" \
-            "${PARAM_WORKING_DIRECTORY}" \
-            "${CIRCLE_SHA1}"
+        avr \
+            -branch "${PARAM_MAIN_TRUNK_BRANCH}" \
+            -cicd "${CICD_PLATFORM}" \
+            -wd "${PARAM_WORKING_DIRECTORY}" \
+            workflow-selector \
+                "${PARAM_CHANGELOG_FILE}" \
+                "${GIT_SHA}"
     fi
 }
 

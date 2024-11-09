@@ -5,26 +5,26 @@ setup() {
 
 @test '1: has release' {
     # setup
-    export PARAM_OWNER="kohirens"
-    export PARAM_REPO="version-release"
-    export PARAM_TAG="4.2.4"
+    export GITHUB_ACTIONS="true"
+    export PARAM_OWNER_SLASH_REPO="kohirens/version-release"
+    export PARAM_TAG="0.1.0"
 
     # test
-    result=$(has_release "${PARAM_OWNER}" "${PARAM_REPO}" "${PARAM_TAG}")
+    result=$(has_release "${PARAM_OWNER_SLASH_REPO}" "${PARAM_TAG}")
 
     # assert
-    [ "${result}" = "yes" ]
+    [ "${result}" = "200" ]
 }
 
 @test '2: does not have such a release' {
     # setup
-    export PARAM_OWNER="kohirens"
-    export PARAM_REPO="version-release"
+    export GITHUB_ACTIONS="true"
+    export PARAM_OWNER_SLASH_REPO="kohirens/version-release"
     export PARAM_TAG="f4.2.4-fake"
 
     # test
-    result=$(has_release "${PARAM_OWNER}" "${PARAM_REPO}" "${PARAM_TAG}")
+    result=$(has_release "${PARAM_OWNER_SLASH_REPO}" "${PARAM_TAG}")
 
     # assert
-    [ "${result}" = "no" ]
+    [ "${result}" = "404" ]
 }
