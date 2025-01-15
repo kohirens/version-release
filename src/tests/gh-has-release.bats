@@ -12,6 +12,8 @@ setup() {
     # test
     result=$(has_release "${PARAM_OWNER_SLASH_REPO}" "${PARAM_TAG}")
 
+    echo "has_release result: \"${result}\""
+
     # assert
     [ "${result}" = "200" ]
 }
