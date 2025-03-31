@@ -1,23 +1,15 @@
-InstallPseudoDocker() {
-    if [ ! -f "/home/circleci/bin/docker" ]; then
-        wd=$(pwd)
-        cp src/tests/bin/docker /home/circleci/bin
-    fi
-    chmod +x /home/circleci/bin/docker
-    export PATH="/home/circleci/bin:${PATH}"
-}
-
 # Runs prior to every test
 setup() {
+    source ./src/tests/bin/install.sh
+    InstallPseudoCmd "docker"
     # Install required software
-    InstallPseudoDocker
 }
 
 #share input
 export BUILD_CONTEXT="."
 export REPOSITORY="example/com"
 export CIRCLE_SHA1="abc123"
-export DH_PASS="fakePass"
+export DH_API_TOKEN="fakePass"
 export DH_USER="fakeUser"
 export DOCKER_FILE="path/to/Dockerfile"
 export TARGET="test-target"

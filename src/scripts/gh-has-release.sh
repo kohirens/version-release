@@ -48,7 +48,7 @@ if [ "${0#*"${ORB_TEST_ENV}"}" = "$0" ]; then
         exit 1
     fi
 
-    result="$(has_release "${PARAM_OWNER_SLASH_REPO}" "${semver}" "${!PARAM_GITHUB_WRITE_TOKEN_VAR}")"
+    result="$(has_release "${PARAM_OWNER_SLASH_REPO}" "${semver}" "${GH_WRITE_TOKEN}")"
 
     echo "has_release result: \"${result}\""
 
