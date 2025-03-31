@@ -57,17 +57,17 @@ func (gh *Client) DoesBranchExistRemotely(branch string) bool {
 
 	res, err1 := gh.Send(uri, "GET", nil)
 	if err1 != nil {
-		log.Logf(stderr.CouldNotGetRequest, err1.Error())
+		Log.Logf(stderr.CouldNotGetRequest, err1.Error())
 		return false
 	}
 
 	bodyBits, err2 := io.ReadAll(res.Body)
 	if err2 != nil {
-		log.Logf(stderr.CouldNotReadResponse, err2.Error())
+		Log.Logf(stderr.CouldNotReadResponse, err2.Error())
 		return false
 	}
 
-	log.Dbugf(stdout.RemoteBranchStatus, string(bodyBits))
+	Log.Dbugf(stdout.RemoteBranchStatus, string(bodyBits))
 
 	return res.StatusCode == 200
 }
@@ -77,10 +77,10 @@ func (gh *Client) DoesBranchExistRemotely(branch string) bool {
 func (gh *Client) PublishChangelog(wd, branch, header, msgBody, footer string, files []string) error {
 	// Return early if the branch that updates the change log exists remotely.
 	uri := fmt.Sprintf(repoUrl, PublicServer, gh.Repository)
-	log.Dbugf(stdout.RepoUrl, uri)
+	Log.Dbugf(stdout.RepoUrl, uri)
 
 	branchExist := git.DoesBranchExistRemotely(wd, PublicServer, GenBranchName)
-	log.Dbugf(stdout.BranchExist, branchExist)
+	Log.Dbugf(stdout.BranchExist, branchExist)
 
 	if branchExist {
 		return fmt.Errorf(
@@ -125,11 +125,11 @@ func (gh *Client) PublishChangelog(wd, branch, header, msgBody, footer string, f
 	}
 
 	if merge.Merged {
-		log.Logf(stdout.PullRequestMerged, pr.Number)
+		Log.Logf(stdout.PullRequestMerged, pr.Number)
 		return nil
 	}
 
-	log.Logf(stdout.MergeResponse, merge.Message)
+	Log.Logf(stdout.MergeResponse, merge.Message)
 
 	if e := gh.waitForPrToMerge(pr.Number, 5); e != nil {
 		return e
@@ -142,7 +142,7 @@ func (gh *Client) PublishChangelog(wd, branch, header, msgBody, footer string, f
 func (gh *Client) ReleaseByTag(tag string) (*ReleasesResponse, error) {
 	uri := fmt.Sprintf(epReleaseByTag, gh.Host, gh.Repository, tag)
 
-	log.Dbugf(stdout.RequestUrl, uri)
+	Log.Dbugf(stdout.RequestUrl, uri)
 
 	res, e1 := gh.Send(uri, "GET", nil)
 	if e1 != nil {
@@ -193,7 +193,7 @@ func (gh *Client) Send(uri, method string, body io.Reader) (*http.Response, erro
 func (gh *Client) waitForPrToMerge(prNumber int, waitSeconds int) error {
 	uri := fmt.Sprintf(epPullMerge, gh.Host, gh.Repository, prNumber)
 
-	log.Logf(stdout.CheckMergeStatus, uri)
+	Log.Logf(stdout.CheckMergeStatus, uri)
 
 	r1, e1 := gh.Send(uri, "GET", nil)
 	if e1 != nil {
@@ -209,7 +209,7 @@ func (gh *Client) waitForPrToMerge(prNumber int, waitSeconds int) error {
 	for i := 0; i < waitSeconds; i++ {
 		time.Sleep(1 * time.Second)
 
-		log.Infof("checking if pr %d was merged\n", prNumber)
+		Log.Infof("checking if pr %d was merged\n", prNumber)
 		r2, e2 := gh.Send(uri, "GET", nil)
 		if e2 != nil {
 			return fmt.Errorf(stderr.CouldNotPingMergeStatus, prNumber, e2.Error())

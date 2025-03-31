@@ -30,7 +30,10 @@ const (
 	workflowSelector          = "workflow-selector"
 )
 
-var clo = &commandLineOptions{}
+var (
+	clo  = &commandLineOptions{}
+	logs = log.StdLogger{}
+)
 
 func init() {
 	defineOptions(clo)
@@ -46,7 +49,7 @@ func main() {
 	// Run this when this function returns.
 	defer func() {
 		if mainErr != nil {
-			log.Errf("%v", mainErr.Error())
+			logs.Errf("%v", mainErr.Error())
 			os.Exit(1)
 		}
 		os.Exit(0)
@@ -62,7 +65,7 @@ func main() {
 
 	// Print the current version of this executable and exit 0.
 	if clo.version {
-		log.Logf(stdout.CurrentVersion, clo.CurrentVersion, clo.CommitHash)
+		logs.Logf(stdout.CurrentVersion, clo.CurrentVersion, clo.CommitHash)
 		return
 	}
 
@@ -91,7 +94,7 @@ func main() {
 			mainErr = fmt.Errorf(stderr.InvalidSemVer, clo.SemVer)
 			return
 		}
-		log.Infof(stdout.SemVer, semVer)
+		logs.Infof(stdout.SemVer, semVer)
 	}
 
 	// clean up the working directory
@@ -101,7 +104,7 @@ func main() {
 		return
 	}
 
-	log.Dbugf(stdout.WorkDir, workDir)
+	logs.Dbugf(stdout.WorkDir, workDir)
 
 	// An HTTP client is also required for everything below.
 	client := &http.Client{
@@ -128,11 +131,11 @@ func main() {
 		}
 
 		// Let the user know we are starting down the tag and release path.
-		log.Logf(stdout.StartWorkflow, publishReleaseTagWorkflow)
+		logs.Logf(stdout.StartWorkflow, publishReleaseTagWorkflow)
 
 		branch := clo.Branch
 
-		log.Infof(stdout.Branch, branch)
+		logs.Infof(stdout.Branch, branch)
 
 		gh, e2 := newGitHubClient(client)
 		if e2 != nil {
@@ -154,7 +157,7 @@ func main() {
 			return
 		}
 
-		log.Logf(stdout.ReleaseTag, ghRelease.Name)
+		logs.Logf(stdout.ReleaseTag, ghRelease.Name)
 
 	case publishChgLogWorkflow:
 		// publish-changelog <path-to-changelog> [<merge-type>]
@@ -171,13 +174,13 @@ func main() {
 			return
 		}
 
-		log.Logf(stdout.StartWorkflow, publishChgLogWorkflow)
+		logs.Logf(stdout.StartWorkflow, publishChgLogWorkflow)
 
 		github.PublicServer = clo.PublishChangelog.GitHubServer
 
 		// Get command line arguments.
 		subCla := clo.PublishChangelog.Flags.Args()
-		log.Dbugf(stdout.SubCla, subCla)
+		logs.Dbugf(stdout.SubCla, subCla)
 		if len(subCla) < 1 {
 			mainErr = fmt.Errorf(stderr.PublishChangelogArgs)
 			return
@@ -199,6 +202,7 @@ func main() {
 		}
 
 		gitHubToken := lib.GetEnv(github.EnvToken)
+		logs.Dbugf("token: ***%v", gitHubToken[len(gitHubToken)-5:])
 		gitHubApiUrl := lib.GetEnv(github.EnvApiUrl)
 
 		var gh *github.Client
@@ -206,7 +210,7 @@ func main() {
 
 		switch clo.CiCd {
 		case circleci.Name:
-			log.Logf(stdout.CciChangelog, clo.CiCd)
+			logs.Logf(stdout.CciChangelog, clo.CiCd)
 
 			eVars, err1 := lib.GetRequiredEnvVars([]string{
 				circleci.EnvProjectRepoName,
@@ -220,7 +224,7 @@ func main() {
 
 			repo = eVars[circleci.EnvProjectUsername] + "/" + eVars[circleci.EnvProjectRepoName]
 		case github.Name:
-			log.Logf(stdout.GaChangelog)
+			logs.Logf(stdout.GaChangelog)
 
 			eVars, err1 := lib.GetRequiredEnvVars([]string{
 				github.EnvActor,
@@ -259,11 +263,11 @@ func main() {
 			return
 		}
 
-		log.Logf(stdout.StartWorkflow, workflowSelector)
+		logs.Logf(stdout.StartWorkflow, workflowSelector)
 
 		// Get command line arguments.
 		subCla := clo.WorkflowSelector.Flags.Args()
-		log.Dbugf(stdout.SubCla, subCla)
+		logs.Dbugf(stdout.SubCla, subCla)
 		if len(subCla) < 2 {
 			mainErr = fmt.Errorf(stderr.WorkflowSelectorInput)
 			return
@@ -282,7 +286,7 @@ func main() {
 
 		// Log that the commit already has a tag.
 		if hasSemverTag {
-			log.Logf(stderr.CommitAlreadyTagged, commit)
+			logs.Logf(stderr.CommitAlreadyTagged, commit)
 		}
 
 		// Only consider tagging if:
@@ -292,12 +296,12 @@ func main() {
 		if !hasSemverTag {
 			nextVer := gitcliff.NextVersion(workDir, semVer)
 			if nextVer == "" { // No version to tag, then check for changelog updates.
-				log.Logf(stdout.NoChangesToTag)
+				logs.Logf(stdout.NoChangesToTag)
 				goto changLog
 			}
 
 			l := git.Log(workDir, commit)
-			log.Dbugf(stdout.DbgCommitLog, l)
+			logs.Dbugf(stdout.DbgCommitLog, l)
 
 			// Skip tagging when the latest commit is NOT a changelog update.
 			if !strings.Contains(l, fmt.Sprintf(autoReleaseHeader, nextVer)) {
@@ -310,7 +314,7 @@ func main() {
 				cci := circleci.NewClient("gh", client)
 				mainErr = cci.RunWorkflow(clo.Branch, publishReleaseTagWorkflow)
 			case github.Name:
-				log.Logf("trigger a tag_and_release workflow on GitHub Actions")
+				logs.Logf("trigger a tag_and_release workflow on GitHub Actions")
 				// For GitHub Actions we merely need to set an output variable to continue onto the next workflow.
 				mainErr = github.AddOutputVar("workflow", publishReleaseTagWorkflow)
 				mainErr = github.AddOutputVar("next_semver", nextVer)
@@ -332,7 +336,7 @@ func main() {
 
 		// verify there are no unreleased changes.
 		if len(hasUnreleasedChanges) == 0 {
-			log.Logf(stdout.NoWorkflowSelected)
+			logs.Logf(stdout.NoWorkflowSelected)
 			return
 		}
 
@@ -362,13 +366,13 @@ func main() {
 
 				nextVer := gitcliff.NextVersion(workDir, semVer)
 				if nextVer == "" { // No version to tag, then check for changelog updates.
-					log.Logf(stdout.NoChangesToTag)
+					logs.Logf(stdout.NoChangesToTag)
 					return
 				}
 
 				rr, _ := gh.ReleaseByTag(nextVer)
 				if rr == nil {
-					log.Logf(stdout.ChgLogUpToDate)
+					logs.Logf(stdout.ChgLogUpToDate)
 					return
 				}
 			}
@@ -380,7 +384,7 @@ func main() {
 			// Trigger the publish-changelog workflow.
 			mainErr = cci.RunWorkflow(clo.Branch, publishChgLogWorkflow)
 		case github.Name:
-			log.Dbugf(stdout.GhPublishChgLog)
+			logs.Dbugf(stdout.GhPublishChgLog)
 			// For GitHub Actions we merely need to set an output variable
 			// to continue onto the next workflow.
 			mainErr = github.AddOutputVar("workflow", publishChgLogWorkflow)
@@ -391,7 +395,7 @@ func main() {
 
 	case "known-sshkeys":
 		subCla := clo.KnownSshKeys.Flags.Args()
-		log.Dbugf(stdout.SubCla, subCla)
+		logs.Dbugf(stdout.SubCla, subCla)
 		if len(subCla) < 2 {
 			mainErr = fmt.Errorf(stderr.KnownSshKeys)
 			return
