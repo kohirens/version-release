@@ -286,6 +286,7 @@ func Push(wd, origin, branch string) error {
 		cmdGit,
 		[]string{"push", origin, branch},
 	)
+	log.Dbugf("%v", cmdStr)
 	if se != nil {
 		return fmt.Errorf(stderr.CouldNotPush, string(status), se.Error())
 	}

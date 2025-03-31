@@ -25,6 +25,7 @@ var (
 	envs         map[string]string
 	PublicApiUrl = "https://api.github.com"
 	PublicServer = "github.com"
+	Log          = log.StdLogger{}
 )
 
 func init() {
