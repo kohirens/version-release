@@ -24,10 +24,6 @@ inputs: # https://docs.github.com/en/actions/writing-workflows/choosing-what-you
         default: "github.com"
         description: GitHub server domain name.
         required: true
-    github_token_var:
-        default: GH_TOKEN
-        description: Name of the environment variable holding the GitHub API token.
-        required: true
     main_trunk_branch:
         default: "main"
         description: Name of the main trunk branch to tag.
@@ -35,8 +31,6 @@ inputs: # https://docs.github.com/en/actions/writing-workflows/choosing-what-you
     merge_type:
         default: "rebase"
         description: Type of merge to perform, choose between merge|squash|rebase.
-        type: enum
-        enum: [ "merge", "rebase", "squash" ]
         required: true
     tag_cmd:
         default: ""

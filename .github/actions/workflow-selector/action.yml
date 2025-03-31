@@ -10,10 +10,6 @@ inputs: # https://docs.github.com/en/actions/writing-workflows/choosing-what-you
         default: "VERSION_RELEASE_IMAGE"
         description: Version of the executor image to pull.
         required: true
-    github_token_var:
-        default: GITHUB_TOKEN
-        description: Name of the environment variable holding the GitHub API token.
-        required: true
     main_trunk_branch:
         default: "main"
         description: Name of the main trunk branch to tag.

@@ -17,7 +17,7 @@ const (
 	EnvApiUrl          = "GITHUB_API_URL"
 	EnvRepository      = "GITHUB_REPOSITORY"
 	EnvRepositoryOwner = "GITHUB_REPOSITORY_OWNER"
-	EnvToken           = "GH_TOKEN"
+	EnvToken           = "GH_WRITE_TOKEN"
 	Name               = "github"
 )
 

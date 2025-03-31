@@ -8,7 +8,7 @@ on:
                 required: false
                 type: string
         secrets:
-            access_token:
+            github_write_token:
                 required: true
                 description: Personal GitHub access token to allow GitHub API request to trigger workflows.
 
@@ -17,7 +17,7 @@ concurrency:
     cancel-in-progress: false
 
 env:
-    GH_TOKEN: ${{ secrets.access_token }}
+    GH_WRITE_TOKEN: ${{ secrets.github_write_token }}
 
 jobs:
     select-a-workflow:

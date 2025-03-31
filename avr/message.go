@@ -97,7 +97,6 @@ var um = map[string]string{
 	"branch":                          "set the branch to evaluate commit message and or tag",
 	"wd":                              "set the working directory of the Git repository to evaluate",
 	"gh_api_url":                      "GitHub API URL (default: https://api/github.com)",
-	"gh_token":                        "GitHub API access token",
 	"semver":                          "set the semantic version for the automated release",
 	"publish_changelog_merge_type":    "type of merge to perform when closing the changelog pull request",
 	"publish_changelog_github_server": "GitHub server domain name",
