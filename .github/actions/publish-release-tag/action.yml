@@ -4,10 +4,6 @@ description: |2
   Publish a tag on a specified branch.
 author: Kohirens
 inputs: # https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/accessing-contextual-information-about-workflow-runs#inputs-context
-    github_token_var:
-        default: GH_TOKEN
-        description: Name of the environment variable holding the GitHub API token.
-        required: true
     main_trunk_branch:
         default: "main"
         description: Name of the main trunk branch to tag.

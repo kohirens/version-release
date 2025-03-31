@@ -111,18 +111,25 @@ The fix was generating a new token in my case.
 
 3. If this is for an organization you'll need to have it approved before it can
    access any of those repositories. For details see [Setting a personal access token policy for your organization]
-4. Add the token as the `GH_TOKEN` secret, either in the repository settings or
-   the organization settings. The name of this environment variable is
-   configurable.
+4. Add the token as the `GH_WRITE_TOKEN` secret, either in the repository settings or
+   the organization settings.
 
    NOTE: You need to have a paid plan to use organization secrets in private
    repositories.
 5. Pass the secret to the selector job in your workflow.
+   ```yaml
+   jobs:
+     selector: # trigger this on push to main and only when a PR merge.
+       uses: kohirens/version-release/.github/workflows/selector.yml
+       name: workflow-selector
+       secrets:
+         github_write_token: ${{ secrets.GH_WRITE_TOKEN }}
+   ```
 
    ![Passing secrets to job step](/docs/assets/passing-secrets.png)
 6. Example curl test:
    ```shell
-   curl -i -H "Authorization: Bearer ${GH_TOKEN}" https://api.github.com/repos/blast-zone/pulls
+   curl -i -H "Authorization: Bearer ${GH_WRITE_TOKEN}" https://api.github.com/repos/blast-zone/pulls
    ```
 
 NOTE: Even though were running GitHub Actions which will automatically generate

@@ -3,12 +3,13 @@
 has_release() {
     owner_slash_repo="${1}"
     semver_tag="${2}"
+    gh_token="${3}"
 
     http_code=$(curl -kL \
         --show-error \
         --silent \
         -H "Accept: application/vnd.github+json" \
-        -H "Authorization: Bearer ${GH_TOKEN}" \
+        -H "Authorization: Bearer ${gh_token}" \
         -H "X-GitHub-Api-Version: 2022-11-28" \
         --url "https://api.github.com/repos/${owner_slash_repo}/releases/tags/${semver_tag}" \
         --output /dev/null \
@@ -47,7 +48,7 @@ if [ "${0#*"${ORB_TEST_ENV}"}" = "$0" ]; then
         exit 1
     fi
 
-    result="$(has_release "${PARAM_OWNER_SLASH_REPO}" "${semver}")"
+    result="$(has_release "${PARAM_OWNER_SLASH_REPO}" "${semver}" "${!PARAM_GITHUB_WRITE_TOKEN_VAR}")"
 
     echo "has_release result: \"${result}\""
 
