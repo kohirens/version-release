@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/kohirens/stdlib/log"
 	"io"
 	"time"
 )
