@@ -14,7 +14,7 @@ description: |2
   Required Environment Variables:
 
     * CIRCLE_TOKEN
-    * GH_TOKEN
+    * GH_WRITE_TOKEN
 
 usage:
   version: 2.1
@@ -25,7 +25,7 @@ usage:
   parameters:
     ctx_auto_release:
       default: "auto-release-vars"
-      description: Release automation secrets CIRCLE_TOKEN and GH_TOKEN
+      description: Release automation secrets, such as, CIRCLE_TOKEN and GH_WRITE_TOKEN
       type: string
     ssh_finger:
       description: Fingerprint of an SSH key to allow writing back to the repo.

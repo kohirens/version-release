@@ -35,10 +35,6 @@ parameters:
     default: "VERSION_RELEASE_IMAGE"
     description: Version of the executor image to pull.
     type: string
-  github_token_var:
-    default: GH_TOKEN
-    description: Name of the environment variable holding the GitHub API token.
-    type: env_var_name
   github_api_url:
     default: "https://api.github.com"
     description: Github API URL.

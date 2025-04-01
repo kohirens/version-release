@@ -23,10 +23,6 @@ parameters:
     default: "has-release.txt"
     description: File containing the response for checking if the release was found or not.
     type: string
-  github_token_var:
-    default: GH_TOKEN
-    description: Name of the environment variable holding the GitHub API token.
-    type: env_var_name
   owner:
       description: GitHub organization containing the repository to check.
       type: string

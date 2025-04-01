@@ -22,10 +22,6 @@ parameters:
     default: "VERSION_RELEASE_IMAGE"
     description: Version of the executor image to pull.
     type: string
-  gh_token_var:
-    default: GH_WRITE_TOKEN
-    description: Name of the environment variable holding the GitHub API write token.
-    type: env_var_name
   github_api_url:
     default: "https://api.github.com"
     description: Github API URL.
@@ -90,7 +86,6 @@ steps:
   - run:
       environment:
         GITHUB_API_URL: "<< parameters.github_api_url >>"
-        PARAM_GH_WRITE_TOKEN_VAR: "<< parameters.gh_token_var >>"
         PARAM_MAIN_TRUNK_BRANCH: "<< parameters.main_trunk_branch >>"
         PARAM_TAG_CMD: "<< parameters.tag_cmd >>"
         PARAM_TAG_ENV_VAR: "<< parameters.tag_env_var >>"
