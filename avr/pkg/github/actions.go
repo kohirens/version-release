@@ -2,7 +2,6 @@ package github
 
 import (
 	"fmt"
-	"github.com/kohirens/stdlib/log"
 	"os"
 )
 
@@ -43,7 +42,7 @@ func DumpOutput() error {
 		return fmt.Errorf(stderr.ReadFile, outFile, e1)
 	}
 
-	log.Dbugf(stdout.GitHubOutputsFile, outFile, string(contents))
+	Log.Dbugf(stdout.GitHubOutputsFile, outFile, string(contents))
 
 	return nil
 }
