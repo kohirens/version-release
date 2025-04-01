@@ -109,7 +109,7 @@ func (gh *Client) TagAndRelease(branch, tag string) (*ReleasesResponse, error) {
 		return nil, fmt.Errorf(stderr.CouldNotJsonEncode, body, err1.Error())
 	}
 
-	log.Logf("attempting to publish release %v to %v\n", tag, uri)
+	Log.Logf("attempting to publish release %v to %v\n", tag, uri)
 
 	res, err2 := gh.Send(uri, "POST", bytes.NewReader(bodyBits))
 	if err2 != nil {

@@ -3,7 +3,6 @@ package github
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/kohirens/stdlib/log"
 	"github.com/kohirens/version-release/avr/pkg/git"
 	"io"
 	"net/http"

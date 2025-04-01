@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/kohirens/stdlib/log"
 	"io"
 	"time"
 )
@@ -258,7 +257,7 @@ func (gh *Client) MergePullRequest(prNumber int, mergeMethod string) (*PullReque
 		return nil, fmt.Errorf(stderr.CouldNotJsonEncode, body, err1.Error())
 	}
 
-	log.Logf(stdout.SendMergeRequest, uri)
+	Log.Logf(stdout.SendMergeRequest, uri)
 
 	res, err2 := gh.Send(uri, "PUT", bytes.NewReader(bodyBits))
 	if err2 != nil {
@@ -286,7 +285,7 @@ func (gh *Client) MergePullRequest(prNumber int, mergeMethod string) (*PullReque
 // OpenPullRequest Opens a pull request against the base branch.
 // gh pr create --base "${PARAM_MAIN_TRUNK_BRANCH}" --head "${GEN_BRANCH_NAME}" --fill
 func (gh *Client) OpenPullRequest(base, branch, title, summary string) (*PullRequest, error) {
-	log.Dbugf("host: %v\nrepository: %v", gh.Host, gh.Repository)
+	Log.Dbugf("host: %v\nrepository: %v", gh.Host, gh.Repository)
 	uri := fmt.Sprintf(epPulls, gh.Host, gh.Repository)
 	body := &PullRequestBody{
 		Base:  base,
@@ -300,7 +299,7 @@ func (gh *Client) OpenPullRequest(base, branch, title, summary string) (*PullReq
 		return nil, fmt.Errorf(stderr.CouldNotJsonEncode, body, err1.Error())
 	}
 
-	log.Logf(stdout.MakePullRequest, uri)
+	Log.Logf(stdout.MakePullRequest, uri)
 
 	res, err2 := gh.Send(uri, "POST", bytes.NewReader(bodyBits))
 	if err2 != nil {
@@ -327,7 +326,7 @@ func (gh *Client) OpenPullRequest(base, branch, title, summary string) (*PullReq
 		return nil, fmt.Errorf(stderr.CouldNotJsonDecode, err4.Error())
 	}
 
-	log.Logf(stdout.PullRequestMade, pr.Number)
+	Log.Logf(stdout.PullRequestMade, pr.Number)
 
 	return pr, nil
 }
