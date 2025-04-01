@@ -111,17 +111,25 @@ func (gh *Client) PublishChangelog(wd, branch, header, msgBody, footer string, f
 		return e
 	}
 
+	newUrl := fmt.Sprintf("https://x-access-token:%v@github.com/%v", gh.Token, gh.Repository)
+	Log.Infof(stdout.GitUrl, newUrl)
+
+	// Set the URL using the token so we can write to the repo
+	if e := git.RemoteSetUrl(wd, "origin", newUrl, ""); e != nil {
+		return e
+	}
+
 	if e := git.Push(wd, "origin", GenBranchName); e != nil {
 		return e
 	}
 
-	pr, err1 := gh.OpenPullRequest(branch, GenBranchName, header, msgBody+"\n"+footer)
-	if err1 != nil {
-		return err1
+	pr, e1 := gh.OpenPullRequest(branch, GenBranchName, header, msgBody+"\n"+footer)
+	if e1 != nil {
+		return e1
 	}
-	merge, err2 := gh.MergePullRequest(pr.Number, gh.MergeMethod)
-	if err2 != nil {
-		return err2
+	merge, e2 := gh.MergePullRequest(pr.Number, gh.MergeMethod)
+	if e2 != nil {
+		return e2
 	}
 
 	if merge.Merged {
