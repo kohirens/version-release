@@ -3,13 +3,13 @@
 has_release() {
     owner_slash_repo="${1}"
     semver_tag="${2}"
-    gh_token="${3}"
+    gh_write_token="${3}"
 
     http_code=$(curl -kL \
         --show-error \
         --silent \
         -H "Accept: application/vnd.github+json" \
-        -H "Authorization: Bearer ${gh_token}" \
+        -H "Authorization: Bearer ${gh_write_token}" \
         -H "X-GitHub-Api-Version: 2022-11-28" \
         --url "https://api.github.com/repos/${owner_slash_repo}/releases/tags/${semver_tag}" \
         --output /dev/null \

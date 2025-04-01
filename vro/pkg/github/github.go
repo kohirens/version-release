@@ -13,7 +13,7 @@ import (
 
 const (
 	EnvMergeType = "PARAM_MERGE_TYPE"
-	EnvToken     = "GH_TOKEN"
+	EnvToken     = "GH_WRITE_TOKEN"
 	EnvServer    = "PARAM_GH_SERVER"
 )
 

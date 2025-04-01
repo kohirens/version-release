@@ -74,7 +74,7 @@ release.
      Pull requests Access: Read and Write
    ```
 7. Go to CircleCI and go to your Org Context and save in the context as
-   `GH_TOKEN`.
+   `GH_WRITE_TOKEN`.
 
 NOTE: Without these certain parts of the jobs may fail.
 
@@ -85,9 +85,9 @@ You will also need a CircleCI Token for accessing the API to trigger workflows.
 1. Go to your "User Settings" and then select "Personal API Tokens".
 2. Click the "Create New Token" button and save it as "CircleCI Automated
    Releases" (or give it any name you like).
-3. Save the token as `CIRCLE_TOKEN` in the same context as the GH_TOKEN.
+3. Save the token as `CIRCLE_TOKEN` in the same context as the GH_WRITE_TOKEN.
 
-NOTE: `GH_TOKEN` and `CIRCLE_TOKEN` can be given different names. You will
+NOTE: `GH_WRITE_TOKEN` and `CIRCLE_TOKEN` can be given different names. You will
 need to update the parameters in the jobs to look for the names you give them in
 the context or environment. See [this orbs docs] for details.
 
