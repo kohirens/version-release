@@ -281,7 +281,7 @@ func Log(wd, refId string) string {
 // Push Pushes changes to an origin.
 // git push origin <branch_name>
 func Push(wd, origin, branch string) error {
-	status, se, _, _ := cli.RunCommand(
+	status, se, _, cmdStr := cli.RunCommand(
 		wd,
 		cmdGit,
 		[]string{"push", origin, branch},
