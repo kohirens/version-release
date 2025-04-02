@@ -34,7 +34,8 @@ func captureRequestInfo(prefix string, r *http.Request) {
 	}
 
 	//build a filename based on the url path
-	name := fmt.Sprintf("%s/tmp/%s", serverDir, strings.Replace(prefix, "/", "-", -1))
+	name := cacheDir + "/" + strings.Replace(prefix, "/", "-", -1)
+	log.Dbugf("capture request info into %v", name)
 
 	headers := getHeadersAsString(r.Header)
 
@@ -86,6 +87,11 @@ func load404Page(tFile string, w http.ResponseWriter, vars *tmplVars) {
 }
 
 func logToFile(filename string, line string) {
+	dirname := filepath.Dir(filename)
+	if os.MkdirAll(dirname, 0755) != nil {
+		log.Errf("could not create dir: %v", dirname)
+	}
+
 	f, e1 := os.OpenFile(filename, os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0774)
 	if e1 != nil {
 		log.Logf(e1.Error())

@@ -1,6 +1,7 @@
 # Directories
 # -----------
 /.idea/
+/avr/cache/
 /avr/mock-server/request/
 /avr/mock-server/*.log
 /avr/mock-server/ssl/

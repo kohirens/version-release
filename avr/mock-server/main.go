@@ -15,13 +15,10 @@ import (
 
 var (
 	serverDir = abs("mock-server")
+	cacheDir  = abs("cache")
 )
 
 func main() {
-	handlers := &Handlers{
-		"/": LoadMock,
-	}
-
 	// Set the logging level via an environment variable.
 	vl, vlFound := os.LookupEnv("VERBOSITY_LEVEL")
 	if vlFound {
@@ -30,16 +27,17 @@ func main() {
 	}
 
 	// Register HTTP request handlers
-	for endpoint, handler := range *handlers {
-		http.HandleFunc(endpoint, handler)
-	}
+	handler := http.NewServeMux()
+	handler.HandleFunc("/", LoadMock)
+	handler.HandleFunc("/{owner}/{repo}/info/refs", gitHttpBackendProxy)
+	handler.HandleFunc("/{owner}/{repo}/git-receive-pack", gitHttpBackendProxy)
 
 	// run the web server
 	mainErr := http.ListenAndServeTLS(
 		":443",
 		"mock-server/ssl/certs/ca-cert-mock-server-CA.pem",
 		"mock-server/ssl/private/mock-server-server.key",
-		nil,
+		handler,
 	)
 
 	if mainErr != nil {
@@ -58,8 +56,11 @@ func LoadMock(w http.ResponseWriter, r *http.Request) {
 		},
 	}
 	mock := "does-not-exist.json"
+	log.Infof("r.URL.Path = %v", r.URL.Path)
+	// used this to capture the request for developing mocks for new request that have not been handled.
+	captureRequestInfo(r.URL.Path, r)
 
-	logToFile(serverDir+"/request-access.log", r.URL.String()+" : "+r.URL.RawQuery)
+	logToFile(cacheDir+"/request/access.log", r.URL.String()+" : "+r.URL.RawQuery)
 
 	switch r.URL.Path {
 	case "/":
@@ -94,23 +95,21 @@ func LoadMock(w http.ResponseWriter, r *http.Request) {
 		vars.Data["Mock"] = mock
 	case "/kohirens/repo-01/info/refs":
 		// Setup fixture
-		fixedRepo := "tmp/repo-01"
+		fixedRepo := gitRoot + "/kohirens/repo-01"
 		if fsio.Exist(fixedRepo) {
 			if e := os.RemoveAll(fixedRepo); e != nil {
 				log.Logf("could not remove %s: %s", fixedRepo, e.Error())
 			}
 		}
-		git.CloneFromBundle("repo-01", "tmp", "testdata", "/")
+		git.CloneFromBundle("repo-01", gitRoot, "testdata", "/")
 
-		//captureRequestInfo("request-repo-01/git-receive-pack", r)
-		if e := gitHttpBackend(w, r, []string{}, tmpDir); e != nil {
+		if e := gitHttpBackend(w, r); e != nil {
 			log.Logf("%s", e.Error())
 		}
 
 		return
 	case "/kohirens/repo-01/git-receive-pack":
-		//captureRequestInfo("/kohirens/repo-01/git-receive-pack", r)
-		if e := gitHttpBackend(w, r, []string{"tmp/repo-01"}, tmpDir); e != nil {
+		if e := gitHttpBackend(w, r); e != nil {
 			log.Logf("%s", e.Error())
 		}
 
@@ -148,20 +147,6 @@ func LoadMock(w http.ResponseWriter, r *http.Request) {
 			w.WriteHeader(http.StatusOK)
 		}
 		vars.Data["Mock"] = mock
-	case "/kohirens/version-release/info/refs":
-		unbundleRepo("version-release")
-		captureRequestInfo(r.URL.Path, r)
-		if e := gitHttpBackend(w, r, []string{}, tmpDir); e != nil {
-			log.Logf("%s", e.Error())
-		}
-		return
-	case "/kohirens/version-release/git-receive-pack":
-		//captureRequestInfo("/kohirens/repo-01/git-receive-pack", r)
-		if e := gitHttpBackend(w, r, []string{"tmp/version-release"}, tmpDir); e != nil {
-			log.Logf("%s", e.Error())
-		}
-
-		return
 	}
 
 	log.Infof(Stdout.LoadingFile, "JSON", mock)
@@ -169,7 +154,28 @@ func LoadMock(w http.ResponseWriter, r *http.Request) {
 	tFile := serverDir + "/responses/" + mock
 	if e := loadTemplate(tFile, w, vars); e != nil {
 		log.Errf(e.Error())
-		logToFile(serverDir+"/request-404.log", r.URL.String())
-		load404Page(serverDir+"/responses/not-found.json", w, vars)
+		logToFile(cacheDir+"/request/404.log", r.URL.String())
+		load404Page(cacheDir+"/responses/not-found.json", w, vars)
 	}
+}
+
+// gitHttpBackendProxy the http.HandleFunc that proxies request through git http-backend.
+// For more details about git http-backend, see https://git-scm.com/docs/git-http-backend
+func gitHttpBackendProxy(w http.ResponseWriter, r *http.Request) {
+	log.Infof("\ngit http-backend proxy begin")
+	owner := r.PathValue("owner")
+	repo := r.PathValue("repo")
+
+	// used this to capture the request for developing mocks for new request that have not been handled.
+	captureRequestInfo(r.URL.Path, r)
+
+	log.Infof("r.URL.Path = %v", r.URL.Path)
+
+	unbundleRepo(repo, owner)
+
+	if e := gitHttpBackend(w, r); e != nil {
+		log.Logf(e.Error())
+	}
+
+	log.Infof("git http-backend proxy end\n")
 }
