@@ -27,7 +27,7 @@ RUN echo "https://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repo
  && rm -vrf /var/cache/apk/* \
  && cp /usr/share/zoneinfo/America/Detroit /etc/localtime
 
-HEALTHCHECK --interval=5s --timeout=3s \
+HEALTHCHECK --interval=60s --timeout=3s \
   CMD curl -f https://127.0.0.1/ || exit 1
 
 COPY --chmod=755 .docker/mock-server/start.sh /usr/local/bin
@@ -43,8 +43,6 @@ RUN mkdir -p ~/bin ~/src
 
 ENV PATH=${PATH}:/root/bin
 
-COPY --from=kohirens/git-tool-belt:2.1.2 /usr/local/bin/git-tool-belt /usr/local/bin
-
 COPY --chmod=755 .docker/mock-server/gen-ss-cert.sh /usr/local/bin/
 COPY .docker/.gitconfig /root
 
@@ -53,19 +51,6 @@ RUN chmod 755 /usr/local/bin/gen-ss-cert.sh \
     --sans="DNS:github.com, DNS:*.github.com, DNS:*.circleci.com" \
     --out-dir="./ssl" \
     "circleci.com"
-
-COPY vro/testdata/repo-01.bundle /root/testdata
-COPY vro/ /root/src/${REPO}/vro/
-
-WORKDIR "/root/src/${REPO}/vro"
-
-# Build the mock server app
-RUN cd mock-server \
- && mkdir -p request tmp \
- && go mod tidy \
- && go generate \
- && go build \
- && go install
 
 COPY avr/testdata/repo-01.bundle /tmp/testdata/repo-01.bundle
 COPY avr /root/src/${REPO}/avr/

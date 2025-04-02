@@ -48,8 +48,6 @@ func TestClient_PublishChangelog(t *testing.T) {
 				Host:        "https://api.github.com",
 			}
 			repo := git.CloneFromBundle(tt.bundle, "tmp", "testdata", ps)
-			oldUrl, _ := vgit.RemoteGetUrl(repo, "origin")
-			_ = vgit.RemoteSetUrl(repo, "origin", "https://github.com/kohirens/repo-01", oldUrl)
 			_ = os.WriteFile(repo+ps+"CHANGELOG.md", []byte("[1.0.0] - 2024-06-14\n\n### Added\n\n- README.md"), 0664)
 			_ = vgit.StageFiles(repo, "CHANGELOG.md")
 
