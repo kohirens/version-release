@@ -48,6 +48,7 @@ services:
         volumes:
             - ./mock-server/.ash_history:/root/.ash_history
             - ../avr/mock-server/tmp/:/root/src/github.com/kohirens/version-release/avr/mock-server/tmp/
+            - ../avr/cache/:/root/src/github.com/kohirens/version-release/avr/cache/
 
 volumes:
     vscode: null

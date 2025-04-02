@@ -112,13 +112,15 @@ func (gh *Client) PublishChangelog(wd, branch, header, msgBody, footer string, f
 
 	oldUrl, _ := git.RemoteGetUrl(wd, "origin")
 	newUrl := fmt.Sprintf("https://x-access-token:%v@github.com/%v", gh.Token, gh.Repository)
-	Log.Infof(stdout.GitUrl, oldUrl)
-	Log.Infof(stdout.GitUrl, newUrl)
+	Log.Dbugf(stdout.GitOldUrl, oldUrl)
+	Log.Dbugf(stdout.GitUrl, newUrl)
 
 	// Set the URL using the token so we can write to the repo
 	if e := git.RemoteSetUrl(wd, "origin", newUrl, oldUrl); e != nil {
 		return e
 	}
+
+	// Push the new branch with the updated changelog.
 	if e := git.Push(wd, "origin", GenBranchName); e != nil {
 		return e
 	}

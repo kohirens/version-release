@@ -1,9 +1,8 @@
 package main
 
 import (
-	git2 "github.com/kohirens/stdlib/git"
+	"github.com/kohirens/stdlib/git"
 	"net/http"
-	"os"
 	"testing"
 )
 
@@ -21,7 +20,7 @@ func TestIsChangelogCurrent(t *testing.T) {
 	}
 	for _, c := range cases {
 		t.Run(c.name, func(t *testing.T) {
-			repo := git2.CloneFromBundle(c.bundle, tmpDir, fixtureDir, ps)
+			repo := git.CloneFromBundle(c.bundle, tmpDir, fixtureDir, ps)
 			got, _, err := isChangelogCurrent(repo, c.chgLogFile)
 
 			if (err != nil) != c.wantErr {
@@ -37,33 +36,27 @@ func TestIsChangelogCurrent(t *testing.T) {
 	}
 }
 
-// Ensure the publish changelog works as advertised.
-func TestPublishChangelog(t *testing.T) {
-	ghcFixture, _ := newGitHubClient(&http.Client{})
+// Ensure the publishing a changelog works as advertised.
+func TestPublishChangelog(runner *testing.T) {
 	cases := []struct {
 		name       string
 		bundle     string
 		chgLogFile string
 		branch     string
 		semVer     string
-		ghc        GithubClient
 		wantErr    bool
 	}{
-		{"successful", "repo-no-releases", "CHANGELOG.md", "main", "0.1.0", ghcFixture, false},
+		{"successful", "repo-no-releases", "CHANGELOG.md", "main", "0.1.0", false},
 	}
 	for _, c := range cases {
-		t.Run(c.name, func(t *testing.T) {
-			ogVal, ok := os.LookupEnv("CIRCLE_PROJECT_REPONAME")
-			if ok {
-				defer os.Setenv("CIRCLE_PROJECT_REPONAME", ogVal)
-			} else {
-				defer os.Unsetenv("CIRCLE_PROJECT_REPONAME")
-			}
-			os.Setenv("CIRCLE_PROJECT_REPONAME", "repo-01")
-			repo := git2.CloneFromBundle(c.bundle, tmpDir, fixtureDir, ps)
+		runner.Run(c.name, func(t *testing.T) {
+			t.Setenv("CIRCLE_PROJECT_REPONAME", c.bundle)
+			ghcFixture, _ := newGitHubClient(&http.Client{})
+			repo := git.CloneFromBundle(c.bundle, tmpDir, fixtureDir, ps)
 
-			if err := PublishChangelog(repo, c.chgLogFile, c.branch, c.semVer, c.ghc); (err != nil) != c.wantErr {
+			if err := PublishChangelog(repo, c.chgLogFile, c.branch, c.semVer, ghcFixture); (err != nil) != c.wantErr {
 				t.Errorf("PublishChangelog() error = %v, wantErr %v", err, c.wantErr)
+				return
 			}
 		})
 	}
