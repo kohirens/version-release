@@ -8,10 +8,10 @@ At this time only the container environment is supported out-of-the-box for
 developing locally. The tests require reaching out to __*circleci.com__ and
 __*github.com__. The container is configured with these host names so request do
 not reach the internet and mock services respond with canned responses. Review
-the `.docker/compose.yml` and code in the `vro/mock-server` directories to see
-how that is accomplished.
+the `.docker/compose.yml` and code in the `avr/mock-server` directories to see
+how that is accomplished. To spin up the environment run:
 
-`docker compose -f .docker/compose.yml up`
+`docker compose up`
 
 There will be 2 container running, but you will only run the test in the
 __version-release-web-1__ container. This is the container with the pseudo

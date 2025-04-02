@@ -29,7 +29,6 @@ services:
             VERBOSITY_LEVEL: 6
         env_file:
             - mock-server/integration-test.env
-
         develop:
             watch:
                 - action: rebuild
@@ -48,6 +47,7 @@ services:
                     - api.github.com
         volumes:
             - ./mock-server/.ash_history:/root/.ash_history
+            - ../avr/mock-server/tmp/:/root/src/github.com/kohirens/version-release/avr/mock-server/tmp/
 
 volumes:
     vscode: null
