@@ -1,2 +1,5 @@
 [safe]
         directory = *
+
+[init]
+        defaultBranch = main

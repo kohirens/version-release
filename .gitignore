@@ -1,5 +1,6 @@
 # Directories
 # -----------
+/.docker/ssl
 /.idea/
 /avr/cache/
 /avr/mock-server/request/

@@ -1,5 +1,7 @@
 # MockServer
 
+Please also see previous notes on this topic at Mock Server Container [README].
+
 There's a lot going on here. We are attempting to mock GitHub.com, CircleCI.com,
 and Git CLI remote responses. For CircleCI.com and GitHub.com APIs we can simply
 capture responses and modify them suit our needs.
@@ -18,3 +20,7 @@ responses.
 3. Run the avr application tests in this container.
 4. Modify responses to suit test needs trying to make them as accurate as
 possible.
+
+---
+
+[README]: /.docker/mock-server/README.md

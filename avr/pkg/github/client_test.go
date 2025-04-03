@@ -31,19 +31,17 @@ func TestClient_PublishChangelog(t *testing.T) {
 		files   []string
 		wantErr bool
 	}{
-		{"success", "repo-commit-message", "main", "auto: Release 1.0.0", "## Added README.md", []string{"CHANGELOG.md"}, false},
+		{"success", "github-repo-commit-message", "main", "auto: Release 1.0.0", "## Added README.md", []string{"CHANGELOG.md"}, false},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-
-			//gh := github.NewClient("https://github.com/kohirens/repo-01", "fakegithubtoken", "github.com", mockClient)
 			gh := &Client{
 				Client: &http.Client{
 					Timeout: 5 * time.Second,
 				},
 				Domain:      "github.com",
 				MergeMethod: "rebase",
-				Repository:  "kohirens/repo-01",
+				Repository:  "kohirens/" + tt.bundle,
 				Token:       "fakegithubtoken",
 				Host:        "https://api.github.com",
 			}

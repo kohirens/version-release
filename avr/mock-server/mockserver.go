@@ -1,11 +1,5 @@
 package main
 
-import "net/http"
-
-const tmpDir = "tmp"
-
-type Handlers map[string]func(w http.ResponseWriter, r *http.Request)
-
 type Parameters struct {
 	TriggeredFlow string `json:"triggered_flow"`
 }

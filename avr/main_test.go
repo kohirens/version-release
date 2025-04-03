@@ -69,7 +69,7 @@ func TestCallingMain(tester *testing.T) {
 
 // Will trigger the workflow to publish the changelog.
 func TestWorkflowSelector_PublishChangelog(runner *testing.T) {
-	repo := git2.CloneFromBundle("repo-01", tmpDir, fixtureDir, ps)
+	repo := git2.CloneFromBundle("test-workflow-selector-publish-chglog", tmpDir, fixtureDir, ps)
 	expectSo := []byte(fmt.Sprintf("trigger workflow %v", publishChgLogWorkflow))
 	// This git commit has changes where the change log needs updating and there is something to tag
 	cases := []struct {
@@ -84,8 +84,7 @@ func TestWorkflowSelector_PublishChangelog(runner *testing.T) {
 
 	for _, c := range cases {
 		runner.Run(c.name, func(t *testing.T) {
-			_ = os.Setenv(circleci.EnvRepoUrl, "git@github.com:kohirens/version-release.git")
-			defer os.Unsetenv(circleci.EnvRepoUrl)
+			t.Setenv(circleci.EnvRepoUrl, fmt.Sprintf("git@github.com:kohirens/test-workflow-selector-publish-chglog.git"))
 			cmd := help.GetTestBinCmd(subEnvVarName, c.args)
 
 			so, _ := help.VerboseSubCmdOut(cmd.CombinedOutput())
@@ -183,17 +182,9 @@ func TestTriggeredPublishChangelogWorkflow(t *testing.T) {
 
 	// This git commit has changes where the change log needs updating
 	fixedArgs := []string{"-wd", repo, "publish-changelog", "CHANGELOG.md"}
-	eru := os.Getenv(circleci.EnvRepoUrl)
-	prn := os.Getenv(circleci.EnvProjectRepoName)
-	pu := os.Getenv(circleci.EnvProjectUsername)
-	_ = os.Setenv(circleci.EnvRepoUrl, "git@github.com:kohirens/version-release.git")
-	_ = os.Setenv(circleci.EnvProjectRepoName, "version-release")
-	_ = os.Setenv(circleci.EnvProjectUsername, "kohirens")
-	defer func() {
-		resetEnv(circleci.EnvRepoUrl, eru)
-		resetEnv(circleci.EnvProjectRepoName, prn)
-		resetEnv(circleci.EnvProjectUsername, pu)
-	}()
+	t.Setenv(circleci.EnvRepoUrl, "git@github.com:kohirens/repo-01.git")
+	t.Setenv(circleci.EnvProjectRepoName, "repo-01")
+	t.Setenv(circleci.EnvProjectUsername, "kohirens")
 
 	// run the test
 	cmd := help.GetTestBinCmd(subEnvVarName, fixedArgs)
