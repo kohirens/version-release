@@ -28,7 +28,7 @@ RUN echo "https://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repo
  && cp /usr/share/zoneinfo/America/Detroit /etc/localtime
 
 HEALTHCHECK --interval=60s --timeout=3s \
-  CMD curl -f https://127.0.0.1/ || exit 1
+  CMD curl -f https://127.0.0.1/health || exit 1
 
 COPY --chmod=755 .docker/mock-server/start.sh /usr/local/bin
 
@@ -52,7 +52,6 @@ RUN chmod 755 /usr/local/bin/gen-ss-cert.sh \
     --out-dir="./ssl" \
     "circleci.com"
 
-COPY avr/testdata/repo-01.bundle /tmp/testdata/repo-01.bundle
 COPY avr /root/src/${REPO}/avr/
 
 # Go build rules require the repo to be in the GOPATH
@@ -66,3 +65,8 @@ RUN cd mock-server \
  && go generate \
  && go build \
  && go install
+
+COPY --chmod=755  .docker/ssl/ /tmp/
+
+RUN cat /tmp/certs/server.pem >> /etc/ssl/certs/ca-certificates.crt \
+ && echo "" >> /etc/ssl/certs/ca-certificates.crt

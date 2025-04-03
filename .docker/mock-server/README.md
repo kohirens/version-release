@@ -6,8 +6,9 @@ The GitHub and CircleCI mocking was not difficult as they are well documented.
 
 Mocking Git response for remote repository fetch and pushes required at least
 a weeks efforts to understand its Protocol and how to generate the correct
-responses. The results is that all request are proxied from a Go server to
-`git http-backend` via environment variables and command line arguments.
+responses. The results are that all request are proxied from a Go server to
+`git http-backend` via environment variables, it does not support command line
+arguments.
 
 These links provided all that I needed to begin to understand how to mock Git
 remote responses to pushes:
@@ -43,7 +44,8 @@ git commands; so that I could test other parts that followed those command, thus
 not reachable any other way during test. Because there is no way to mock a
 package in Go, that I'm aware of. However, I will be able to use this of
 knowledge of mocking git remote responses over many projects. Where it will
-balance out over time.
+balance out over time. Unless I forget where I placed this information. Then
+I will have to learn all over again. Those who forget are doomed to repeat.
 
 ---
 

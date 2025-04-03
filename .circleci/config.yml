@@ -41,16 +41,16 @@ parameters:
         type: string
 
 executors:
-    image-builder:
-        docker: # see https://circleci.com/docs/building-docker-images/#docker-version
-            - image: docker:20.10.18-git
-              auth:
-                  username: ${DH_USER}
-                  password: ${DH_PASS}
-        resource_class: small
+#    image-builder:
+#        docker: # see https://circleci.com/docs/building-docker-images/#docker-version
+#            - image: docker:docker24
+#              auth:
+#                  username: ${DH_USER}
+#                  password: ${DH_PASS}
+#        resource_class: small
     base:
-        docker: # see https://circleci.com/docs/building-docker-images/#docker-version
-            - image: cimg/base:2023.04
+        docker: # see https://circleci.com/developer/images/image/cimg/base#image-tags
+            - image: cimg/base:current
               auth:
                   username: ${DH_USER}
                   password: ${DH_PASS}
@@ -108,7 +108,7 @@ jobs:
                       circleci orb publish --skip-update-check orb.yml << pipeline.parameters.orb_repo >>@${BUILD_VER} --token ${CIRCLE_TOKEN}
 
     integration-test-vr:
-        executor: image-builder
+        executor: base
         environment:
             DOCKER_BUILDKIT: 1
         steps:
@@ -118,6 +118,13 @@ jobs:
             - run:
                   name: "Build mock server tests environment"
                   command: |
+                      sudo apt-get install -y openssl
+                      chmod +x ./.docker/gen-ss-cert.sh
+                      ./.docker/gen-ss-cert.sh --company="mock-server" \
+                        --sans="DNS:github.com, DNS:*.github.com, DNS:*.circleci.com" \
+                        --out-dir="./.docker/ssl" \
+                        "circleci.com"
+                      ls -la ./.docker/ssl
                       docker build --rm -f .docker/mock-server/Dockerfile -t mock-server --progress plain .
             - run:
                   name: "Run tests against mock server environment"

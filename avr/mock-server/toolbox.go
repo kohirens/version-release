@@ -34,7 +34,7 @@ func captureRequestInfo(prefix string, r *http.Request) {
 	}
 
 	//build a filename based on the url path
-	name := cacheDir + "/" + strings.Replace(prefix, "/", "-", -1)
+	name := requestDir + "/" + strings.TrimRight(strings.Replace(prefix, "/", "-", -1), "-") + "-http.txt"
 	log.Dbugf("capture request info into %v", name)
 
 	headers := getHeadersAsString(r.Header)
@@ -46,7 +46,7 @@ func captureRequestInfo(prefix string, r *http.Request) {
 	}
 
 	// build an HTTP request string
-	req := fmt.Sprintf("%v %v\r\n%v\r\n%s\r\n", r.Method, r.URL.String(), headers, bodyBits)
+	req := fmt.Sprintf("%v %v %v\r\nHost: %v\r\n%v\r\n%s\r\n", r.Method, r.URL.String(), r.Proto, r.Host, headers, bodyBits)
 
 	saveFile(name, []byte(req))
 }
@@ -118,10 +118,13 @@ func saveFile(filename string, b []byte) {
 	}
 }
 
+// getHeadersAsString Format headers as a string as they would appear in an HTTP request
 func getHeadersAsString(header http.Header) string {
 	h := ""
 	for k, v := range header {
-		h += fmt.Sprintf("%v: %v\r\n", k, v)
+		for _, vv := range v {
+			h += fmt.Sprintf("%v: %v\r\n", k, vv)
+		}
 	}
 
 	return h
