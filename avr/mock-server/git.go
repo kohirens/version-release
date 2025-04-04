@@ -11,6 +11,7 @@ import (
 	"net/http"
 	"os"
 	"os/exec"
+	"strings"
 )
 
 const gitRoot = "cache/git"
@@ -23,24 +24,6 @@ const gitRoot = "cache/git"
 //
 //	For more details about git http-backend, see https://git-scm.com/docs/git-http-backend
 func gitHttpBackend(w http.ResponseWriter, r *http.Request) error {
-	service := r.URL.Query().Get("service")
-	ct := ""
-
-	if service != "" {
-		ct = fmt.Sprintf("application/x-%v-advertisement", service)
-	}
-
-	switch r.Header.Get("Content-Type") {
-	case "application/x-git-receive-pack-request":
-		ct = "application/x-git-receive-pack-result"
-		service = "git-receive-pack"
-	default:
-
-	}
-
-	log.Dbugf("service = %v", service)
-	log.Dbugf("response Content-Type = %v", ct)
-
 	// configure git http-backend request
 	// See https://git-scm.com/docs/git-http-backend
 	httpBackendInput := map[string]string{ // see https://git-scm.com/docs/git-http-backend#_environment
@@ -57,29 +40,6 @@ func gitHttpBackend(w http.ResponseWriter, r *http.Request) error {
 	}
 
 	log.Dbugf("httpBackendInput: %v", httpBackendInput)
-	// we configure the http-backend request with environment variables that the CGI will read
-	//setEnv(httpBackendInput)
-	//// clear out any http-backend request environment variables.
-	//defer unsetEnv(httpBackendInput)
-
-	//bodyBytes, e1 := io.ReadAll(r.Body)
-	//if e1 != nil {
-	//	return fmt.Errorf("could not read body: %v\n", e1.Error())
-	//}
-
-	//so, se, _, _ := cli.RunCommandWithInput(
-	//	".",
-	//	"git",
-	//	[]string{"http-backend"},
-	//	bodyBytes,
-	//)
-	//so, se, _, _ := cli.RunCommandWithInputAndEnv(
-	//	".",
-	//	"git",
-	//	[]string{"http-backend"},
-	//	bodyBytes,
-	//	httpBackendInput,
-	//)
 
 	outputBuf := new(bytes.Buffer)
 	errBuf := new(bytes.Buffer)
@@ -98,8 +58,9 @@ func gitHttpBackend(w http.ResponseWriter, r *http.Request) error {
 		return fmt.Errorf("problem proxying request through git http-backend: %v", e2.Error())
 	}
 
-	if errBuf != nil {
-		return fmt.Errorf("problem with %v: %v\n", service, errBuf.String())
+	errStr := errBuf.String()
+	if errStr != "" {
+		return fmt.Errorf("problem proxying the request to git-http-backend: %v\n", errStr)
 	}
 
 	so := outputBuf.Bytes()
@@ -109,11 +70,10 @@ func gitHttpBackend(w http.ResponseWriter, r *http.Request) error {
 	// write the http-backend body to the response:
 	bb := bytes.SplitAfter(so, []byte{13, 10, 13, 10})
 
-	// just cheat for now and rebuild the headers; leaving out the expires.
-	w.Header().Set("Content-Type", ct)
-	w.Header().Set("Cache-Control", "no-cache, max-age=0, must-revalidate")
-	w.Header().Set("Pragma", "no-cache")
+	// parse headers returned from git-http-backend and set them in the response
+	parseHeaders(bb[0], w)
 
+	// write the body to the response
 	if _, e := w.Write(bb[1]); e != nil {
 		return fmt.Errorf("%s\n", e.Error())
 	}
@@ -130,6 +90,18 @@ func unbundleRepo(bundle, owner string) {
 		}
 	}
 	git.CloneFromBundle(bundle, cloneToDir, "testdata", "/")
+}
+
+func parseHeaders(headers []byte, w http.ResponseWriter) {
+	headerLines := strings.Split(string(headers), "\r\n")
+	for _, v := range headerLines {
+		if v == "" {
+			continue
+		}
+		header := strings.Split(v, ":")
+		log.Dbugf("header line: %v: %v", header[0], header[1])
+		w.Header().Set(header[0], header[1])
+	}
 }
 
 // RunPipedCommandWithInputAndEnv run an external program in a sub process, with
