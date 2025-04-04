@@ -9,13 +9,19 @@ ${package} - attempt to capture frames
 ${package} [options] application [arguments]
 
 options:
--h, --help        show brief help
---city            specify a city locale (default: Detroit)
---company         specify a city locale (default: Acme)
---ec-type         set the encryption type [rsa, ecdsa]
---sans            specify Subnet Alternative Name(s) in the form: "DNS:domain.com, DNS:domain2.com"
---state=Michigan  specify a state locale (default: Detroit)
---prefix          add an optional prefix to the filenames (ex: myprefix-server.pem), the hyphen will be added.
+-h, --help          show brief help
+--ca-file           specify a CA file which to append the certificate CA (default: /etc/ssl/certs/ca-certificates.crt)
+--city              specify a city locale (default: Detroit)
+--company           specify a company (default: Acme)
+--days              number days until the certificate expires(default: 365)
+--ec-type           set the encryption type [rsa, ecdsa]
+--ec-level          set the encryption level (default: 2048)
+--out-dir           where to save the certificate files, will make sub directories (default: /etc/ssl)
+--prefix            add an optional prefix to the filenames (ex: myprefix-server.pem), the hyphen will be added
+--sans              specify Subnet Alternative Name(s) in the form: "DNS:domain.com, DNS:domain2.com"
+--skip-append-to-ca do not append the certificate to a CA file
+--state=Michigan    specify a state locale (default: Detroit)
+-v                  turn on verbose output
 HDOC
 }
 
@@ -35,29 +41,38 @@ if [ $? -ne 4 ]; then
 fi
 
 # Options with a colon must have a value that follows, those without are just booleans.
-LONG_OPTS=city:,company:,ec-type:,help,sans:,state:,out-dir:
+LONG_OPTS=ca-file:,city:,company:,days,ec-level:,ec-type:,help,out-dir:,prefix:,sans:,skip-append-to-ca,state:
 OPTIONS=h,v
 
 PARSED=$(getopt --options=${OPTIONS} --longoptions=${LONG_OPTS} --name "$0" -- "${@}") || exit 1
 eval set -- "${PARSED}"
 
+
+ca_file='/etc/ssl/certs/ca-certificates.crt'
 city='Detroit'
 company='Acme'
-ec_type='ecdsa'
+days=365
 ec_level=2048
+ec_type='ecdsa'
 out_dir='/etc/ssl'
-package="$(basename "${0}")"
 prefix=''
 sans=''
+skip_append_to_ca='no'
 state='Michigan'
 verbose=''
 
-# See https://stackoverflow.com/a/7069755/419097
+package="$(basename "${0}")"
+
+# Knowledge improved by reading https://stackoverflow.com/a/7069755/419097
 while test $# -gt 0; do
     case "${1}" in
         -h|--help)
             print_help
             exit 0
+            ;;
+        --ca-file)
+            ca_file="${2}"
+            shift 2
             ;;
         --city)
             city="${2}"
@@ -65,6 +80,10 @@ while test $# -gt 0; do
             ;;
         --company)
             company="${2}"
+            shift 2
+            ;;
+        --days)
+            days="${2}"
             shift 2
             ;;
         --ec-type)
@@ -78,6 +97,10 @@ while test $# -gt 0; do
         --sans)
             sans="${2}"
             shift 2
+            ;;
+        --skip-append-to-ca)
+            skip_append_to_ca="yes"
+            shift
             ;;
         --state)
             state="${2}"
@@ -102,20 +125,24 @@ done
 
 if [ "${verbose}" = "true" ]; then
     echo "configuration:"
+    echo "\tca_file=${ca_file}"
     echo "\tcity=${city}"
     echo "\tcompany=${company}"
+    echo "\tdays=${days}"
     echo "\tec-type=${ec_type}"
+    echo "\tec-level=${ec_level}"
+    echo "\tout-dir=${out_dir}"
     echo "\tpackage=${package}"
     echo "\tprefix=${prefix}"
     echo "\tsans=${sans}"
+    echo "\tskip-append-to-ca=${skip_append_to_ca}"
     echo "\tstate=${state}"
     echo "\tverbose=${verbose}"
-    echo "\tout-dir=${out_dir}"
 fi
-common_name="${1}"
 
+common_name="${1}"
 if [ -z "${common_name}" ]; then
-    echo "please enter the Common Name for the certificate as the first argument"
+    echo "please enter the Common Name for the certificate as the first and only argument"
     exit 1
 fi
 
@@ -124,18 +151,19 @@ if [ -n "${prefix}" ]; then
   prefix="${prefix}-"
 fi
 
-ROOT_CA_KEY="${out_dir}/private/${prefix}Root-CA.key"``
+ROOT_CA_KEY="${out_dir}/private/${prefix}Root-CA.key"
 ROOT_CA_CRT="${out_dir}/certs/${prefix}Root-CA.pem"
+
 SRV_KEY="${out_dir}/private/${prefix}server.key"
 SRV_CSR="${out_dir}/certs/${prefix}server.csr"
 SRV_CERT="${out_dir}/certs/${prefix}server.pem"
 
-OS_CA_FILE="/etc/ssl/certs/ca-certificates.crt"
+CA_FILE="${ca_file}"
 
 SUBJ="/C=US/ST=${state}/L=${city}/O=${company}, Inc/OU=Team Ultra/CN=${common_name}"
 CA_SUBJ="/C=US/ST=${state}/L=${city}/O=${company}, LLC/CN=${company} Root CA"
 SANS="subjectAltName = ${sans}"
-DAYS=365
+DAYS=${days}
 EC_LEVEL="${ec_level}"
 
 echo  "set up the output directories ${out_dir}"
@@ -242,11 +270,12 @@ if [ "${verbose}" = "true" ]; then
     openssl x509 -in "${SRV_CERT}" -text -noout
 fi
 
-# Add the cert to the OS chain, which prevent curl SSL errors inside the
-# container. Not necessary, but cool to use -v and see cURL succeed.
-echo "add new self-signed certificate to the OS chain of certificates"
-cat "${SRV_CERT}" >> "${OS_CA_FILE}"
-echo "" >> "${OS_CA_FILE}"
+if [ "${skip_append_to_ca}" = "no" ]; then
+    # Append the certificate to a chain
+    echo "add new self-signed certificate to the ${ca_file} chain of certificates"
+    cat "${SRV_CERT}" >> "${CA_FILE}"
+    echo "" >> "${CA_FILE}"
+fi
 
 if [ "${verbose}" = "true" ]; then
     ls -la "${SRV_CERT}"

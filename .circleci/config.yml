@@ -123,6 +123,7 @@ jobs:
                       ./.docker/gen-ss-cert.sh --company="mock-server" \
                         --sans="DNS:github.com, DNS:*.github.com, DNS:*.circleci.com" \
                         --out-dir="./.docker/ssl" \
+                        --skip-append-to-ca -v \
                         "circleci.com"
                       ls -la ./.docker/ssl
                       docker build --rm -f .docker/mock-server/Dockerfile -t mock-server --progress plain .
