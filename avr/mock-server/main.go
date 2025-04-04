@@ -33,9 +33,7 @@ func main() {
 	handler.HandleFunc("api.circleci.com/", mockCircleCi)
 	handler.HandleFunc("circleci.com/", mockCircleCi)
 	handler.HandleFunc("/health", healthCheck)
-	handler.HandleFunc("/{owner}/{repo}/info/refs", gitHttpBackendProxy)
-	handler.HandleFunc("/{owner}/{repo}/git-receive-pack", gitHttpBackendProxy)
-	handler.HandleFunc("/{owner}/{repo}/HEAD", gitHttpBackendProxy)
+	handler.HandleFunc("github.com/{owner}/{repo}/", gitHttpBackendProxy)
 	handler.HandleFunc("api.github.com/repos/{owner}/{repo}/", mockGitHubApi)
 
 	// run the web server
@@ -108,6 +106,7 @@ func gitHttpBackendProxy(w http.ResponseWriter, r *http.Request) {
 	repo := r.PathValue("repo")
 
 	log.Infof("r.URL.Path = %v", r.URL.Path)
+	logToFile(cacheDir+"/request/access.log", r.URL.String()+" : "+r.URL.RawQuery)
 
 	unbundleRepo(repo, owner)
 

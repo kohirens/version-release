@@ -73,9 +73,11 @@ func gitHttpBackend(w http.ResponseWriter, r *http.Request) error {
 	// parse headers returned from git-http-backend and set them in the response
 	parseHeaders(bb[0], w)
 
-	// write the body to the response
-	if _, e := w.Write(bb[1]); e != nil {
-		return fmt.Errorf("%s\n", e.Error())
+	if strings.ToUpper(r.Method) != "HEAD" && len(bytes.TrimSpace(bb[1])) > 0 {
+		// write the body to the response
+		if _, e := w.Write(bb[1]); e != nil {
+			return fmt.Errorf("%s\n", e.Error())
+		}
 	}
 
 	return nil
