@@ -107,9 +107,6 @@ func gitHttpBackendProxy(w http.ResponseWriter, r *http.Request) {
 	owner := r.PathValue("owner")
 	repo := r.PathValue("repo")
 
-	// used this to capture the request for developing mocks for new request that have not been handled.
-	captureRequestInfo(r.URL.Path, r)
-
 	log.Infof("r.URL.Path = %v", r.URL.Path)
 
 	unbundleRepo(repo, owner)

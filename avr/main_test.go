@@ -142,8 +142,7 @@ func TestWorkflowSelector_TagRelease(runner *testing.T) {
 }
 
 func TestTriggeredPublishReleaseTagWorkflow(t *testing.T) {
-	_ = os.Setenv(circleci.EnvRepoUrl, "git@github.com:kohirens/version-release.git")
-	defer os.Unsetenv(circleci.EnvRepoUrl)
+	t.Setenv(circleci.EnvRepoUrl, "git@github.com:kohirens/repo-03.git")
 
 	wantCode := 1
 
@@ -161,15 +160,6 @@ func TestTriggeredPublishReleaseTagWorkflow(t *testing.T) {
 	if got != wantCode {
 		t.Errorf("got %d, want %d", got, wantCode)
 	}
-}
-
-func resetEnv(name, value string) {
-	if value != "" {
-		_ = os.Setenv(name, value)
-		return
-	}
-
-	_ = os.Unsetenv(name)
 }
 
 // Should pick the workflow to publish a release tag
@@ -232,8 +222,7 @@ func TestTriggerPipeline_NoChangelogOrTaggableChanges(t *testing.T) {
 }
 
 func TestPublishReleaseTagWorkflows(t *testing.T) {
-	_ = os.Setenv(circleci.EnvRepoUrl, "git@github.com:kohirens/version-release.git")
-	defer os.Unsetenv(circleci.EnvRepoUrl)
+	t.Setenv(circleci.EnvRepoUrl, "git@github.com:kohirens/version-release.git")
 
 	fixedArgs := []string{"-wd", "", "publish-release-tag"}
 	ghFixedArgs := []string{"-wd", "", "-cicd", "github", "publish-release-tag"}
