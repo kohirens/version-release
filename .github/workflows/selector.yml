@@ -39,6 +39,8 @@ jobs:
               with:
                  exec_img_tag: ${{ inputs.exec_img_tag }}
     publish-changelog:
+        permissions:
+            contents: write
         if: ${{ needs.select-a-workflow.outputs.workflow == 'publish-changelog' }}
         runs-on: ubuntu-latest
         name: Publish changelog workflow
