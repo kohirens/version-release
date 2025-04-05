@@ -43,11 +43,6 @@ parameters:
     default: "main"
     description: Name of the main trunk branch to tag.
     type: string
-  ssh_finger:
-    description: |2
-      Fingerprint of an SSH key that can be used to perform a merge into a
-      branch.
-    type: string
   tag_cmd:
       default: ""
       description: Command to run to get the semantic version tag, will override the auto generated value.
@@ -84,9 +79,6 @@ steps:
       steps:
          - attach_workspace:
              at: << parameters.attach_workspace_path >>
-  - add_ssh_keys:
-      fingerprints:
-        - << parameters.ssh_finger >>
   - run:
       environment:
         PARAM_CIRCLECI_API_HOST: "<< parameters.circleci_api_host >>"

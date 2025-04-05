@@ -1,15 +1,4 @@
 publish_changelog() {
-    # publishing a changelog branch uses git push, so we will run into
-    # known host issues with github.com servers from time to time, this adds
-    # the latest github.com public SSH keys to the known_hosts files to resolve
-    # that issue.
-    if [ -f ~/.ssh/known_hosts ]; then
-        vro known-sshkeys "${GITHUB_API_URL}/meta" "github.com" >> ~/.ssh/known_hosts
-    else
-        mkdir -p ~/.ssh
-        vro known-sshkeys "${GITHUB_API_URL}/meta" "github.com" > ~/.ssh/known_hosts
-    fi
-
     # Get the value of the semantic version tag in 1 of 3 way.
     # If more than 1 is set, the last wins.
     semver=""
@@ -27,11 +16,6 @@ publish_changelog() {
         semver="$(cat "${PARAM_TAG_FILE}")"
         echo "semantic version ${semver} was pulled from the file ${PARAM_TAG_FILE}"
     fi
-
-    # Allow git command to work
-    git config --global --add safe.directory /github/workspace
-    git config user.name "GitHub Actions Bot"
-    git config user.email "<>"
 
     if [ "${CIRCLECI}" = "true" ]; then
         CICD_PLATFORM="circleci"

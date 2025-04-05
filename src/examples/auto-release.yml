@@ -27,10 +27,6 @@ usage:
       default: "auto-release-vars"
       description: Release automation secrets, such as, CIRCLE_TOKEN and GH_WRITE_TOKEN
       type: string
-    ssh_finger:
-      description: Fingerprint of an SSH key to allow writing back to the repo.
-      type: string
-      default: "ab:cd:ef:gh:12:34:56:78"
     triggered_flow:
       default: "workflow-selector"
       description: Workflow to be executed.
@@ -38,8 +34,8 @@ usage:
 
   workflows:
 
-    # Run on the trunk branch only and acts a controller as code is merged
-    # to help decide which workflow executes.
+    # Run on the trunk branch only and acts as a controller, as code is merged,
+    # to help decide which workflow to execute.
     workflow-selector:
       when:
         and:
@@ -48,7 +44,6 @@ usage:
       jobs:
         - vr/workflow-selector:
             context: << pipeline.parameters.ctx_auto_release >>
-            ssh_finger: << pipeline.parameters.ssh_finger >>
 
     publish-changelog:
       when:
@@ -57,7 +52,8 @@ usage:
       jobs:
         - vr/publish-changelog:
             context: << pipeline.parameters.ctx_auto_release >>
-            ssh_finger: << pipeline.parameters.ssh_finger >>
+            committer_email: "rando@example.com"
+            committer_name: "rando"
 
     publish-release-tag:
       when:

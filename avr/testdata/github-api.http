@@ -1,0 +1,14 @@
+### Get a ref
+GET https://api.github.com/repos/{{ owner }}/{{ repo }}/git/ref/heads/main
+Accept: application/vnd.github+json
+Authorization: Bearer {{ github_token}}
+X-GitHub-Api-Version: 2022-11-28
+
+### Get a tree
+GET https://api.github.com/repos/{{ owner }}/{{ repo }}/git/trees/heads/main
+Accept: application/vnd.github+json
+Authorization: Bearer {{ github_token}}
+X-GitHub-Api-Version: 2022-11-28
+
+###
+

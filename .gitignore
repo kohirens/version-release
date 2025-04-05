@@ -19,6 +19,7 @@ tmp/
 /really-i-need-a-file.txt
 /avr/info.go
 /avr/mock-server/mock-server.exe
+/avr/testdata/*.private.env.json
 /vro/info.go
 /vro/mock-server/mock-server.exe
 /vro/vro$

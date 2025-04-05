@@ -3,7 +3,6 @@ package github
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/kohirens/version-release/avr/pkg/git"
 	"io"
 	"net/http"
 	"time"
@@ -19,10 +18,16 @@ import (
 const ( // See https://docs.github.com/en/rest?apiVersion=2022-11-28 for endpoints and permissions.
 	BaseUri        = "%s/repos/%s"
 	epBranches     = BaseUri + "/branches/%s"
+	epCommit       = BaseUri + "/git/commits"
+	epCreateARef   = BaseUri + "/git/refs"
+	epGetARef      = BaseUri + "/git/ref/%v"
+	epUpdateARef   = BaseUri + "/git/refs/%v"
 	epPulls        = BaseUri + "/pulls"
 	epPullMerge    = BaseUri + "/pulls/%d/merge"
 	epRelease      = BaseUri + "/releases"
 	epReleaseByTag = epRelease + "/tags/%s"
+	epTree         = BaseUri + "/git/trees"
+	fullRefPrefix  = "refs/heads/"
 	GenBranchName  = "auto-update-changelog"
 	repoUrl        = "git@%v:%v.git"
 )
@@ -73,59 +78,20 @@ func (gh *Client) DoesBranchExistRemotely(branch string) bool {
 
 // PublishChangelog Stage, commit, and push local changes, then make a pull
 // request and merge it containing the CHANGELOG.md if it contains changes.
-func (gh *Client) PublishChangelog(wd, branch, header, msgBody, footer string, files []string) error {
+func (gh *Client) PublishChangelog(baseRef, header, msgBody, footer string, files []string) error {
 	// Return early if the branch that updates the change log exists remotely.
 	uri := fmt.Sprintf(repoUrl, PublicServer, gh.Repository)
 	Log.Dbugf(stdout.RepoUrl, uri)
 
-	branchExist := git.DoesBranchExistRemotely(wd, PublicServer, GenBranchName)
-	Log.Dbugf(stdout.BranchExist, branchExist)
-
-	if branchExist {
-		return fmt.Errorf(
-			stderr.BranchExists,
-			GenBranchName, uri,
-		)
+	if gh.ReferenceExist("heads/" + GenBranchName) {
+		return fmt.Errorf(stderr.BranchExists, GenBranchName, uri)
 	}
 
-	if e := git.Config(wd, "user.name", "bot"); e != nil {
+	if e := Push(GenBranchName, baseRef, header+"\n"+msgBody+"\n"+footer, files, gh); e != nil {
 		return e
 	}
 
-	if e := git.Config(wd, "user.email", "<>"); e != nil {
-		return e
-	}
-
-	if e := git.CheckoutBranch(wd, GenBranchName); e != nil {
-		return e
-	}
-
-	// Staging the CHANGELOG file.
-	if e := git.StageFiles(wd, files...); e != nil {
-		return e
-	}
-
-	// Commit the CHANGELOG file.
-	if e := git.Commit(wd, header+"\n"+msgBody+"\n"+footer); e != nil {
-		return e
-	}
-
-	oldUrl, _ := git.RemoteGetUrl(wd, "origin")
-	newUrl := fmt.Sprintf("https://x-access-token:%v@github.com/%v", gh.Token, gh.Repository)
-	Log.Dbugf(stdout.GitOldUrl, oldUrl)
-	Log.Dbugf(stdout.GitUrl, newUrl)
-
-	// Set the URL using the token so we can write to the repo
-	if e := git.RemoteSetUrl(wd, "origin", newUrl, oldUrl); e != nil {
-		return e
-	}
-
-	// Push the new branch with the updated changelog.
-	if e := git.Push(wd, "origin", GenBranchName); e != nil {
-		return e
-	}
-
-	pr, e1 := gh.OpenPullRequest(branch, GenBranchName, header, msgBody+"\n"+footer)
+	pr, e1 := gh.OpenPullRequest(baseRef, GenBranchName, header, msgBody+"\n"+footer)
 	if e1 != nil {
 		return e1
 	}

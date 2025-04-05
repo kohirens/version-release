@@ -49,7 +49,7 @@ func TestClient_PublishChangelog(t *testing.T) {
 			_ = os.WriteFile(repo+ps+"CHANGELOG.md", []byte("[1.0.0] - 2024-06-14\n\n### Added\n\n- README.md"), 0664)
 			_ = vgit.StageFiles(repo, "CHANGELOG.md")
 
-			if err := gh.PublishChangelog(repo, tt.branch, tt.header, tt.msgBody, "", tt.files); (err != nil) != tt.wantErr {
+			if err := gh.PublishChangelog(tt.branch, tt.header, tt.msgBody, "", tt.files); (err != nil) != tt.wantErr {
 				t.Errorf("PublishChangelog() error = %v, wantErr %v", err, tt.wantErr)
 			}
 		})
