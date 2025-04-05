@@ -40,25 +40,17 @@ if [ -z "${REPOSITORY}" ]; then
     exit 1
 fi
 
+if [ -z "${DH_API_TOKEN}" ]; then
+    echo "the environment variable DH_API_TOKEN containing the Docker Hub API token/password is not set"
+    exit 1
+fi
+
 if [ -n "${ENV_FILE}" ]; then
     # shellcheck disable=SC1090
     source "${ENV_FILE}"
 fi
 
 export DH_IMAGE="${REPOSITORY}:${CIRCLE_SHA1}"
-
-# Change variable name, but with backwards compatibility.
-# TODO: Remove this backward compatibility in the next major release.
-DH_API_TOKEN="${DH_PASS}"
-if [ -n "${DH_PASS}" ]; then
-    echo "Docker Hub API/password obtained from legacy the environment variable DH_PASS, please rename to DH_API_TOKEN environment variable as soon as you can"
-    DH_API_TOKEN="${DH_PASS}"
-fi
-
-if [ -n "${DH_PASS_ENV}" ]; then
-    echo "Docker Hub API/password obtained from a custom environment variable, but I'm not telling you the name of that variable because it's top-secret"
-    DH_API_TOKEN="${!DH_PASS_ENV}"
-fi
 
 echo "${DH_API_TOKEN}" | docker login -u "${DH_USER}" --password-stdin
 

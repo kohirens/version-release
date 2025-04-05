@@ -20,6 +20,12 @@ inputs: # https://docs.github.com/en/actions/writing-workflows/choosing-what-you
     changelog_hash:
         default: ""
         description: A checksum hash of the changelog from a the selector-workflow to compare against the current changelog, if they are different there are more changes to publish.
+    committer_email:
+        required: true
+    committer_gpg_key:
+        default: ""
+    committer_name:
+        required: true
     github_server:
         default: "github.com"
         description: GitHub server domain name.
@@ -58,6 +64,9 @@ runs: # https://docs.github.com/en/actions/sharing-automations/creating-actions/
     image: docker://kohirens/version-release:dev
     env: # https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/store-information-in-variables#default-environment-variables
         PARAM_CHANGELOG_FILE: ${{ inputs.changelog_file }}
+        PARAM_COMMITTER_EMAIL: ${{ inputs.committer_email }}
+        PARAM_COMMITTER_GPG_KEY: ${{ inputs.committer_gpg_key }}
+        PARAM_COMMITTER_NAME: ${{ inputs.committer_name }}
         PARAM_MAIN_TRUNK_BRANCH: ${{ inputs.main_trunk_branch }}
         PARAM_MERGE_TYPE: ${{ inputs.merge_type }}
         PARAM_GITHUB_SERVER: ${{ inputs.github_server }}

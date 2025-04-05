@@ -10,4 +10,4 @@ docker:
   - image: kohirens/version-release:<< parameters.exec_img_tag >>
     auth:
       username: ${DH_USER}
-      password: ${DH_PASS}
+      password: ${DH_API_TOKEN}

@@ -3,9 +3,18 @@ run-name: ${{ github.actor }} is checking which workflow to run
 on:
     workflow_call:
         inputs:
-            exec_img_tag:
-                default: "dev"
+            committer_email:
+                description: Git user email address to use when commiting the changelog.
+                required: true
+                type: string
+            committer_gpg_key:
+                description: Git user GPG key to use when commiting the changelog.
+                default: ""
                 required: false
+                type: string
+            committer_name:
+                description: Git username to use when commiting the changelog.
+                required: true
                 type: string
         secrets:
             github_write_token:
@@ -36,8 +45,6 @@ jobs:
             - name: Select a workflow
               uses: kohirens/version-release/.github/actions/workflow-selector@github-actions # Uses an action in the root directory
               id: selector
-              with:
-                 exec_img_tag: ${{ inputs.exec_img_tag }}
     publish-changelog:
         permissions:
             contents: write
@@ -55,6 +62,9 @@ jobs:
               id: changelog
               with:
                   changelog_hash: ${{ needs.select-a-workflow.outputs.changelog_hash }}
+                  committer_email: ${{ inputs.committer_email }}
+                  committer_gpg_key: ${{ inputs.committer_gpg_key }}
+                  committer_name: ${{ inputs.committer_name }}
         needs: select-a-workflow
     publish-release-tag:
         if: ${{ needs.select-a-workflow.outputs.workflow == 'publish-release-tag' }}
@@ -72,12 +82,3 @@ jobs:
               with:
                   tag_cmd: 'echo "${{ needs.select-a-workflow.outputs.next_semver }}"'
         needs: select-a-workflow
-
-#permissions:
-#    attestations: write
-#    pull-requests: write
-#    contents: read
-#    statuses: read
-#    checks: read|write
-# https://docs.github.com/en/actions/writing-workflows/about-workflows#reusing-workflows
-# https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/storing-and-sharing-data-from-a-workflow

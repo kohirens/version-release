@@ -18,6 +18,18 @@ parameters:
     default: "CHANGELOG.md"
     description: Location to output/update the CHANGELOG file.
     type: string
+  committer_email:
+    default: ""
+    description: Git user email address to use when commiting the changelog.
+    type: string
+  committer_gpg_key:
+    default: ""
+    description: Git user GPG key to use when commiting the changelog.
+    type: string
+  committer_name:
+    default: ""
+    description: Git username to use when commiting the changelog.
+    type: string
   do_attach_workspace:
     default: false
     description: >
@@ -49,9 +61,6 @@ parameters:
     description: Type of merge to perform, choose between merge|squash|rebase.
     type: enum
     enum: [ "merge", "rebase", "squash" ]
-  ssh_finger:
-    description: Fingerprint of an SSH key that can be used to perform a merge into a branch.
-    type: string
   tag_cmd:
       default: ""
       description: Command to run to get the semantic version tag, will override the auto generated value.
@@ -83,14 +92,14 @@ steps:
       steps:
         - attach_workspace:
             at: "<< parameters.attach_workspace_path >>"
-  - add_ssh_keys:
-      fingerprints:
-        - << parameters.ssh_finger >>
   - run:
       environment:
-        PARAM_MAIN_TRUNK_BRANCH: "<< parameters.main_trunk_branch >>"
-        PARAM_CHANGELOG_FILE: "<< parameters.changelog_file >>"
         GITHUB_API_URL: "<< parameters.github_api_url >>"
+        PARAM_CHANGELOG_FILE: "<< parameters.changelog_file >>"
+        PARAM_COMMITTER_EMAIL: "<< parameters.committer_email >>"
+        PARAM_COMMITTER_GPG_KEY: "<< parameters.committer_gpg_key >>"
+        PARAM_COMMITTER_NAME: "<< parameters.committer_name >>"
+        PARAM_MAIN_TRUNK_BRANCH: "<< parameters.main_trunk_branch >>"
         PARAM_MERGE_TYPE: "<< parameters.merge_type >>"
         PARAM_TAG_CMD: "<< parameters.tag_cmd >>"
         PARAM_TAG_ENV_VAR: "<< parameters.tag_env_var >>"

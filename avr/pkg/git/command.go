@@ -138,7 +138,7 @@ func ConfigGlobal(wd, key, val string) error {
 // DoesBranchExistRemotely return the result of:
 // git ls-remote --heads <repository_url> <branch_name>
 func DoesBranchExistRemotely(wd, uri, branch string) bool {
-	status, se, exitCode, cs := cli.RunCommand(
+	status, se, _, cs := cli.RunCommand(
 		wd,
 		cmdGit,
 		[]string{"ls-remote", "--heads", uri, branch},
@@ -147,11 +147,11 @@ func DoesBranchExistRemotely(wd, uri, branch string) bool {
 	log.Dbugf(stdout.Cs, cs)
 
 	if se != nil {
-		log.Errf(stderr.GitListRemote, exitCode, se.Error())
+		//log.Errf(stderr.GitListRemote, exitCode, se.Error())
 		return false
 	}
 
-	log.Infof(stdout.FoundRemoteBranch, status)
+	log.Dbugf(stdout.FoundRemoteBranch, status)
 
 	return len(bytes.Trim(status, "\n")) > 0
 }
