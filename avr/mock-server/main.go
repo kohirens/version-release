@@ -13,7 +13,7 @@ import (
 )
 
 var (
-	serverDir  = abs("mock-server")
+	serverDir  = "mock-server"
 	cacheDir   = abs("cache")
 	requestDir = cacheDir + "/request"
 )
@@ -88,7 +88,7 @@ func mockCircleCi(w http.ResponseWriter, r *http.Request) {
 	log.Infof(Stdout.LoadingFile, "JSON", mock)
 
 	if mock == "" {
-		load404Page(serverDir+"/responses/not-found.json", w, vars)
+		notFound(w, r)
 		return
 	}
 
@@ -145,7 +145,12 @@ func notFound(w http.ResponseWriter, r *http.Request) {
 	// used this to capture the request for developing mocks for new request that have not been handled.
 	captureRequestInfo(r.URL.Path, r)
 
-	load404Page(serverDir+"/responses/not-found.json", w, vars)
+	w.WriteHeader(404)
+
+	e1 := loadTemplate(serverDir+"/responses/not-found.json", w, vars)
+	if e1 != nil {
+		panic(fmt.Errorf(Stderr.CannotLoad404Page))
+	}
 }
 
 func mockGitHubApi(w http.ResponseWriter, r *http.Request) {
@@ -201,12 +206,14 @@ func mockGitHubApi(w http.ResponseWriter, r *http.Request) {
 				return
 			}
 		}
+	default:
+		mock = getResponseMock(r.URL.Path)
 	}
 
 	log.Infof(Stdout.LoadingFile, "JSON", mock)
 
 	if mock == "" {
-		load404Page(serverDir+"/responses/not-found.json", w, vars)
+		notFound(w, r)
 		return
 	}
 

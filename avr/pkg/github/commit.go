@@ -73,6 +73,8 @@ func GetTree(ref string, gh *Client) (*GitTree, error) {
 		return nil, fmt.Errorf(stderr.CouldNotReadResponse, e2.Error())
 	}
 
+	Log.Dbugf("get tree body: %v", string(resBody))
+
 	if res.StatusCode != 200 {
 		return nil, fmt.Errorf(stderr.GetTree, res.Status, string(resBody))
 	}
@@ -146,6 +148,8 @@ func NewTree(parentSha string, files []string, gh *Client) (*GitTree, error) {
 		return nil, fmt.Errorf(stderr.CouldNotReadResponse, e3.Error())
 	}
 
+	Log.Dbugf("new tree body: \n\t%v", string(resBody))
+
 	if res.StatusCode != 201 {
 		return nil, fmt.Errorf(stderr.MakeTree, res.Status, string(resBody))
 	}
@@ -203,6 +207,8 @@ func NewCommit(author, committer *UserInfo, message, gpg, treeSha string, parent
 	if e3 != nil {
 		return nil, fmt.Errorf(stderr.CouldNotReadResponse, e3.Error())
 	}
+
+	Log.Dbugf("new commit body: \n\t%v", string(resBody))
 
 	if res.StatusCode != 201 {
 		return nil, fmt.Errorf(stderr.NewCommit, res.Status, string(resBody))
