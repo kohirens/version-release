@@ -53,17 +53,7 @@ ENV PATH="${PATH}:/home/${USER_NAME}/bin"
 
 COPY --from=kohirens/git-tool-belt:2.1.2 --chown=${USER_NAME}:${USER_GROUP} /usr/local/bin/git-tool-belt /home/${USER_NAME}/bin
 
-WORKDIR "/home/${USER_NAME}/src/${REPO}/vro"
-
-# Add source files
-COPY --chown=${USER_NAME}:${USER_GROUP} ./vro/ ./
-
 # Build
-RUN go mod tidy \
- && go generate \
- && go install
-
-# Build 2
 # Add source files
 COPY --chown=${USER_NAME}:${USER_GROUP} ./avr/ ./avr
 
@@ -78,7 +68,7 @@ COPY --chown=${USER_NAME}:${USER_NAME} .docker/.gitconfig /home/${USER_NAME}
 ENTRYPOINT [ "start.sh" ]
 
 HEALTHCHECK --interval=5s --timeout=3s --start-period=3s --retries=4 \
-    CMD vro -help || exit 1
+    CMD avr -help || exit 1
 
 CMD [ ]
 
@@ -90,7 +80,7 @@ ARG REPO
 ARG GIT_CLIFF_VER
 
 HEALTHCHECK --interval=5s --timeout=3s --start-period=3s --retries=4 \
-    CMD vro -help || exit 1
+    CMD avr -help || exit 1
 
 USER root
 
@@ -111,7 +101,6 @@ RUN wget https://github.com/orhun/git-cliff/releases/download/v${GIT_CLIFF_VER}/
 RUN rm /usr/local/bin/git-chglog
 
 # Add build artifacts
-COPY --link --from=build "/home/${USER_NAME}/bin/vro" "/usr/local/bin/vro"
 COPY --link --from=build "/home/${USER_NAME}/bin/avr" "/usr/local/bin/avr"
 COPY --link --chmod=755 ./src/scripts/ /usr/local/bin/
 
@@ -129,7 +118,7 @@ ARG SEMVER
 
 COPY --from=release / /
 
-ENTRYPOINT [ "vro" ]
+ENTRYPOINT [ "avr" ]
 
 CMD [ "--help" ]
 

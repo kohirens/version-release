@@ -49,5 +49,5 @@ I will have to learn all over again. Those who forget are doomed to repeat.
 
 ---
 
-[mock-server]: /vro/mock-server
+[mock-server]: /avr/mock-server
 [GitHub API]: https://docs.github.com/en/rest?apiVersion=2022-11-28

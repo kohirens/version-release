@@ -1,9 +1,0 @@
-{
-    "message": "not found",
-    "path": "{{.Data.Path}}",
-    "query": "{{.Data.Query}}",
-    "mock": "{{.Data.Mock}}",
-    "error1": "{{.Data.Error1}}",
-    "error2": "{{.Data.Error2}}",
-    "post": "{{.Data.Post}}"
-}
