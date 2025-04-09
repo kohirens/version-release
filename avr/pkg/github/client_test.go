@@ -3,7 +3,6 @@ package github
 import (
 	"github.com/kohirens/stdlib/git"
 	help "github.com/kohirens/stdlib/test"
-	vgit "github.com/kohirens/version-release/avr/pkg/git"
 	"net/http"
 	"os"
 	"testing"
@@ -47,7 +46,7 @@ func TestClient_PublishChangelog(t *testing.T) {
 			}
 			repo := git.CloneFromBundle(tt.bundle, "tmp", "testdata", ps)
 			_ = os.WriteFile(repo+ps+"CHANGELOG.md", []byte("[1.0.0] - 2024-06-14\n\n### Added\n\n- README.md"), 0664)
-			_ = vgit.StageFiles(repo, "CHANGELOG.md")
+			//_ = vgit.StageFiles(repo, "CHANGELOG.md")
 
 			if err := gh.PublishChangelog(tt.branch, tt.header, tt.msgBody, "", tt.files); (err != nil) != tt.wantErr {
 				t.Errorf("PublishChangelog() error = %v, wantErr %v", err, tt.wantErr)

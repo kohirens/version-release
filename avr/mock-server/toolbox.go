@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"regexp"
 	"strings"
 	"text/template"
 )
@@ -65,7 +66,27 @@ func getBody(r *http.Request, prefix string) error {
 	return nil
 }
 
+// getResponseMock Parse a URL pack into a file path, returning the path if it exists.
+func getResponseMock(p string) string {
+	re := regexp.MustCompile(`^/repos/kohirens/([^/]+)(.*)$`)
+
+	s := re.FindStringSubmatch(p)
+	fmt.Printf("loadMockResponse: %v\n", s)
+	if len(s) != 3 {
+		return ""
+	}
+
+	mock := s[1] + "/" + strings.Replace(s[2][1:], "/", "-", -1) + ".json"
+	fmt.Println(mock)
+	if fsio.Exist("responses/" + mock) {
+		return mock
+	}
+
+	return ""
+}
+
 func loadTemplate(tFile string, w io.Writer, vars *tmplVars) error {
+	log.Dbugf("loadTemplate: %v", tFile)
 	if !fsio.Exist(tFile) {
 		return fmt.Errorf(Stderr.FileNotFound, tFile)
 	}
@@ -76,14 +97,6 @@ func loadTemplate(tFile string, w io.Writer, vars *tmplVars) error {
 	}
 
 	return t.Execute(w, vars)
-}
-
-func load404Page(tFile string, w http.ResponseWriter, vars *tmplVars) {
-	w.WriteHeader(404)
-	e1 := loadTemplate(tFile, w, vars)
-	if e1 != nil {
-		panic(fmt.Errorf(Stderr.CannotLoad404Page))
-	}
 }
 
 func logToFile(filename string, line string) {

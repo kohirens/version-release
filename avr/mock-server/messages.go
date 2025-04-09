@@ -5,12 +5,14 @@ var Stderr = struct {
 	CouldNotDecodeJson,
 	CouldNotReadBody,
 	FileNotFound,
-	InvalidLoginState string
+	InvalidLoginState,
+	NoMatch string
 }{
 	CannotLoad404Page:  "cannot load 404 page %q",
 	CouldNotDecodeJson: "could not decode JSON: %s",
 	CouldNotReadBody:   "could not read body: %s",
 	FileNotFound:       "%q not found",
+	NoMatch:            "re %V did not match %v",
 }
 
 var Stdout = struct {

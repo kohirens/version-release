@@ -149,6 +149,8 @@ func GetReference(ref string, gh *Client) (*GitReference, error) {
 		return nil, fmt.Errorf(stderr.CouldNotReadResponse, e2.Error())
 	}
 
+	Log.Dbugf("get reference body: \n\t%v", string(resBody))
+
 	if res.StatusCode != 200 {
 		return nil, fmt.Errorf(stderr.GetRef, res.Status, string(resBody))
 	}
@@ -193,6 +195,8 @@ func NewReference(name, sha string, gh *Client) (*GitReference, error) {
 	if e3 != nil {
 		return nil, fmt.Errorf(stderr.CouldNotReadResponse, e3.Error())
 	}
+
+	Log.Dbugf("new reference body: \n\t%v", string(resBody))
 
 	if res.StatusCode != 201 {
 		return nil, fmt.Errorf(stderr.NewRef, res.Status, string(resBody))
