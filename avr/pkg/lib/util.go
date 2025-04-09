@@ -2,13 +2,15 @@ package lib
 
 import (
 	"fmt"
-	"github.com/kohirens/stdlib/log"
+	"github.com/kohirens/stdlib/logger"
 	"os"
 	"regexp"
 	"strings"
 )
 
 const CheckSemVer = `v?\d+\.\d+\.\d+(-.+)?`
+
+var log = logger.Standard{}
 
 // To get environment variables that are already available see
 // https://circleci.com/docs/variables/#built-in-environment-variables

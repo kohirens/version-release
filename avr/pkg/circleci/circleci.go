@@ -5,7 +5,7 @@ package circleci
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/kohirens/stdlib/log"
+	"github.com/kohirens/stdlib/logger"
 	"github.com/kohirens/version-release/avr/pkg/lib"
 	"os"
 	"time"
@@ -45,6 +45,7 @@ const (
 
 var (
 	envs = map[string]string{}
+	log  = logger.Standard{}
 )
 
 func init() {

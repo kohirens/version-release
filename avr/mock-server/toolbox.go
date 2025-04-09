@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"github.com/kohirens/stdlib/fsio"
-	"github.com/kohirens/stdlib/log"
 	"io"
 	"net/http"
 	"os"
@@ -14,14 +13,14 @@ import (
 )
 
 // Abs Return the absolute path if it exists or the directory entered.
-func abs(loc string) string {
-	full, e1 := filepath.Abs(loc)
-
+func workDir() string {
+	wd, e1 := os.Getwd()
+	log.Dbugf("working Directory: %s", wd)
 	if e1 != nil {
-		return loc
+		return ""
 	}
 
-	return full
+	return wd
 }
 
 // captureRequestInfo For debugging purposes.
@@ -71,14 +70,15 @@ func getResponseMock(p string) string {
 	re := regexp.MustCompile(`^/repos/kohirens/([^/]+)(.*)$`)
 
 	s := re.FindStringSubmatch(p)
-	fmt.Printf("loadMockResponse: %v\n", s)
+	log.Dbugf("loadMockResponse: %v", s)
 	if len(s) != 3 {
 		return ""
 	}
 
 	mock := s[1] + "/" + strings.Replace(s[2][1:], "/", "-", -1) + ".json"
-	fmt.Println(mock)
-	if fsio.Exist("responses/" + mock) {
+	exists := fsio.Exist("responses/" + mock)
+	log.Dbugf(stderr.MockExist, mock, exists)
+	if exists {
 		return mock
 	}
 
@@ -88,7 +88,7 @@ func getResponseMock(p string) string {
 func loadTemplate(tFile string, w io.Writer, vars *tmplVars) error {
 	log.Dbugf("loadTemplate: %v", tFile)
 	if !fsio.Exist(tFile) {
-		return fmt.Errorf(Stderr.FileNotFound, tFile)
+		return fmt.Errorf(stderr.FileNotFound, tFile)
 	}
 
 	t, e1 := template.ParseFiles(tFile)

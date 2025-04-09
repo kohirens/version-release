@@ -5,7 +5,7 @@ package github
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/kohirens/stdlib/log"
+	"github.com/kohirens/stdlib/logger"
 	"github.com/kohirens/version-release/avr/pkg/lib"
 	"io"
 	"net/http"
@@ -24,9 +24,8 @@ const (
 
 var (
 	envs         map[string]string
-	PublicApiUrl = "https://api.github.com"
 	PublicServer = "github.com"
-	Log          = log.StdLogger{}
+	Log          = logger.Standard{}
 )
 
 func init() {

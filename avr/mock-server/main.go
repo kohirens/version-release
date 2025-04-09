@@ -3,7 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/kohirens/stdlib/log"
+	"github.com/kohirens/stdlib/logger"
 	"io"
 	"net/http"
 	"os"
@@ -14,8 +14,10 @@ import (
 
 var (
 	serverDir  = "mock-server"
-	cacheDir   = abs("cache")
+	cacheDir   = "cache"
 	requestDir = cacheDir + "/request"
+	wd         = workDir()
+	log        = logger.Standard{}
 )
 
 func main() {
@@ -23,7 +25,7 @@ func main() {
 	vl, vlFound := os.LookupEnv("VERBOSITY_LEVEL")
 	if vlFound {
 		num, _ := strconv.ParseInt(vl, 10, 64)
-		log.VerbosityLevel = int(num)
+		logger.VerbosityLevel = int(num)
 	}
 
 	// Register HTTP request handlers
@@ -71,21 +73,21 @@ func mockCircleCi(w http.ResponseWriter, r *http.Request) {
 		bodyBytes, err1 := io.ReadAll(r.Body)
 		if err1 != nil {
 			vars.Data["Error1"] = err1.Error()
-			log.Errf(Stderr.CouldNotReadBody, err1.Error())
+			log.Errf(stderr.CouldNotReadBody, err1.Error())
 		}
 
 		vars.Data["Post"] = string(bodyBytes)
 		pp := &PipelineParams{}
 		if e := json.Unmarshal(bodyBytes, pp); e != nil {
 			vars.Data["Error2"] = e.Error()
-			log.Errf(Stderr.CouldNotDecodeJson, e.Error())
+			log.Errf(stderr.CouldNotDecodeJson, e.Error())
 		}
 		mock = fmt.Sprintf("%s.json", pp.Parameters.TriggeredFlow)
 		vars.Data["Mock"] = mock
 		w.WriteHeader(201)
 	}
 
-	log.Infof(Stdout.LoadingFile, "JSON", mock)
+	log.Infof(stdout.LoadingFile, "JSON", mock)
 
 	if mock == "" {
 		notFound(w, r)
@@ -149,7 +151,7 @@ func notFound(w http.ResponseWriter, r *http.Request) {
 
 	e1 := loadTemplate(serverDir+"/responses/not-found.json", w, vars)
 	if e1 != nil {
-		panic(fmt.Errorf(Stderr.CannotLoad404Page))
+		panic(fmt.Errorf(stderr.CannotLoad404Page))
 	}
 }
 
@@ -210,7 +212,7 @@ func mockGitHubApi(w http.ResponseWriter, r *http.Request) {
 		mock = getResponseMock(r.URL.Path)
 	}
 
-	log.Infof(Stdout.LoadingFile, "JSON", mock)
+	log.Infof(stdout.LoadingFile, "JSON", mock)
 
 	if mock == "" {
 		notFound(w, r)
