@@ -5,7 +5,6 @@ import (
 	"encoding/base64"
 	"fmt"
 	"github.com/kohirens/stdlib/fsio"
-	"github.com/kohirens/stdlib/log"
 	"github.com/kohirens/version-release/avr/pkg/git"
 	"github.com/kohirens/version-release/avr/pkg/gitcliff"
 	"github.com/kohirens/version-release/avr/pkg/github"

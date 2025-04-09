@@ -6,7 +6,6 @@ import (
 	"github.com/kohirens/stdlib/cli"
 	"github.com/kohirens/stdlib/fsio"
 	"github.com/kohirens/stdlib/git"
-	"github.com/kohirens/stdlib/log"
 	"io"
 	"net/http"
 	"os"

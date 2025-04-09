@@ -3,7 +3,6 @@ package main
 import (
 	"bufio"
 	"fmt"
-	"github.com/kohirens/stdlib/log"
 	"github.com/kohirens/version-release/avr/pkg/circleci"
 	"github.com/kohirens/version-release/avr/pkg/git"
 	"github.com/kohirens/version-release/avr/pkg/gitcliff"

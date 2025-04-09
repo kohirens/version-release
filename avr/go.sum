@@ -2,5 +2,5 @@ github.com/google/uuid v1.6.0 h1:NIvaJDMOsjHA8n1jAhLSgzrAzy1Hgr+hNrb57e+94F0=
 github.com/google/uuid v1.6.0/go.mod h1:TIyPZe4MgqvfeYDBFedMoGGpEw/LqOeaOT+nhxU+yHo=
 github.com/kohirens/json-web-token v0.0.0-20250406124205-25bfcaf2b6e7 h1:6Iz0b3lYgS2XbVqhjmirp6QxzUWcWmnItQM6VFH1nb4=
 github.com/kohirens/json-web-token v0.0.0-20250406124205-25bfcaf2b6e7/go.mod h1:iMKPiZgRwpUUseVXHFtHrgEiLBL1H/TOfeATl1a1xNo=
-github.com/kohirens/stdlib v0.0.0-20241120125351-11ac3d8e92b1 h1:YfbSwrFVANfF9AT3azX8LQEjQO5KBApLpJdhXb8ZAg0=
-github.com/kohirens/stdlib v0.0.0-20241120125351-11ac3d8e92b1/go.mod h1:Na0seF9Ou385w6lwsq7scjvn/8jVZgVGuQYP/tEsh7E=
+github.com/kohirens/stdlib v0.0.0-20250322174128-35358831c996 h1:tw0VQ4Y1g1yk+SBQnygRGPnHdM2LVvRESv3yY/jC3yc=
+github.com/kohirens/stdlib v0.0.0-20250322174128-35358831c996/go.mod h1:tyePzzvEyJdHREgJk2SUQkqbdXtoHKFD7Lyl+7r9qFQ=

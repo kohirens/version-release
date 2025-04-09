@@ -6,7 +6,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/kohirens/stdlib/env"
-	"github.com/kohirens/stdlib/log"
 	"io"
 	"net/http"
 )

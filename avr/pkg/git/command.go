@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"github.com/kohirens/stdlib/cli"
-	"github.com/kohirens/stdlib/log"
+	"github.com/kohirens/stdlib/logger"
 	"github.com/kohirens/version-release/avr/pkg/lib"
 	"io"
 	"os"
@@ -16,6 +16,8 @@ import (
 const (
 	cmdGit = "git"
 )
+
+var log = logger.Standard{}
 
 // CheckoutBranch check out a branch, making it if it does not exist.
 // git checkout -b <branch_name>

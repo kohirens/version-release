@@ -7,7 +7,7 @@ import (
 	"github.com/kohirens/stdlib"
 	"github.com/kohirens/stdlib/cli"
 	"github.com/kohirens/stdlib/fsio"
-	"github.com/kohirens/stdlib/log"
+	"github.com/kohirens/stdlib/logger"
 	"github.com/kohirens/stdlib/str"
 	"github.com/kohirens/version-release/avr/pkg/lib"
 	"os"
@@ -19,6 +19,8 @@ const (
 	unreleasedConfigName = "unreleased-cliff.toml"
 	Cmd                  = "git-cliff"
 )
+
+var log = logger.Standard{}
 
 type Unreleased struct {
 	Version string `json:"version"`
