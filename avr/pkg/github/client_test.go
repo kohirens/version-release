@@ -13,7 +13,7 @@ const (
 	ps = string(os.PathSeparator)
 )
 
-var tmpDir = help.AbsPath("tmp")
+var tmpDir = "tmp"
 
 func TestMain(m *testing.M) {
 	help.ResetDir(tmpDir, 0777)
@@ -27,10 +27,16 @@ func TestClient_PublishChangelog(t *testing.T) {
 		branch  string
 		header  string
 		msgBody string
-		files   []string
 		wantErr bool
 	}{
-		{"success", "github-repo-commit-message", "main", "auto: Release 1.0.0", "## Added README.md", []string{"CHANGELOG.md"}, false},
+		{
+			"success",
+			"github-repo-commit-message",
+			"main",
+			"auto: Release 1.0.0",
+			"## Added README.md",
+			false,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -45,10 +51,11 @@ func TestClient_PublishChangelog(t *testing.T) {
 				Host:        "https://api.github.com",
 			}
 			repo := git.CloneFromBundle(tt.bundle, "tmp", "testdata", ps)
+			// we need a CHANGELOG.md fixture.
 			_ = os.WriteFile(repo+ps+"CHANGELOG.md", []byte("[1.0.0] - 2024-06-14\n\n### Added\n\n- README.md"), 0664)
-			//_ = vgit.StageFiles(repo, "CHANGELOG.md")
 
-			if err := gh.PublishChangelog(tt.branch, tt.header, tt.msgBody, "", tt.files); (err != nil) != tt.wantErr {
+			files := []string{repo + "/CHANGELOG.md"}
+			if err := gh.PublishChangelog(tt.branch, tt.header, tt.msgBody, "", files); (err != nil) != tt.wantErr {
 				t.Errorf("PublishChangelog() error = %v, wantErr %v", err, tt.wantErr)
 			}
 		})

@@ -18,6 +18,7 @@ func Push(name, parent, commitMessage string, files []string, gh *Client) error 
 		parentBranch = "heads/" + parent
 	}
 
+	Log.Dbugf("commitMessage: %v", commitMessage)
 	// Get the sha for the base reference.
 	parentRef, e1 := GetReference(parentBranch, gh)
 	if e1 != nil {

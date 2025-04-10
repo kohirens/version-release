@@ -7,6 +7,8 @@
 /avr/mock-server/*.log
 /avr/mock-server/ssl/
 repo-*/
+!avr/mock-server/responses/repo-no-releases/
+!avr/mock-server/responses/repo-01/
 tmp/
 
 # Files
