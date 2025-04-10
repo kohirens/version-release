@@ -1,26 +1,31 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/kohirens/stdlib/fsio"
 	"io"
 	"net/http"
 	"os"
 	"path/filepath"
-	"regexp"
+	"strconv"
 	"strings"
 	"text/template"
 )
 
 // Abs Return the absolute path if it exists or the directory entered.
-func workDir() string {
-	wd, e1 := os.Getwd()
-	log.Dbugf("working Directory: %s", wd)
+func rootDir() string {
+	w, e1 := os.Getwd()
 	if e1 != nil {
 		return ""
 	}
 
-	return wd
+	ps := string(os.PathSeparator)
+	sep := ps + "avr"
+	idx := strings.Index(w, sep) + 4
+	_wd := w[:idx]
+
+	return _wd + "/"
 }
 
 // captureRequestInfo For debugging purposes.
@@ -33,15 +38,15 @@ func captureRequestInfo(prefix string, r *http.Request) {
 		prefix = prefix[1:]
 	}
 
-	//build a filename based on the url path
+	// Build a filename based on the url path.
 	name := requestDir + "/" + strings.TrimRight(strings.Replace(prefix, "/", "-", -1), "-") + "-http.txt"
-	log.Dbugf("capture request info into %v", name)
+	log.Dbugf(stdout.CaptureRequest, name)
 
 	headers := getHeadersAsString(r.Header)
 
 	bodyBits, e1 := io.ReadAll(r.Body)
 	if e1 != nil {
-		log.Errf("could not read request body: %v", e1.Error())
+		log.Errf(stderr.CouldNotReadBody, e1.Error())
 		return
 	}
 
@@ -56,7 +61,7 @@ func getBody(r *http.Request, prefix string) error {
 
 	bodyBits, e1 := io.ReadAll(r.Body)
 	if e1 != nil {
-		return fmt.Errorf("cannot read body of %v: %v\n", r.URL, e1.Error())
+		return fmt.Errorf(stderr.CouldNotReadBody, r.URL, e1.Error())
 	}
 
 	fname := fmt.Sprintf("%v-body.txt", name)
@@ -66,43 +71,72 @@ func getBody(r *http.Request, prefix string) error {
 }
 
 // getResponseMock Parse a URL pack into a file path, returning the path if it exists.
-func getResponseMock(p string) string {
-	re := regexp.MustCompile(`^/repos/kohirens/([^/]+)(.*)$`)
+func getResponseMock(repo, p string, w http.ResponseWriter) error {
+	// Convert the path to a filename.
+	filename := mockDir + repo + "/" + strings.Replace(p, "/", "-", -1) + ".json"
+	exists := fsio.Exist(filename)
 
-	s := re.FindStringSubmatch(p)
-	log.Dbugf("loadMockResponse: %v", s)
-	if len(s) != 3 {
-		return ""
+	log.Dbugf(stderr.MockExist, filename, exists)
+
+	if !exists {
+
+		return fmt.Errorf(stderr.FindMock, filename)
 	}
 
-	mock := s[1] + "/" + strings.Replace(s[2][1:], "/", "-", -1) + ".json"
-	exists := fsio.Exist("responses/" + mock)
-	log.Dbugf(stderr.MockExist, mock, exists)
-	if exists {
-		return mock
+	content, e1 := os.ReadFile(filename)
+	if e1 != nil {
+		return fmt.Errorf(stderr.MockLoad, filename, e1.Error())
 	}
 
-	return ""
+	log.Dbugf(stdout.MockLoad, filename)
+
+	obj := struct {
+		Status string `json:"status,omitempty"`
+	}{}
+
+	if e := json.Unmarshal(content, &obj); e != nil {
+		return e
+	}
+
+	if w != nil && obj.Status != "" {
+		log.Dbugf(stdout.MockStatus, obj.Status)
+		sc, e := strconv.ParseInt(obj.Status, 10, 0)
+		if e != nil {
+			return fmt.Errorf(stderr.MockStatus, e.Error())
+		}
+		w.WriteHeader(int(sc))
+	}
+
+	if w != nil {
+		_, e2 := w.Write(content)
+		if e2 != nil {
+			return fmt.Errorf(stderr.MockWrite, e2.Error())
+		}
+	}
+
+	return nil
 }
 
 func loadTemplate(tFile string, w io.Writer, vars *tmplVars) error {
-	log.Dbugf("loadTemplate: %v", tFile)
 	if !fsio.Exist(tFile) {
+		log.Dbugf(stderr.TemplateFind, tFile)
 		return fmt.Errorf(stderr.FileNotFound, tFile)
 	}
 
 	t, e1 := template.ParseFiles(tFile)
 	if e1 != nil {
+		log.Dbugf(stderr.TemplateLoad, tFile)
 		return e1
 	}
 
+	log.Dbugf(stdout.TemplateLoad, tFile)
 	return t.Execute(w, vars)
 }
 
 func logToFile(filename string, line string) {
 	dirname := filepath.Dir(filename)
 	if os.MkdirAll(dirname, 0755) != nil {
-		log.Errf("could not create dir: %v", dirname)
+		log.Errf(stderr.MakeDir, dirname)
 	}
 
 	f, e1 := os.OpenFile(filename, os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0774)
@@ -121,13 +155,13 @@ func logToFile(filename string, line string) {
 func saveFile(filename string, b []byte) {
 	f, e1 := os.OpenFile(filename, os.O_CREATE|os.O_WRONLY, 0744)
 	if e1 != nil {
-		log.Errf("could not open file %v", e1.Error())
+		log.Errf(stderr.FileOpen, e1.Error())
 		return
 	}
 
 	_, e2 := f.Write(b)
 	if e2 != nil {
-		log.Errf("could not write file %v", e2.Error())
+		log.Errf(stderr.FileWrite, e2.Error())
 	}
 }
 
@@ -141,20 +175,4 @@ func getHeadersAsString(header http.Header) string {
 	}
 
 	return h
-}
-
-func setEnv(vars map[string]string) {
-	for k, v := range vars {
-		if e := os.Setenv(k, v); e != nil {
-			log.Logf("could not set environment variable %q: %s\n", k, e.Error())
-		}
-	}
-}
-
-func unsetEnv(vars map[string]string) {
-	for k, _ := range vars {
-		if e := os.Unsetenv(k); e != nil {
-			log.Logf("could not set environment variable %q: %s\n", k, e.Error())
-		}
-	}
 }

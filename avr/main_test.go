@@ -164,8 +164,6 @@ func TestTriggeredPublishReleaseTagWorkflow(t *testing.T) {
 
 // Should pick the workflow to publish a release tag
 func TestTriggeredPublishChangelogWorkflow(t *testing.T) {
-	t.Skip("This test is skipped for development of push changes through the REST API")
-
 	wantCode := 0
 
 	repo := git2.CloneFromBundle("repo-01", tmpDir, fixtureDir, ps)

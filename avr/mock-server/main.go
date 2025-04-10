@@ -13,11 +13,12 @@ import (
 )
 
 var (
+	wd         = rootDir()
 	serverDir  = "mock-server"
 	cacheDir   = "cache"
 	requestDir = cacheDir + "/request"
-	wd         = workDir()
 	log        = logger.Standard{}
+	mockDir    = wd + "mock-server/responses/"
 )
 
 func main() {
@@ -28,6 +29,8 @@ func main() {
 		logger.VerbosityLevel = int(num)
 	}
 
+	log.Dbugf("working dir: %s", wd)
+
 	// Register HTTP request handlers
 	// Also read up at https://go.dev/blog/routing-enhancements
 	handler := http.NewServeMux()
@@ -36,7 +39,7 @@ func main() {
 	handler.HandleFunc("circleci.com/", mockCircleCi)
 	handler.HandleFunc("/health", healthCheck)
 	handler.HandleFunc("github.com/{owner}/{repo}/", gitHttpBackendProxy)
-	handler.HandleFunc("api.github.com/repos/{owner}/{repo}/", mockGitHubApi)
+	handler.HandleFunc("api.github.com/repos/{owner}/{repo}/{remain...}", mockGitHubApi)
 
 	// run the web server
 	mainErr := http.ListenAndServeTLS(
@@ -169,14 +172,13 @@ func mockGitHubApi(w http.ResponseWriter, r *http.Request) {
 
 	logToFile(cacheDir+"/request/access.log", r.URL.String()+" : "+r.URL.RawQuery)
 
-	owner := r.PathValue("owner")
 	repo := r.PathValue("repo")
-	p := strings.Replace(r.URL.Path, "/repos/"+owner+"/"+repo, "", 1)
+	remain := r.PathValue("remain")
 
-	log.Dbugf("p = %v", p)
+	log.Dbugf("remain = %v", remain)
 
-	switch p {
-	case "/releases":
+	switch remain {
+	case "releases":
 		b, _ := io.ReadAll(r.Body)
 		var data postData
 
@@ -188,11 +190,11 @@ func mockGitHubApi(w http.ResponseWriter, r *http.Request) {
 		mock = fmt.Sprintf("%v-releases.json", data["tag_name"])
 		vars.Data["Mock"] = mock
 
-	case "/pulls":
+	case "pulls":
 		mock = "make-pr.json"
 		vars.Data["Mock"] = mock
 		w.WriteHeader(http.StatusCreated)
-	case "/pulls/1/merge":
+	case "pulls/1/merge":
 		switch r.Method {
 		case "GET":
 			w.WriteHeader(http.StatusNoContent)
@@ -202,14 +204,18 @@ func mockGitHubApi(w http.ResponseWriter, r *http.Request) {
 			w.WriteHeader(http.StatusOK)
 		}
 		vars.Data["Mock"] = mock
-		if strings.Contains(p, "version-release") {
+		if strings.Contains(remain, "version-release") {
 			if e := getBody(r, "prm"); e != nil {
 				panic(e.Error())
 				return
 			}
 		}
 	default:
-		mock = getResponseMock(r.URL.Path)
+		e := getResponseMock(repo, remain, w)
+		if e == nil {
+			return
+		}
+		log.Errf(e.Error())
 	}
 
 	log.Infof(stdout.LoadingFile, "JSON", mock)

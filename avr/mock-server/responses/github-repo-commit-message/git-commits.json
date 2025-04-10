@@ -1,0 +1,36 @@
+{
+    "sha": "e4b217589dc7b9761e18b9fd7bda1fbdf63e1336",
+    "node_id": "C_kwDONMauyNoAKGFmOGMxNjczZGYyNGU2OGU2ZTMzMmQ4OWUyYmRiNzA1ZjRiYTE0NDk",
+    "url": "https://api.github.com/repos/kohirens/github-repo-commit-message/git/commits/e4b217589dc7b9761e18b9fd7bda1fbdf63e1336",
+    "html_url": "https://github.com/kohirens/github-repo-commit-message/commit/e4b217589dc7b9761e18b9fd7bda1fbdf63e1336",
+    "author": {
+        "name": "Your name",
+        "email": "you@example.com",
+        "date": "2025-04-09T20:53:29Z"
+    },
+    "committer": {
+        "name": "Your Name",
+        "email": "you@example.com",
+        "date": "2025-04-09T20:53:29Z"
+    },
+    "tree": {
+        "sha": "690c01d11569b2760b168f324bfafe452cc6b0c8",
+        "url": "https://api.github.com/repos/kohirens/github-repo-commit-message/git/trees/690c01d11569b2760b168f324bfafe452cc6b0c8"
+    },
+    "message": "auto: Release 0.1.7\n## [0.1.7]\n\n### Changed\n\n- More Auto Version Release Testing\n\n\nchanges sha256 fXZmV28h9t5ivuzjGhv7P7MLtCdeCio7/RdGsGzbWNE=",
+    "parents": [
+        {
+            "sha": "a5ffd3c495517516c42a7ea31debd0eddea0b7ee",
+            "url": "https://api.github.com/repos/kohirens/github-repo-commit-message/git/commits/a5ffd3c495517516c42a7ea31debd0eddea0b7ee",
+            "html_url": "https://github.com/kohirens/github-repo-commit-message/commit/a5ffd3c495517516c42a7ea31debd0eddea0b7ee"
+        }
+    ],
+    "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+    },
+    "status": "201"
+}

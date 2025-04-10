@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/kohirens/stdlib/git"
 	"net/http"
+	"os"
 	"testing"
 )
 
@@ -38,7 +39,6 @@ func TestIsChangelogCurrent(t *testing.T) {
 
 // Ensure the publishing a changelog works as advertised.
 func TestPublishChangelog(runner *testing.T) {
-	runner.Skip("This test is skipped for development of push changes through the REST API")
 	cases := []struct {
 		name       string
 		bundle     string
@@ -54,6 +54,7 @@ func TestPublishChangelog(runner *testing.T) {
 			t.Setenv("CIRCLE_PROJECT_REPONAME", c.bundle)
 			ghcFixture, _ := newGitHubClient(&http.Client{})
 			repo := git.CloneFromBundle(c.bundle, tmpDir, fixtureDir, ps)
+			_ = os.WriteFile(repo+ps+"CHANGELOG.md", []byte("[1.0.0] - 2024-06-14\n\n### Added\n\n- README.md"), 0664)
 
 			if err := PublishChangelog(repo, c.chgLogFile, c.branch, c.semVer, ghcFixture); (err != nil) != c.wantErr {
 				t.Errorf("PublishChangelog() error = %v, wantErr %v", err, c.wantErr)

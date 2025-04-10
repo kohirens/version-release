@@ -19,7 +19,7 @@ type GithubClient interface {
 
 // PublishChangelog Run automation to update the CHANGELOG.md
 func PublishChangelog(wd, chgLogFile, branch, semVer string, ghc GithubClient) error {
-	files := []string{chgLogFile}
+	files := []string{wd + fsio.PS + chgLogFile}
 
 	configFile := wd + fsio.PS + gitcliff.CliffConfigName
 
