@@ -31,10 +31,6 @@ parameters:
         type: boolean
         default: false
         description: Run integration tests
-    ssh_finger:
-        description: SSH fingerprint.
-        type: string
-        default: "SHA256:33aENw5b67lKO3SVfCEeGeMthT+BUKsfyj+0YyU+Qz4"
     triggered_flow:
         default: "workflow-selector"
         description: Workflow to be executed.
@@ -234,7 +230,6 @@ workflows:
         jobs:
             - vr/workflow-selector:
                   context: << pipeline.parameters.ctx_auto_release >>
-                  ssh_finger: << pipeline.parameters.ssh_finger >>
 
     publish-changelog:
         when:
@@ -243,7 +238,6 @@ workflows:
         jobs:
             - vr/publish-changelog:
                   context: << pipeline.parameters.ctx_auto_release >>
-                  ssh_finger: << pipeline.parameters.ssh_finger >>
 
     publish-release-tag:
         when:
