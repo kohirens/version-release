@@ -407,5 +407,9 @@ func main() {
 		}
 
 		fmt.Print(known)
+
+	case "next-version":
+		logger.VerbosityLevel = 0
+		fmt.Print(gitcliff.Bump(workDir))
 	}
 }

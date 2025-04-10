@@ -180,6 +180,73 @@ func GetCurrentTag(wd string) string {
 	return string(tags[0])
 }
 
+// https://git-scm.com/docs/git-status
+type File struct {
+	Stage,
+	Submodule,
+	FileModeHead,
+	FileModeIndex,
+	FileModeWorktree,
+	ObjectNameHead,
+	ObjectNameIndex,
+	Path string
+}
+
+type StatusPorcelainFiles struct {
+	Files   []*File
+	Deleted []string
+}
+
+func (s *StatusPorcelainFiles) Add(xy, sub, mH, mI, mW, hH, hI, path string) {
+	s.Files = append(s.Files, &File{
+		xy,
+		sub,
+		mH,
+		mI,
+		mW,
+		hH,
+		hI,
+		path,
+	})
+}
+
+// Status Git status, using the porcelain option, of file changes.
+func Status(wd string) *StatusPorcelainFiles {
+	so, se, _, _ := cli.RunCommand(
+		wd,
+		cmdGit,
+		[]string{"status", "--porcelain=2"},
+	)
+
+	if se != nil {
+		return nil
+	}
+
+	if len(so) < 1 {
+		return nil
+	}
+
+	files := &StatusPorcelainFiles{}
+
+	for _, status := range bytes.Split(so, []byte("\n")) {
+		parts := strings.Split(string(status), " ")
+		if len(parts) < 9 || parts[0] == "u" {
+			continue
+		}
+		switch parts[0] {
+		case "2": // renamed
+			// NOTE: We are throwing away the rename or copy score parts[8].
+			// parts[9] is of the form <path><sep><origPath>, a tab (ASCII 0x09)
+			// byte separates them since `-z` option is NOT used.
+			files.Add(parts[1], parts[2], parts[3], parts[4], parts[5], parts[6], parts[7], parts[9])
+		default:
+			files.Add(parts[1], parts[2], parts[3], parts[4], parts[5], parts[6], parts[7], parts[8])
+		}
+	}
+
+	return files
+}
+
 // HasSemverTag Indicates when a commit is tagged.
 //
 //	Uses git describe to finds the most recent tag that is reachable from a

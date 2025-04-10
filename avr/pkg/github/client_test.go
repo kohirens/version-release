@@ -27,7 +27,6 @@ func TestClient_PublishChangelog(runner *testing.T) {
 		branch  string
 		header  string
 		msgBody string
-		files   []string
 		wantErr bool
 	}{
 		{
@@ -36,7 +35,6 @@ func TestClient_PublishChangelog(runner *testing.T) {
 			"main",
 			"auto: Release 1.0.0",
 			"## Added README.md",
-			[]string{"CHANGELOG.md"},
 			false,
 		},
 	}
@@ -57,7 +55,7 @@ func TestClient_PublishChangelog(runner *testing.T) {
 			// we need a CHANGELOG.md fixture.
 			_ = os.WriteFile("CHANGELOG.md", []byte("[1.0.0] - 2024-06-14\n\n### Added\n\n- README.md"), 0664)
 
-			if err := gh.PublishChangelog(c.branch, c.header, c.msgBody, "", c.files); (err != nil) != c.wantErr {
+			if err := gh.PublishChangelog(repo, c.branch, c.header, c.msgBody, ""); (err != nil) != c.wantErr {
 				t.Errorf("PublishChangelog() error = %v, wantErr %v", err, c.wantErr)
 			}
 		})

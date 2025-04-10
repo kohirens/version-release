@@ -14,7 +14,7 @@ import (
 
 type GithubClient interface {
 	TagAndRelease(revision, tag string) (*github.ReleasesResponse, error)
-	PublishChangelog(branch, header, msg, footer string, files []string) error
+	PublishChangelog(wd, branch, header, msg, footer string) error
 }
 
 // PublishChangelog Run automation to update the CHANGELOG.md
@@ -62,7 +62,7 @@ func PublishChangelog(wd, chgLogFile, branch, semVer string, ghc GithubClient) e
 	}
 
 	// Commit, push, and rebase the changelog.
-	return ghc.PublishChangelog(branch, header, string(changes), footer, files)
+	return ghc.PublishChangelog(wd, branch, header, string(changes), footer)
 }
 
 // changelogContains Return true if changelog contains the unreleased changes.

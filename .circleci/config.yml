@@ -44,6 +44,13 @@ executors:
                   username: ${DH_USER}
                   password: ${DH_API_TOKEN}
         resource_class: small
+    avr:
+        docker:
+            - image: kohirens/version-release:5.0.1
+              auth:
+                  username: ${DH_USER}
+                  password: ${DH_API_TOKEN}
+        resource_class: small
 
 filter-semantic-tag: &filter-semantic-tag
     tags:
@@ -97,19 +104,25 @@ jobs:
                       circleci orb publish --skip-update-check orb.yml << pipeline.parameters.orb_repo >>@${BUILD_VER} --token ${CIRCLE_TOKEN}
 
     github-action-publish:
-        parameters:
-            ver_tag:
-                default: "dev:alpha"
-                description: version tag for the image
-                type: string
-        executor: cli/default
+        executor: avr
         steps:
             - attach_workspace: { at: "." }
+            - setup_remote_docker:
+                  docker_layer_caching: true
             - run:
-                  name: "Publish Orb"
+                  name: "Generate GitHub Action files"
                   command: |
+                      export GITHUB_API_URL="none"
                       # Update the selector.yaml workflow
-                      sed -i -e "s/VERSION_RELEASE_IMAGE/<<parameters.image_tag>>/g" .github/workflows/selector.yml
+                      next_version="$(git-cliff --bumped-version)"
+                      if [ -z "${next_version}" ]; then
+                        echo "no tag found in order to Generate GitHub Action files"
+                        exit 1
+                      fi
+                      echo "next_version = ${next_version}"
+                      sed -i -e "s/VERSION_RELEASE_IMAGE/${next_version}/g" .github/workflows/selector.yml
+                      cat .github/workflows/selector.yml
+            - persist_to_workspace: { root: .,  paths: [ .github/workflows/selector.yml ] }
 
     integration-test-vr:
         executor: base
@@ -188,12 +201,16 @@ workflows:
                   requires: [ publish-dev-image ]
                   ver_tag: "dev:<< pipeline.git.revision >>"
                   image_tag: "dev"
+            - github-action-publish:
+                  name: publish-github-action-files
+                  context: << pipeline.parameters.ctx_auto_release >>
+                  requires: [ publish-dev-image ]
             - ot/trigger-integration-tests-workflow:
                   name: trigger-integration-tests
                   context: << pipeline.parameters.ctx_auto_release >>
                   pipeline-param-map: >-
                       {\"run_integration_tests\": true, \"orb_version\": \"dev:<< pipeline.git.revision >>\"}
-                  requires: [ publish-dev-orb ]
+                  requires: [ publish-dev-orb, publish-github-action-files ]
         when:
             and:
                 - not: << pipeline.parameters.run_integration_tests >>
@@ -236,8 +253,15 @@ workflows:
             and:
                 - equal: [ "publish-changelog", << pipeline.parameters.triggered_flow >> ]
         jobs:
+            - co
+            - github-action-publish:
+                  name: Publish GitHub Action files
+                  context: << pipeline.parameters.ctx_auto_release >>
             - vr/publish-changelog:
                   context: << pipeline.parameters.ctx_auto_release >>
+                  do_attach_workspace: true
+                  do_checkout: false
+                  requires: [ github-action-publish]
 
     publish-release-tag:
         when:
