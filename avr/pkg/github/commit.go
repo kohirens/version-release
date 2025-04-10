@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"github.com/kohirens/version-release/avr/pkg/git"
 	"io"
 	"os"
 )
@@ -96,39 +97,35 @@ func GetTree(ref string, gh *Client) (*GitTree, error) {
 // overwrite items from base_tree with the same path.
 // For details see
 // https://docs.github.com/en/rest/git/trees?apiVersion=2022-11-28#create-a-tree
-func NewTree(parentSha string, files []string, gh *Client) (*GitTree, error) {
+func NewTree(wd, parentSha string, gh *Client) (*GitTree, error) {
 	uri := fmt.Sprintf(epTree, gh.Host, gh.Repository)
 
 	Log.Dbugf("new tree uri: %v", uri)
 	Log.Dbugf("new tree parent sha: %v", parentSha)
-	Log.Dbugf("files with changes: %v", files)
 
 	body := &RequestTree{
 		BaseTree: parentSha,
 	}
 
+	gitStatFiles := git.Status(wd)
 	// Add contents of the commit to the request body.
-	for _, filePath := range files {
-		content, e1 := os.ReadFile(filePath)
+	for _, gitStatFile := range gitStatFiles.Files {
+		content, e1 := os.ReadFile(gitStatFile.Path)
 		if e1 != nil {
 			return nil, fmt.Errorf(e1.Error())
 		}
 
-		fi, e2 := os.Stat(filePath)
-		if e2 != nil {
-			return nil, fmt.Errorf(e2.Error())
+		theType := "blob"
+		switch gitStatFile.FileModeWorktree {
+		case "040000":
+			theType = "tree"
+		case "160000":
+			theType = "commit"
 		}
-
-		// determine the file mode
-		fileMode := "100644"
-		if fi.IsDir() {
-			fileMode = "160000"
-		}
-
 		body.Tree = append(body.Tree, &Tree{
-			Path:    filePath,
-			Mode:    fileMode,
-			Type:    "blob",
+			Path:    gitStatFile.Path,
+			Mode:    gitStatFile.FileModeWorktree,
+			Type:    theType,
 			Content: string(content),
 		})
 	}

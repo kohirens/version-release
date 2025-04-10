@@ -11,7 +11,7 @@ import (
 // API. Parameters branch and parent must be fully qualified reference (ie:
 // refs/heads/master). If they don't start with 'refs' and have at least two
 // slashes, it will be rejected.
-func Push(name, parent, commitMessage string, files []string, gh *Client) error {
+func Push(wd, name, parent, commitMessage string, gh *Client) error {
 	// Support passing in just the branch name (ie: main),
 	parentBranch := parent
 	if !strings.Contains(parent, "heads/") {
@@ -34,7 +34,7 @@ func Push(name, parent, commitMessage string, files []string, gh *Client) error 
 	// Make a new Git tree, based off of a parent tree, with new changes.
 	// We found out that we had to use a tree instead of just a reference.
 	// Otherwise, the new branch would not contain any of bases history.
-	newTree, e2 := NewTree(parentTree.Sha, files, gh)
+	newTree, e2 := NewTree(wd, parentTree.Sha, gh)
 	if e2 != nil {
 		return e2
 	}
