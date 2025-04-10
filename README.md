@@ -1,7 +1,7 @@
 # Auto Version Release
 
-Use A pipeline to automate updating the CHANGELOG and releasing on GitHub using
-[Conventional Commits].
+Use A CI/CD pipeline to automate updating the CHANGELOG and releasing on GitHub
+using [Conventional Commits].
 
 FYI: Changelog updates are performed using the [git-cliff] tool.
 
@@ -9,29 +9,38 @@ FYI: Changelog updates are performed using the [git-cliff] tool.
 
 ## Features
 
-1. Supports CircleCI pipelines.
-2. Auto update the change log from Git commit messages based on conventional
-   commits then merge into the main trunk.
-3. Auto publish a release tag on GitHub.
+* Integrate with existing CircleCI pipelines.
+* Automated change log publishing.
+* Automated GitHub release publishing.
 
 ## How It Works
 
-**CircleCI Integration**
+1. Automatically update the change log from Git commit messages based on
+   conventional commits.
+2. Automatically commit, branch and then merge any CHANGELOG.md updates into
+   a trunk (named or ref) of your choosing.
+3. Automatically publish a new release tag on GitHub (will fail if the
+   calculated release already exists).
 
-You will need to integrate CircleCI and GitHub so that Circle CI workflows can
-write to your repository on your behalf.
+## CI/CD Pipeline Integration
+
+Make use of the Auto Version Release Docker image to integrate with any
+pipeline.
+
+### CircleCI
+
+You will need to allow CircleCI read/write permissions to your GitHub
+repository, which can be done with these steps.
 
 1. [Set up a personal access token on GitHub] to allow CircleCI to make GitHub
  API request on your behalf.
-2. [Generate an SSH key for your repository] to grant CircleCI write access to
-  your repository.
-3. Add or edit `.circleci/config.yml` to:
+2. Edit `.circleci/config.yml` to:
    1. Update the change log by extracting changes from (conventional) commits
       messages.
    2. Make a pull request and with the updated changes then auto merge them.
    3. Perform a release if the changes warrant one.
 
-See this repository's [.circleci/config.yml] for example.
+See the [Version Release Orb] documentation for an example.
 
 ## Resources
 
