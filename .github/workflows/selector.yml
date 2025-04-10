@@ -43,7 +43,7 @@ jobs:
                   fetch-tags: true
                   fetch-depth: 0
             - name: Select a workflow
-              uses: kohirens/version-release/.github/actions/workflow-selector@github-actions # Uses an action in the root directory
+              uses: kohirens/version-release/.github/actions/workflow-selector@patch-2025-04-10-02
               id: selector
     publish-changelog:
         permissions:
@@ -58,7 +58,7 @@ jobs:
                   fetch-tags: true
                   fetch-depth: 0
             - name: Update and publish the changelog
-              uses: kohirens/version-release/.github/actions/publish-changelog@github-actions # Uses an action in the root directory
+              uses: kohirens/version-release/.github/actions/publish-changelog@patch-2025-04-10-02
               id: changelog
               with:
                   changelog_hash: ${{ needs.select-a-workflow.outputs.changelog_hash }}
@@ -77,7 +77,7 @@ jobs:
                   fetch-tags: true
                   fetch-depth: 0
             - name: Publish a release
-              uses: kohirens/version-release/.github/actions/publish-release-tag@github-actions # Uses an action in the root directory
+              uses: kohirens/version-release/.github/actions/publish-release-tag@patch-2025-04-10-02
               id: release
               with:
                   tag_cmd: 'echo "${{ needs.select-a-workflow.outputs.next_semver }}"'

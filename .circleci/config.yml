@@ -96,6 +96,21 @@ jobs:
                       circleci orb --skip-update-check validate orb.yml
                       circleci orb publish --skip-update-check orb.yml << pipeline.parameters.orb_repo >>@${BUILD_VER} --token ${CIRCLE_TOKEN}
 
+    github-action-publish:
+        parameters:
+            ver_tag:
+                default: "dev:alpha"
+                description: version tag for the image
+                type: string
+        executor: cli/default
+        steps:
+            - attach_workspace: { at: "." }
+            - run:
+                  name: "Publish Orb"
+                  command: |
+                      # Update the selector.yaml workflow
+                      sed -i -e "s/VERSION_RELEASE_IMAGE/<<parameters.image_tag>>/g" .github/workflows/selector.yml
+
     integration-test-vr:
         executor: base
         environment:
