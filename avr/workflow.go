@@ -19,17 +19,15 @@ type GithubClient interface {
 
 // PublishChangelog Run automation to update the CHANGELOG.md
 func PublishChangelog(wd, chgLogFile, branch, semVer string, ghc GithubClient) error {
-	files := []string{wd + fsio.PS + chgLogFile}
+	files := []string{chgLogFile}
 
-	configFile := wd + fsio.PS + gitcliff.CliffConfigName
-
-	configWritten, e1 := gitcliff.BuildConfig(configFile)
+	configWritten, e1 := gitcliff.BuildConfig(wd + fsio.PS + gitcliff.CliffConfigName)
 	if e1 != nil {
 		return e1
 	}
 
 	if configWritten {
-		files = append(files, configFile)
+		files = append(files, gitcliff.CliffConfigName)
 	}
 
 	// If one exist, then checkout the changelog from the current tag and use that as the start point to prepend

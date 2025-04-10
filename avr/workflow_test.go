@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/kohirens/stdlib/git"
+	help "github.com/kohirens/stdlib/test"
 	"net/http"
 	"os"
 	"testing"
@@ -54,6 +55,7 @@ func TestPublishChangelog(runner *testing.T) {
 			t.Setenv("CIRCLE_PROJECT_REPONAME", c.bundle)
 			ghcFixture, _ := newGitHubClient(&http.Client{})
 			repo := git.CloneFromBundle(c.bundle, tmpDir, fixtureDir, ps)
+			help.Chdir(t, repo)
 			_ = os.WriteFile(repo+ps+"CHANGELOG.md", []byte("[1.0.0] - 2024-06-14\n\n### Added\n\n- README.md"), 0664)
 
 			if err := PublishChangelog(repo, c.chgLogFile, c.branch, c.semVer, ghcFixture); (err != nil) != c.wantErr {

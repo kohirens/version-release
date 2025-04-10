@@ -30,7 +30,8 @@ var (
 func TestMain(m *testing.M) {
 	// Only runs when this environment variable is set.
 	if _, ok := os.LookupEnv(subEnvVarName); ok {
-		runAppMain()
+		//runAppMain()
+		help.RunMain(subEnvVarName, main)
 	}
 
 	help.ResetDir(tmpDir, dirMode)
@@ -167,6 +168,7 @@ func TestTriggeredPublishChangelogWorkflow(t *testing.T) {
 	wantCode := 0
 
 	repo := git2.CloneFromBundle("repo-01", tmpDir, fixtureDir, ps)
+	help.Chdir(t, repo)
 	oldUrl, _ := git.RemoteGetUrl(repo, "origin")
 	_ = git.RemoteSetUrl(repo, "origin", "https://github.com/kohirens/repo-01", oldUrl)
 
@@ -270,16 +272,4 @@ func TestPublishReleaseTagWorkflows(t *testing.T) {
 			}
 		})
 	}
-}
-
-// Used for running the application's main function from test in a sub process.
-func runAppMain() {
-	args := strings.Split(os.Getenv(subEnvVarName), " ")
-	os.Args = append([]string{os.Args[0]}, args...)
-
-	// Cannot use testing.Verbose() here since flag.Parse() has not been called.
-	// Debug stmt, uncomment when needed.
-	//fmt.Printf("\nsub os.Args = %v\n", os.Args)
-
-	main()
 }
