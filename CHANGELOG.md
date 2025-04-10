@@ -5,6 +5,56 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [5.0.0]
+
+### Added
+
+- GitHub Actions for Auto Version Release
+- Auto Version Release Executable
+
+### Changed
+
+- Upgrade The Standard Logger Package.
+- Push Commit Through GitHub REST API
+- GitHub Actions Publish Changelog Permissions
+- Rename GH_TOKEN to GH_WRITE_TOKEN
+- Refactor Logging Functionality
+- Push with Fine Grained Token
+- Refactor Logging Functionality
+- Change GitHub Token Environment Variable Name
+- GitHub Actions
+
+### Documentation
+
+- Added GitHub Token Setup
+
+### Fixed
+
+- Continuous Integration
+- Go Git-http-backend Proxy
+- Unused Import
+- Missing Variable
+
+### Regular Maintenance
+
+- Continue Updating Tests
+- Updated Tests
+- Optimize Mock Server
+- Refactor Mock server
+- Mock Server
+- Refactor Mock Server
+- Fix Shell Check
+- Updated CI Configuration
+- Update GitCliff Configuration
+
+### Removed
+
+- Vro Source Code
+
+### Testing
+
+- Modified Container Environment avr Command
+
 ## [4.4.4] - 2024-10-03
 
 ### Documentation
