@@ -211,6 +211,7 @@ func (s *StatusPorcelainFiles) Add(xy, sub, mH, mI, mW, hH, hI, path string) {
 }
 
 // Status Git status, using the porcelain option, of file changes.
+// For details see https://git-scm.com/docs/git-status
 func Status(wd string) *StatusPorcelainFiles {
 	so, se, _, _ := cli.RunCommand(
 		wd,
