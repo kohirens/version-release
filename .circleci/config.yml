@@ -287,11 +287,11 @@ workflows:
                   dockerfile: ".docker/vr/Dockerfile"
                   repository: << pipeline.parameters.orb_repo >>
                   tags: "<< pipeline.git.tag >> latest"
-            - orb-publish:
-                  name: "publish-prod-orb"
-                  context: << pipeline.parameters.ctx_auto_release >>
-                  requires: [ publish-prod-image-semver ]
-                  ver_tag: << pipeline.git.tag >>
-                  image_tag: "<< pipeline.git.tag >>"
-                  filters:
-                      <<: *filter-semantic-tag
+#            - orb-publish:
+#                  name: "publish-prod-orb"
+#                  context: << pipeline.parameters.ctx_auto_release >>
+#                  requires: [ publish-prod-image-semver ]
+#                  ver_tag: << pipeline.git.tag >>
+#                  image_tag: "<< pipeline.git.tag >>"
+#                  filters:
+#                      <<: *filter-semantic-tag
