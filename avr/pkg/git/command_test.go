@@ -4,6 +4,7 @@ import (
 	"github.com/kohirens/stdlib/git"
 	help "github.com/kohirens/stdlib/test"
 	"os"
+	"reflect"
 	"strings"
 	"testing"
 )
@@ -176,5 +177,46 @@ func TestGetCurrentTag(t *testing.T) {
 				t.Errorf("GetCurrentTag() = %v, want %v", got, c.want)
 			}
 		})
+	}
+}
+
+func TestStatus(runner *testing.T) {
+	runner.Skipf("skip for now, not moving forward with using Status to detect files to add to the changelog commit")
+	cases := []struct {
+		name   string
+		bundle string
+		files  map[string]string
+		want   *StatusPorcelainFiles
+	}{
+		{
+			"add-new-files",
+			"git-status-porcelain-readme-only",
+			map[string]string{"CHANGELOG.md": "[0.1.0] - 2025-04-12"},
+			&StatusPorcelainFiles{},
+		},
+	}
+
+	for _, c := range cases {
+		runner.Run(c.name, func(t *testing.T) {
+			repo := git.CloneFromBundle(c.bundle, tmpDir, fixtureDir, ps)
+			var fil []*File
+
+			fil = append(fil, &File{
+				Stage: "?",
+				Path:  "CHANGELOG.md",
+			})
+			makeFiles(repo, c.files)
+			if got := Status(repo); !reflect.DeepEqual(got, c.want) {
+				t.Errorf("Status() = %v, want %v", got, c.want)
+			}
+		})
+	}
+}
+
+func makeFiles(wd string, files map[string]string) {
+	for filename, content := range files {
+		if e := os.WriteFile(wd+ps+filename, []byte(content), 0664); e != nil {
+			panic(e)
+		}
 	}
 }
