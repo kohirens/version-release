@@ -255,13 +255,13 @@ workflows:
         jobs:
             - co
             - github-action-publish:
-                  name: Publish GitHub Action files
+                  name: publish-github-action-files
                   context: << pipeline.parameters.ctx_auto_release >>
             - vr/publish-changelog:
                   context: << pipeline.parameters.ctx_auto_release >>
                   do_attach_workspace: true
                   do_checkout: false
-                  requires: [ github-action-publish]
+                  requires: [ publish-github-action-files ]
 
     publish-release-tag:
         when:
