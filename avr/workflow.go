@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"bytes"
 	"encoding/base64"
 	"fmt"
 	"github.com/kohirens/stdlib/fsio"
@@ -14,7 +15,7 @@ import (
 
 type GithubClient interface {
 	TagAndRelease(revision, tag string) (*github.ReleasesResponse, error)
-	PublishChangelog(wd, branch, header, msg, footer string) error
+	PublishChangelog(wd, branch, header, msg, footer string, files []string) error
 }
 
 // PublishChangelog Run automation to update the CHANGELOG.md
@@ -61,8 +62,19 @@ func PublishChangelog(wd, chgLogFile, branch, semVer string, ghc GithubClient) e
 		return e4
 	}
 
+	// Add additional files to the commit.
+	addFiles, ok := os.LookupEnv("")
+	if ok {
+		filesBytes, e := os.ReadFile(addFiles)
+		if e != nil {
+			return fmt.Errorf(stderr.AdditionalFiles, e.Error())
+		}
+		cleanData := bytes.Replace(filesBytes, []byte("\r\n"), []byte("\n"), -1)
+		files = append(files, strings.Split(string(cleanData), "\n")...)
+	}
+
 	// Commit, push, and rebase the changelog.
-	return ghc.PublishChangelog(wd, branch, header, string(changes), footer)
+	return ghc.PublishChangelog(wd, branch, header, string(changes), footer, files)
 }
 
 // changelogContains Return true if changelog contains the unreleased changes.

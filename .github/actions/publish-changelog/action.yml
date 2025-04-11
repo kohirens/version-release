@@ -13,6 +13,13 @@ description:  |2
   We use a PR instead of a push in case the branch is protected from direct pushes.
 
 inputs: # https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/accessing-contextual-information-about-workflow-runs#inputs-context
+    add_files_to_commit:
+        default: ""
+        description: |2
+          A text file (UTF-8) containing 1 file per line to add along with the
+          changelog commit. The path should be relative to the root of the
+          repository. Line endings can be Linux, Mac, or Windows.
+        required: false
     changelog_file:
         default: "CHANGELOG.md"
         description: Location to output/update the CHANGELOG file.
@@ -75,6 +82,7 @@ runs: # https://docs.github.com/en/actions/sharing-automations/creating-actions/
     using: docker
     image: docker://kohirens/version-release:dev
     env: # https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/store-information-in-variables#default-environment-variables
+        PARAM_ADD_FILES_TO_COMMIT: ${{ inputs.add_files_to_commit }}
         PARAM_CHANGELOG_FILE: ${{ inputs.changelog_file }}
         PARAM_COMMITTER_EMAIL: ${{ inputs.committer_email }}
         PARAM_COMMITTER_GPG_KEY: ${{ inputs.committer_gpg_key }}

@@ -1,6 +1,7 @@
 package main
 
 var stderr = struct {
+	AdditionalFiles,
 	ChgLogAutoUpdate,
 	ClosingFile,
 	CommitAlreadyTagged,
@@ -23,6 +24,7 @@ var stderr = struct {
 	WorkDir,
 	WorkflowSelectorInput string
 }{
+	AdditionalFiles:       "unable to read in additional files: %v",
 	ChgLogAutoUpdate:      "abort, the last commit contains an auto update to the CHANGELOG.md",
 	ClosingFile:           "could not clos file %v: %v",
 	CommitAlreadyTagged:   "commit %v is already tagged",

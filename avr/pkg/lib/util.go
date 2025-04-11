@@ -8,7 +8,10 @@ import (
 	"strings"
 )
 
-const CheckSemVer = `v?\d+\.\d+\.\d+(-.+)?`
+const (
+	CheckSemVer = `v?\d+\.\d+\.\d+(-.+)?`
+	ps          = string(os.PathSeparator)
+)
 
 var log = logger.Standard{}
 
@@ -57,4 +60,16 @@ func ParseRepositoryUri(uri string) (string, string, string) {
 	}
 
 	return "", "", ""
+}
+
+func MakeFiles(wd string, files map[string][]byte) []string {
+	f := []string{}
+	for filename, content := range files {
+		if e := os.WriteFile(wd+ps+filename, content, 0664); e != nil {
+			panic(e)
+		}
+		f = append(f, filename)
+	}
+
+	return f
 }
