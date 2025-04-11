@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/kohirens/stdlib/logger"
+	"github.com/kohirens/version-release/avr/pkg/github"
 	"io"
 	"net/http"
 	"os"
@@ -211,6 +212,26 @@ func mockGitHubApi(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 	default:
+		if repo == "readme-only-no-tags" && remain == "git/trees" {
+			log.Dbugf("speicial case, we are checking for additional files.")
+			// TODO: Make sure the new tree contains the additional files
+			b, _ := io.ReadAll(r.Body)
+			var data github.RequestTree
+
+			_ = json.Unmarshal(b, &data)
+			log.Dbugf("body posted: %v", string(b))
+			for _, tree := range data.Tree {
+				log.Dbugf("tree paths posted: %v", tree.Path)
+				if tree.Path == "generated-file.txt" {
+					// The addition file was found in the list of files to add to the commit.
+					log.Dbugf("additonal file %v found", "generated-file.txt")
+					goto go2go
+				}
+			}
+			return
+		}
+	go2go:
+
 		e := getResponseMock(repo, remain, w)
 		if e == nil {
 			return
