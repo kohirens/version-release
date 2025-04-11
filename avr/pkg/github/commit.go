@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/kohirens/version-release/avr/pkg/git"
 	"io"
 	"os"
 )
@@ -97,7 +96,7 @@ func GetTree(ref string, gh *Client) (*GitTree, error) {
 // overwrite items from base_tree with the same path.
 // For details see
 // https://docs.github.com/en/rest/git/trees?apiVersion=2022-11-28#create-a-tree
-func NewTree(wd, parentSha string, gh *Client) (*GitTree, error) {
+func NewTree(wd, parentSha string, files []string, gh *Client) (*GitTree, error) {
 	uri := fmt.Sprintf(epTree, gh.Host, gh.Repository)
 
 	Log.Dbugf("new tree uri: %v", uri)
@@ -107,25 +106,30 @@ func NewTree(wd, parentSha string, gh *Client) (*GitTree, error) {
 		BaseTree: parentSha,
 	}
 
-	gitStatFiles := git.Status(wd)
+	Log.Dbugf("add files: %v", files)
+
 	// Add contents of the commit to the request body.
-	for _, gitStatFile := range gitStatFiles.Files {
-		content, e1 := os.ReadFile(gitStatFile.Path)
+	// this essentially is equivalent to staging files locally.
+	for _, filename := range files {
+		filepath := wd + "/" + filename
+
+		stats, e := os.Stat(wd + "/" + filename)
+		if e != nil {
+			return nil, fmt.Errorf(e.Error())
+		}
+		if stats.IsDir() { // can't handle directories or subtrees right now.
+			continue
+		}
+
+		content, e1 := os.ReadFile(filepath)
 		if e1 != nil {
 			return nil, fmt.Errorf(e1.Error())
 		}
 
-		theType := "blob"
-		switch gitStatFile.FileModeWorktree {
-		case "040000":
-			theType = "tree"
-		case "160000":
-			theType = "commit"
-		}
 		body.Tree = append(body.Tree, &Tree{
-			Path:    gitStatFile.Path,
-			Mode:    gitStatFile.FileModeWorktree,
-			Type:    theType,
+			Path:    filename,
+			Mode:    "100644",
+			Type:    "blob",
 			Content: string(content),
 		})
 	}

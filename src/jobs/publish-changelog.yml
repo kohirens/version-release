@@ -12,6 +12,13 @@ description: |2
   We use a PR instead of a push in case the branch is protected from direct
   pushes.
 parameters:
+  add_files_to_commit:
+    default: ""
+    description: |2
+      A text file (UTF-8) containing 1 file per line to add along with the
+      changelog commit. The path should be relative to the root of the
+      repository. Line endings can be Linux, Mac, or Windows.
+    type: string
   attach_workspace_path:
     default: "."
     description: Set where to attach the workspace.
@@ -103,6 +110,7 @@ steps:
   - run:
       environment:
         GITHUB_API_URL: "<< parameters.github_api_url >>"
+        PARAM_ADD_FILES_TO_COMMIT: "<< parameters.add_files_to_commit >>"
         PARAM_CHANGELOG_FILE: "<< parameters.changelog_file >>"
         PARAM_COMMITTER_EMAIL: "<< parameters.committer_email >>"
         PARAM_COMMITTER_GPG_KEY: "<< parameters.committer_gpg_key >>"

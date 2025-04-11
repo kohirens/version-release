@@ -8,14 +8,8 @@ import (
 	"time"
 )
 
-/*
-	curl -L \
-	  -H "Accept: application/vnd.github+json" \
-	  -H "Authorization: Bearer <YOUR-TOKEN>" \
-	  -H "X-GitHub-Api-Version: 2022-11-28" \
-	  https://api.github.com/repos/OWNER/REPO/pulls
-*/
-const ( // See https://docs.github.com/en/rest?apiVersion=2022-11-28 for endpoints and permissions.
+// See https://docs.github.com/en/rest?apiVersion=2022-11-28 for endpoints and permissions.
+const (
 	BaseUri        = "%s/repos/%s"
 	epBranches     = BaseUri + "/branches/%s"
 	epCommit       = BaseUri + "/git/commits"
@@ -78,7 +72,7 @@ func (gh *Client) DoesBranchExistRemotely(branch string) bool {
 
 // PublishChangelog Stage, commit, and push local changes, then make a pull
 // request and merge it containing the CHANGELOG.md if it contains changes.
-func (gh *Client) PublishChangelog(wd, baseRef, header, msgBody, footer string) error {
+func (gh *Client) PublishChangelog(wd, baseRef, header, msgBody, footer string, files []string) error {
 	// Return early if the branch that updates the change log exists remotely.
 	uri := fmt.Sprintf(repoUrl, PublicServer, gh.Repository)
 	Log.Dbugf(stdout.RepoUrl, uri)
@@ -87,7 +81,7 @@ func (gh *Client) PublishChangelog(wd, baseRef, header, msgBody, footer string) 
 		return fmt.Errorf(stderr.BranchExists, GenBranchName, uri)
 	}
 
-	if e := Push(wd, GenBranchName, baseRef, header+"\n"+msgBody+"\n"+footer, gh); e != nil {
+	if e := Push(wd, GenBranchName, baseRef, header+"\n"+msgBody+"\n"+footer, files, gh); e != nil {
 		return e
 	}
 

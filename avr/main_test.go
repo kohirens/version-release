@@ -30,7 +30,6 @@ var (
 func TestMain(m *testing.M) {
 	// Only runs when this environment variable is set.
 	if _, ok := os.LookupEnv(subEnvVarName); ok {
-		//runAppMain()
 		help.RunMain(subEnvVarName, main)
 	}
 

@@ -11,7 +11,7 @@ import (
 // API. Parameters branch and parent must be fully qualified reference (ie:
 // refs/heads/master). If they don't start with 'refs' and have at least two
 // slashes, it will be rejected.
-func Push(wd, name, parent, commitMessage string, gh *Client) error {
+func Push(wd, name, parent, commitMessage string, files []string, gh *Client) error {
 	// Support passing in just the branch name (ie: main),
 	parentBranch := parent
 	if !strings.Contains(parent, "heads/") {
@@ -34,9 +34,23 @@ func Push(wd, name, parent, commitMessage string, gh *Client) error {
 	// Make a new Git tree, based off of a parent tree, with new changes.
 	// We found out that we had to use a tree instead of just a reference.
 	// Otherwise, the new branch would not contain any of bases history.
-	newTree, e2 := NewTree(wd, parentTree.Sha, gh)
+	newTree, e2 := NewTree(wd, parentTree.Sha, files, gh)
 	if e2 != nil {
 		return e2
+	}
+
+	// verify all files were added to the tree.
+	var found bool
+	for _, aFile := range files {
+		found = false
+		for _, tree := range newTree.Tree {
+			if aFile == tree.Path {
+				found = true
+			}
+		}
+		if !found {
+			Log.Warnf("file not found in new tree: %q", aFile)
+		}
 	}
 
 	// Pass in commiter info of the integrators choosing.

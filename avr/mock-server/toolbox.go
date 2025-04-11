@@ -79,7 +79,6 @@ func getResponseMock(repo, p string, w http.ResponseWriter) error {
 	log.Dbugf(stderr.MockExist, filename, exists)
 
 	if !exists {
-
 		return fmt.Errorf(stderr.FindMock, filename)
 	}
 

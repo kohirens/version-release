@@ -16,6 +16,14 @@ on:
                 description: Git username to use when commiting the changelog.
                 required: true
                 type: string
+            add_files_to_commit:
+                default: ""
+                description: |2
+                  A text file (UTF-8) containing 1 file per line to add along with the
+                  changelog commit. The path should be relative to the root of the
+                  repository. Line endings can be Linux, Mac, or Windows.
+                required: false
+                type: string
         secrets:
             github_write_token:
                 required: true
@@ -65,6 +73,7 @@ jobs:
                   committer_email: ${{ inputs.committer_email }}
                   committer_gpg_key: ${{ inputs.committer_gpg_key }}
                   committer_name: ${{ inputs.committer_name }}
+                  add_files_to_commit: ${{ inputs.add_files_to_commit }}
         needs: select-a-workflow
     publish-release-tag:
         if: ${{ needs.select-a-workflow.outputs.workflow == 'publish-release-tag' }}

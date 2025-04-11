@@ -8,6 +8,10 @@ orbs:
     vr: kohirens/version-release@<< pipeline.parameters.orb_version >>
 
 parameters:
+    additional_files_file:
+        default: "additional-files-to-commit.txt"
+        description: Release automation
+        type: string
     ctx_auto_release:
         default: "kohirens-automation"
         description: Release automation
@@ -107,8 +111,6 @@ jobs:
         executor: avr
         steps:
             - attach_workspace: { at: "." }
-            - setup_remote_docker:
-                  docker_layer_caching: true
             - run:
                   name: "Generate GitHub Action files"
                   command: |
@@ -122,7 +124,14 @@ jobs:
                       echo "next_version = ${next_version}"
                       sed -i -e "s/VERSION_RELEASE_IMAGE/${next_version}/g" .github/workflows/selector.yml
                       cat .github/workflows/selector.yml
-            - persist_to_workspace: { root: .,  paths: [ .github/workflows/selector.yml ] }
+                      # Start adding files to the list of files that should be committed.
+                      echo ".github/workflows/selector.yml" > << pipeline.parameters.additional_files_file >>
+                      echo ".github/workflows/selector.yml updated"
+                      cat .github/workflows/selector.yml
+                      echo ""
+                      echo "additional files to commit"
+                      cat << pipeline.parameters.additional_files_file >>
+            - persist_to_workspace: { root: ".",  paths: [ "*" ] }
 
     integration-test-vr:
         executor: base
@@ -260,6 +269,7 @@ workflows:
                   requires: [ co ]
             - vr/publish-changelog:
                   context: << pipeline.parameters.ctx_auto_release >>
+                  add_files_to_commit: << pipeline.parameters.additional_files_file >>
                   do_attach_workspace: true
                   do_checkout: false
                   requires: [ publish-github-action-files ]
