@@ -257,6 +257,7 @@ workflows:
             - github-action-publish:
                   name: publish-github-action-files
                   context: << pipeline.parameters.ctx_auto_release >>
+                  requires: [ co ]
             - vr/publish-changelog:
                   context: << pipeline.parameters.ctx_auto_release >>
                   do_attach_workspace: true
