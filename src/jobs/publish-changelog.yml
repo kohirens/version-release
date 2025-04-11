@@ -1,5 +1,6 @@
 description: |2
-  Commit changes to the changelog and merge into a remote branch using the process:
+  Commit changes to the changelog and merge into a remote branch using the
+  process:
 
   1. Configure Git to allow a commit.
   2. Making a new branch.
@@ -8,7 +9,8 @@ description: |2
   5. Use the GitHub CLI to make a PR.
   6. Then immediately merge the changes in the desired branch.
 
-  We use a PR instead of a push in case the branch is protected from direct pushes.
+  We use a PR instead of a push in case the branch is protected from direct
+  pushes.
 parameters:
   attach_workspace_path:
     default: "."
@@ -63,15 +65,21 @@ parameters:
     enum: [ "merge", "rebase", "squash" ]
   tag_cmd:
       default: ""
-      description: Command to run to get the semantic version tag, will override the auto generated value.
+      description: |2
+        Command to run to get the semantic version tag, will override the auto
+        generated value.
       type: string
   tag_env_var:
       default: ""
-      description: Environment variable to get the semantic version tag, will override the auto generated value.
+      description: |2
+        Environment variable to get the semantic version tag, will override the
+        auto generated value.
       type: string
   tag_file:
       default: ""
-      description: File to get the semantic version tag, will override the auto generated value.
+      description: |2
+        File to get the semantic version tag, will override the auto generated
+        value.
       type: string
   working_directory:
     default: .

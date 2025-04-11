@@ -19,7 +19,10 @@ inputs: # https://docs.github.com/en/actions/writing-workflows/choosing-what-you
         required: true
     changelog_hash:
         default: ""
-        description: A checksum hash of the changelog from a the selector-workflow to compare against the current changelog, if they are different there are more changes to publish.
+        description: |2
+          A checksum hash of the changelog from a the selector-workflow to
+          compare against the current changelog, if they are different there
+          are more changes to publish.
     committer_email:
         required: true
     committer_gpg_key:
@@ -36,23 +39,32 @@ inputs: # https://docs.github.com/en/actions/writing-workflows/choosing-what-you
         required: true
     merge_type:
         default: "rebase"
-        description: Type of merge to perform, choose between merge|squash|rebase.
+        description: |2
+          Type of merge to perform, choose between merge|squash|rebase.
         required: true
     tag_cmd:
         default: ""
-        description: Command to run to get the semantic version tag, will override the auto generated value.
+        description: |2
+          Command to run to get the semantic version tag, will override the
+          auto generated value.
         required: false
     tag_env_var:
         default: ""
-        description: Environment variable to get the semantic version tag, will override the auto generated value.
+        description: |2
+          Environment variable to get the semantic version tag, will override
+          the auto generated value.
         required: false
     tag_file:
         default: ""
-        description: File to get the semantic version tag, will override the auto generated value.
+        description: |2
+          File to get the semantic version tag, will override the auto
+          generated value.
         required: false
     verbosity_level:
         default: "6"
-        description: Set the logging verbosity level, a value between 1-6, 1 being the least and 6 being the most.
+        description: |2
+          Set the logging verbosity level, a value between 1-6, 1 being the
+          least and 6 being the most.
         required: false
     working_directory:
         default: ${{ github.workspace }}
