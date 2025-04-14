@@ -21,7 +21,7 @@ parameters:
         description: Container automation
         type: string
     orb_version:
-        default: "dev:bd4866048d472818c9e4759ce25cbded65b1bb4f"
+        default: "dev:0aae75e0d6c56babc685df894c7c0eb199b46da6"
         description: >
             The development version of the orb to test.
             This value is automatically adjusted by the "trigger-integration-tests-workflow" job to correspond with the specific version created by the commit and should not be edited.
@@ -265,7 +265,6 @@ workflows:
             - co
             - github-action-publish:
                   name: publish-github-action-files
-                  context: << pipeline.parameters.ctx_auto_release >>
                   requires: [ co ]
             - vr/publish-changelog:
                   context: << pipeline.parameters.ctx_auto_release >>
@@ -298,11 +297,11 @@ workflows:
                   dockerfile: ".docker/vr/Dockerfile"
                   repository: << pipeline.parameters.orb_repo >>
                   tags: "<< pipeline.git.tag >> latest"
-#            - orb-publish:
-#                  name: "publish-prod-orb"
-#                  context: << pipeline.parameters.ctx_auto_release >>
-#                  requires: [ publish-prod-image-semver ]
-#                  ver_tag: << pipeline.git.tag >>
-#                  image_tag: "<< pipeline.git.tag >>"
-#                  filters:
-#                      <<: *filter-semantic-tag
+            - orb-publish:
+                  name: "publish-prod-orb"
+                  context: << pipeline.parameters.ctx_auto_release >>
+                  requires: [ publish-prod-image-semver ]
+                  ver_tag: << pipeline.git.tag >>
+                  image_tag: "<< pipeline.git.tag >>"
+                  filters:
+                      <<: *filter-semantic-tag
