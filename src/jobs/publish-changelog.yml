@@ -17,7 +17,9 @@ parameters:
     description: |2
       A text file (UTF-8) containing 1 file per line to add along with the
       changelog commit. The path should be relative to the root of the
-      repository. Line endings can be Linux, Mac, or Windows.
+      repository. Line endings can be Linux, Mac, or Windows. These are usually
+      files that need to be generated with the next semantic tag or other
+      release information.
     type: string
   attach_workspace_path:
     default: "."
