@@ -122,7 +122,7 @@ jobs:
                         exit 1
                       fi
                       echo "next_version = ${next_version}"
-                      sed -i -e "s/VERSION_RELEASE_IMAGE/${next_version}/g" .github/workflows/selector.yml
+                      sed -e "s/VERSION_RELEASE_IMAGE/${next_version}/g" templates/selector.yml > .github/workflows/selector.yml
                       cat .github/workflows/selector.yml
                       # Start adding files to the list of files that should be committed.
                       echo ".github/workflows/selector.yml" > << pipeline.parameters.additional_files_file >>
