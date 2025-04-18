@@ -9,7 +9,7 @@ FYI: Changelog updates are performed using the [git-cliff] tool.
 
 ## Features
 
-* Integrate with existing CircleCI pipelines.
+* Integrate with existing CircleCI and GitHub Actions workflows.
 * Automated change log publishing.
 * Automated GitHub release publishing.
 
@@ -33,7 +33,7 @@ You will need to allow CircleCI read/write permissions to your GitHub
 repository, which can be done with these steps.
 
 1. [Set up a personal access token on GitHub] to allow CircleCI to make GitHub
- API request on your behalf.
+   API request on your behalf.
 2. Edit `.circleci/config.yml` to:
    1. Update the change log by extracting changes from (conventional) commits
       messages.
@@ -41,6 +41,17 @@ repository, which can be done with these steps.
    3. Perform a release if the changes warrant one.
 
 See the [Version Release Orb] documentation for an example.
+
+### GitHub Actions
+
+1. [Set up a personal fine-grained access token on GitHub] to allow GitHub
+   Actions, through the GitHub REST API, to make changes to the repo on your
+   behalf.
+2. Add `.github/workflows/avr.yml` to:
+    1. Update the change log by extracting changes from (conventional) commits
+       messages.
+    2. Make a pull request and with the updated changes then auto merge them.
+    3. Perform a release if the changes warrant one.
 
 ## Resources
 
