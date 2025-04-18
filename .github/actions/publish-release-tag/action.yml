@@ -56,7 +56,6 @@ runs: # https://docs.github.com/en/actions/sharing-automations/creating-actions/
 #          id: "gh_has_release"
 #          entrypoint: gh-has-release.sh
 #          env:
-#              PARAM_FILE: ${{ inputs.release_file }}
 #              PARAM_OWNER_SLASH_REPO: ${{ inputs.repo }}
 #              PARAM_TAG_CMD: ${{ inputs.tag_cmd }}
 #              PARAM_TAG_ENV_VAR: ${{ inputs.tag_env_var }}

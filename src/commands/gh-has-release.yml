@@ -32,7 +32,6 @@ parameters:
 steps:
   - run:
       environment:
-        PARAM_FILE: <<parameters.file>>
         PARAM_OWNER: <<parameters.owner>>
         PARAM_REPO: <<parameters.repo>>
         PARAM_TAG_CMD: << parameters.tag_cmd >>
