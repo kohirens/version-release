@@ -272,3 +272,102 @@ func TestPublishReleaseTagWorkflows(t *testing.T) {
 		})
 	}
 }
+
+func TestNextVersion(t *testing.T) {
+	subcommand := "next-version"
+	tests := []struct {
+		name     string
+		bundle   string
+		args     []string
+		wantCode int
+		contains []byte
+	}{
+		{
+			"tag-without-prefix",
+			"first-commit-to-tag",
+			[]string{},
+			0,
+			[]byte("0.1.0"),
+		},
+		{
+			"tag-with-v-prefix",
+			"first-commit-to-tag-02",
+			[]string{"-enable-tag-v-prefix"},
+			0,
+			[]byte("v0.1.0"),
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			repo := git2.CloneFromBundle(tt.bundle, tmpDir, fixtureDir, ps)
+
+			tt.args = append(tt.args, "-wd", repo, subcommand)
+
+			cmd := help.GetTestBinCmd(subEnvVarName, tt.args)
+
+			got, _ := help.VerboseSubCmdOut(cmd.CombinedOutput())
+
+			// get exit code.
+			exitCode := cmd.ProcessState.ExitCode()
+
+			if exitCode != tt.wantCode {
+				t.Errorf("%v subcommand exit code %d, want %d", subcommand, exitCode, tt.wantCode)
+				return
+			}
+
+			if !bytes.Contains(got, tt.contains) {
+				t.Errorf("%v subcommand returned %v, want %v", subcommand, string(got), tt.contains)
+				return
+			}
+		})
+	}
+}
+
+// Verify that it will publish a tag with the "v" prefix.
+func TestPublishReleaseTagWithV(t *testing.T) {
+	subcommand := "publish-release-tag"
+	cases := []struct {
+		name     string
+		bundle   string
+		args     []string
+		wantCode int
+		contains []byte
+	}{
+		{
+			"use-v-prefix-on-repo-with-no-tag",
+			"first-commit-to-tag-03", // This bundle has its first commit to tag
+			[]string{"-enable-tag-v-prefix"},
+			0,
+			[]byte("v0.1.0"),
+		},
+		{
+			"use-v-prefix-on-repo-with-a-tag",
+			"has-a-tag-and-commit-to-tag", // This bundle has its first commit to tag
+			[]string{"-enable-tag-v-prefix"},
+			0,
+			[]byte("v0.2.0"),
+		},
+	}
+	for _, c := range cases {
+		t.Run(c.name, func(t *testing.T) {
+			repo := git2.CloneFromBundle(c.bundle, tmpDir, fixtureDir, ps)
+			c.args = append(c.args, "-wd", repo, subcommand)
+			cmd := help.GetTestBinCmd(subEnvVarName, c.args)
+
+			got, _ := help.VerboseSubCmdOut(cmd.CombinedOutput())
+
+			// get exit code.
+			exitCode := cmd.ProcessState.ExitCode()
+
+			if exitCode != c.wantCode {
+				t.Errorf("got %d, want %d", exitCode, c.wantCode)
+				return
+			}
+
+			if !bytes.Contains(got, c.contains) {
+				t.Errorf("%v subcommand returned %v, want %v", subcommand, string(got), c.contains)
+				return
+			}
+		})
+	}
+}

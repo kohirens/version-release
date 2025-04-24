@@ -18,12 +18,6 @@ trigger_workflow() {
         echo "semantic version ${semver} was pulled from the file ${PARAM_TAG_FILE}"
     fi
 
-    if [ -n "${CIRCLE_SHA1}" ]; then
-        GIT_SHA="${CIRCLE_SHA1}"
-    elif [ -n "${GITHUB_SHA}" ]; then
-        GIT_SHA="${GITHUB_SHA}"
-    fi
-
     if [ "${CIRCLECI}" = "true" ]; then
         CICD_PLATFORM="circleci"
     fi
@@ -32,24 +26,34 @@ trigger_workflow() {
         CICD_PLATFORM="github"
     fi
 
-    if [ -n "${semver}" ]; then
-        avr \
-            -branch "${PARAM_MAIN_TRUNK_BRANCH}" \
-            -cicd "${CICD_PLATFORM}" \
-            -semver "${semver}" \
-            -wd "${PARAM_WORKING_DIRECTORY}" \
-            workflow-selector \
-                "${PARAM_CHANGELOG_FILE}" \
-                "${GIT_SHA}"
-    else
-        avr \
-            -branch "${PARAM_MAIN_TRUNK_BRANCH}" \
-            -cicd "${CICD_PLATFORM}" \
-            -wd "${PARAM_WORKING_DIRECTORY}" \
-            workflow-selector \
-                "${PARAM_CHANGELOG_FILE}" \
-                "${GIT_SHA}"
+    if [ -n "${CIRCLE_SHA1}" ]; then
+        GIT_SHA="${CIRCLE_SHA1}"
+    elif [ -n "${GITHUB_SHA}" ]; then
+        GIT_SHA="${GITHUB_SHA}"
     fi
+
+    cmd_str="avr"
+    # Global options
+    cmd_str="${cmd_str} -branch ""${PARAM_MAIN_TRUNK_BRANCH}"""
+    cmd_str="${cmd_str} -cicd ""${CICD_PLATFORM}"""
+    cmd_str="${cmd_str} -wd ""${PARAM_WORKING_DIRECTORY}"""
+
+    if [ -n "${semver}" ]; then
+        cmd_str="${cmd_str} -semver \"${semver}\""
+    fi
+
+    echo "PARAM_ENABLE_TAG_V_PREFIX=${PARAM_ENABLE_TAG_V_PREFIX}"
+    if [ "${PARAM_ENABLE_TAG_V_PREFIX}" = "true" ] || [ "${PARAM_ENABLE_TAG_V_PREFIX}" = "1" ]; then
+        cmd_str="${cmd_str} -enable-tag-v-prefix"
+    fi
+
+    # sub command
+    cmd_str="${cmd_str} workflow-selector"
+    # arguments
+    cmd_str="${cmd_str} ""${PARAM_CHANGELOG_FILE}"""
+    cmd_str="${cmd_str} ""${GIT_SHA}"""
+
+    sh -c "${cmd_str}"
 }
 
 # Will not run if sourced for bats-core tests.

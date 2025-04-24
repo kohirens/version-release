@@ -109,7 +109,7 @@ func TestBump(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			repo := git.CloneFromBundle(tt.bundle, tmpDir, fixtureDir, ps)
 
-			if got := Bump(repo); got != tt.want {
+			if got := Bump(repo, false); got != tt.want {
 				t.Errorf("Bump() = %v, want %v", got, tt.want)
 			}
 		})

@@ -71,7 +71,7 @@ protect_breaking_commits = false
 filter_commits = true
 # regex for matching git tags
 #tag_pattern = "[0-9].*"
-tag_pattern = "^\\d+\\.\\d+\\.\\d+$"
+tag_pattern = "^v?\\d+\\.\\d+\\.\\d+$"
 # regex for skipping tags
 skip_tags = "^\\d+\\.\\d+\\.\\d+-.+"
 # regex for ignoring tags

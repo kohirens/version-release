@@ -1,0 +1,4 @@
+{
+    "tag_name": "v0.2.0",
+    "name": "0.2.0 - {{.Data.TagNameDate}}"
+}

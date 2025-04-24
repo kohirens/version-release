@@ -116,6 +116,8 @@ func main() {
 		return
 	}
 
+	log.Dbugf("command line args: %v", cla)
+
 	switch cla[0] {
 	case publishReleaseTagWorkflow:
 		if e := clo.TagAndRelease.Flags.Parse(cla[1:]); e != nil {
@@ -144,11 +146,21 @@ func main() {
 		}
 
 		// required tag for the release
-		nextVer := gitcliff.NextVersion(workDir, semVer)
+		nextVer := gitcliff.NextVersion(workDir, semVer, clo.EnableTagVPrefix)
 		if nextVer == "" { // this is definitely an error at this point.
 			mainErr = fmt.Errorf(stderr.NoSemverTag)
 			return
 		}
+
+		// This should replace the gh-has-release job & script.
+		// Do not try to push or overwrite a tag that exist,
+		tagExist, _ := gh.ReleaseByTag(nextVer)
+		if tagExist != nil { // verify the tag does NOT exist before we proceed
+			log.Errf(stderr.TagReleaseAbort, gh.Repository, nextVer)
+			return
+		}
+
+		log.Logf(stdout.TagAbsent, gh.Repository, nextVer)
 
 		// Publish a new tag on GitHub.
 		ghRelease, e4 := gh.TagAndRelease(branch, nextVer)
@@ -195,7 +207,7 @@ func main() {
 		}
 
 		// required semver tag for the changelog header
-		nextVer := gitcliff.NextVersion(workDir, semVer)
+		nextVer := gitcliff.NextVersion(workDir, semVer, clo.EnableTagVPrefix)
 		if nextVer == "" {
 			mainErr = fmt.Errorf(stderr.NoSemverTag)
 			return
@@ -294,7 +306,7 @@ func main() {
 		// 2. the commit message contains the expected auto-release header.
 		// 3. There are conventional commits to tag.
 		if !hasSemverTag {
-			nextVer := gitcliff.NextVersion(workDir, semVer)
+			nextVer := gitcliff.NextVersion(workDir, semVer, clo.EnableTagVPrefix)
 			if nextVer == "" { // No version to tag, then check for changelog updates.
 				log.Logf(stdout.NoChangesToTag)
 				goto changLog
@@ -357,21 +369,20 @@ func main() {
 			changeLogHash64 = hash64
 
 			if isUpToDate {
-				// Verify the tag has been published.
 				gh, e6 := newGitHubClient(client)
 				if e6 != nil {
 					mainErr = e6
 					return
 				}
 
-				nextVer := gitcliff.NextVersion(workDir, semVer)
-				if nextVer == "" { // No version to tag, then check for changelog updates.
+				nextVer := gitcliff.NextVersion(workDir, semVer, clo.EnableTagVPrefix)
+				if nextVer == "" { // Exit gracefully when no version to tag.
 					log.Logf(stdout.NoChangesToTag)
 					return
 				}
 
 				rr, _ := gh.ReleaseByTag(nextVer)
-				if rr == nil {
+				if rr == nil { // Exit gracefully when the tag does not exist.
 					log.Logf(stdout.ChgLogUpToDate)
 					return
 				}
@@ -410,6 +421,8 @@ func main() {
 
 	case "next-version":
 		logger.VerbosityLevel = 0
-		fmt.Print(gitcliff.Bump(workDir))
+		semver := gitcliff.Bump(workDir, clo.EnableTagVPrefix)
+
+		fmt.Print(semver)
 	}
 }

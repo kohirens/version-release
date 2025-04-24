@@ -21,6 +21,7 @@ var stderr = struct {
 	PublishChangelogArgs,
 	PublishReleaseTagArgs,
 	SetGitCliffFooter,
+	TagReleaseAbort,
 	WorkDir,
 	WorkflowSelectorInput string
 }{
@@ -44,6 +45,7 @@ var stderr = struct {
 	PublishChangelogArgs:  "path to the changelog is a required argument to run this command, see -help",
 	PublishReleaseTagArgs: "3 arguments are required to run this command, see -help",
 	SetGitCliffFooter:     "could not set the git-cliff footer environment variable %v: :%v",
+	TagReleaseAbort:       "aborting... there is already a release tag at https://github.com/%v/releases/tag/%v",
 	WorkDir:               "failed to clean working directory path: %v",
 	WorkflowSelectorInput: "workflow-selector requires arguments changelog file and commit, see -help",
 }
@@ -68,6 +70,7 @@ var stdout = struct {
 	SemVer,
 	StartWorkflow,
 	SubCla,
+	TagAbsent,
 	Wd,
 	WorkDir string
 }{
@@ -89,6 +92,7 @@ var stdout = struct {
 	SemVer:             "semantic version set to %v",
 	StartWorkflow:      "starting %v workflow",
 	SubCla:             "sub-command line arguments: %v",
+	TagAbsent:          "will proceed since no exiting release tag was found at https://github.com/%v/releases/tag/%v",
 	WorkDir:            "working directory: %v",
 }
 
