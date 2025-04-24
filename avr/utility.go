@@ -4,14 +4,12 @@ import (
 	"bufio"
 	"fmt"
 	"github.com/kohirens/version-release/avr/pkg/circleci"
-	"github.com/kohirens/version-release/avr/pkg/git"
 	"github.com/kohirens/version-release/avr/pkg/gitcliff"
 	"github.com/kohirens/version-release/avr/pkg/github"
 	"github.com/kohirens/version-release/avr/pkg/lib"
 	"net/http"
 	"os"
 	"regexp"
-	"strings"
 )
 
 // changelogContainsUnreleased Return true if changelog contains the unreleased changes.
@@ -56,33 +54,6 @@ func validateMergeType(mType string) (string, error) {
 	}
 
 	return mType, nil
-}
-
-// TagIt Only consider tagging if HEAD has no tag and the commit message
-// contains the expected auto-release header.
-func TagIt(wd, commit, semVer string) bool {
-	hasSemverTag := git.HasSemverTag(wd, commit)
-
-	// Log that the commit already has a tag.
-	if hasSemverTag {
-		log.Logf(stderr.CommitAlreadyTagged, commit)
-		return false
-	}
-
-	nextVer := gitcliff.NextVersion(wd, semVer)
-	if nextVer == "" { // No version to tag, then check for changelog updates.
-		return false
-	}
-
-	l := git.Log(wd, commit)
-	log.Dbugf(stdout.DbgCommitLog, l)
-
-	// Skip commits that are NOT released and also should NOT be tagged.
-	if !strings.Contains(l, fmt.Sprintf(autoReleaseHeader, nextVer)) {
-		return true
-	}
-
-	return true
 }
 
 func newGitHubClient(client *http.Client) (*github.Client, error) {

@@ -2,6 +2,7 @@ publish_changelog() {
     # Get the value of the semantic version tag in 1 of 3 way.
     # If more than 1 is set, the last wins.
     semver=""
+
     if [ -n "${PARAM_TAG_CMD}" ]; then
         semver="$("${PARAM_TAG_CMD}")"
         echo "semantic version ${semver} was set by command"
@@ -25,24 +26,32 @@ publish_changelog() {
         CICD_PLATFORM="github"
     fi
 
+    cmd_str="avr"
+    # Global options
+    cmd_str="${cmd_str} -branch ""${PARAM_MAIN_TRUNK_BRANCH}"""
+    cmd_str="${cmd_str} -cicd ""${CICD_PLATFORM}"""
+    cmd_str="${cmd_str} -wd ""${PARAM_WORKING_DIRECTORY}"""
+
     if [ -n "${semver}" ]; then
-        avr -branch "${PARAM_MAIN_TRUNK_BRANCH}" \
-            -cicd "${CICD_PLATFORM}" \
-            -semver "${semver}" \
-            -wd "${PARAM_WORKING_DIRECTORY}" \
-            publish-changelog \
-                -gh-server "${PARAM_GITHUB_SERVER}" \
-                -merge-type "${PARAM_MERGE_TYPE}" \
-                "${PARAM_CHANGELOG_FILE}"
-    else
-        avr -branch "${PARAM_MAIN_TRUNK_BRANCH}" \
-            -cicd "${CICD_PLATFORM}" \
-            -wd "${PARAM_WORKING_DIRECTORY}" \
-            publish-changelog \
-                -gh-server "${PARAM_GITHUB_SERVER}" \
-                -merge-type "${PARAM_MERGE_TYPE}" \
-                "${PARAM_CHANGELOG_FILE}"
+        cmd_str="${cmd_str} -semver \"${semver}\""
     fi
+
+    echo "PARAM_ENABLE_TAG_V_PREFIX=${PARAM_ENABLE_TAG_V_PREFIX}"
+    if [ "${PARAM_ENABLE_TAG_V_PREFIX}" = "true" ] || [ "${PARAM_ENABLE_TAG_V_PREFIX}" = "1" ]; then
+        cmd_str="${cmd_str} -enable-tag-v-prefix"
+    fi
+
+    # sub command
+    cmd_str="${cmd_str} publish-changelog"
+    # sub options
+    cmd_str="${cmd_str} -gh-server ""${PARAM_GITHUB_SERVER}"""
+    cmd_str="${cmd_str} -merge-type ""${PARAM_MERGE_TYPE}"""
+    # arguments
+    cmd_str="${cmd_str} ""${PARAM_CHANGELOG_FILE}"""
+
+    echo "command to run: ${cmd_str}"
+
+    sh -c "${cmd_str}"
 }
 
 # Will not run if sourced for bats-core tests.

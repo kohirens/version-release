@@ -14,6 +14,7 @@ type commandLineOptions struct {
 	CiCd             string
 	CommitHash       string
 	CurrentVersion   string
+	EnableTagVPrefix bool
 	SemVer           string
 	WorkDir          string
 	PublishChangelog struct {
@@ -40,6 +41,7 @@ func defineOptions(options *commandLineOptions) {
 	flag.BoolVar(&options.help, "help", false, um["help"])
 	flag.BoolVar(&options.version, "version", false, um["version"])
 	flag.StringVar(&options.Branch, "branch", "main", um["branch"])
+	flag.BoolVar(&options.EnableTagVPrefix, "enable-tag-v-prefix", false, um["enable-tag-v-prefix"])
 	flag.StringVar(&options.CiCd, "cicd", circleci.Name, um["cicd"])
 	flag.StringVar(&options.SemVer, "semver", "", um["semver"])
 	flag.StringVar(&options.WorkDir, "wd", ".", um["wd"])

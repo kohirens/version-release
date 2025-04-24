@@ -32,6 +32,12 @@ on:
                   The ID of the workflow run that uploaded the artifact.
                 required: false
                 type: string
+            enable_tag_v_prefix:
+                default: false
+                description: |2
+                  Prefix git tags with a "v" before the semantic version number.
+                required: false
+                type: bool
         secrets:
             github_write_token:
                 required: true
@@ -105,4 +111,5 @@ jobs:
               id: release
               with:
                   tag_cmd: 'echo "${{ needs.select-a-workflow.outputs.next_semver }}"'
+                  enable_tag_v_prefix: ${{ inputs.enable_tag_v_prefix }}
         needs: select-a-workflow

@@ -34,7 +34,7 @@ var stdout = struct {
 	Cs:                 "exec command string: %s",
 	DiagnosticsFound:   "found diagnostic message: %v",
 	Fmt:                "%v stdout: \n%v",
-	NextSemVer:         "next semVer: %v",
+	NextSemVer:         "next semantic version: %v",
 	NoCommitsToBump:    "There is nothing to bump",
 	NoMoreDiagnostics:  "no more matches found",
 	NothingToTag:       "next semantic version is empty, so we cannot release a tag",

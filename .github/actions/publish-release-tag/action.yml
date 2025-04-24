@@ -4,6 +4,11 @@ description: |2
   Publish a tag on a specified branch.
 author: Kohirens
 inputs: # https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/accessing-contextual-information-about-workflow-runs#inputs-context
+    enable_tag_v_prefix:
+        default: "false"
+        description: |2
+          Prefix git tags with a "v" before the semantic version number.
+        required: false
     main_trunk_branch:
         default: "main"
         description: Name of the main trunk branch to tag.
@@ -42,6 +47,7 @@ runs: # https://docs.github.com/en/actions/sharing-automations/creating-actions/
     using: docker
     image: docker://kohirens/version-release:dev
     env:
+      PARAM_ENABLE_TAG_V_PREFIX: ${{ inputs.enable_tag_v_prefix }}
       PARAM_OWNER_SLASH_REPO: ${{ inputs.repository }}
       PARAM_TAG_CMD: ${{ inputs.tag_cmd }}
       PARAM_TAG_ENV_VAR: ${{ inputs.tag_env_var }}
@@ -49,7 +55,7 @@ runs: # https://docs.github.com/en/actions/sharing-automations/creating-actions/
       PARAM_MAIN_TRUNK_BRANCH: ${{ inputs.main_trunk_branch }}
       PARAM_WORKING_DIRECTORY: ${{ inputs.working_directory }}
       VERBOSITY_LEVEL: ${{ inputs.verbosity_level }}
-    pre-entrypoint: gh-has-release.sh
+#    pre-entrypoint: gh-has-release.sh
     entrypoint: tag-and-release.sh
 #    steps: # https://docs.github.com/en/actions/sharing-automations/creating-actions/metadata-syntax-for-github-actions#runsstepsuses
 #        - name: Check release does not exist

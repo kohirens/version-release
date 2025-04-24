@@ -12,6 +12,7 @@ import (
 	"github.com/kohirens/version-release/avr/pkg/lib"
 	"os"
 	"regexp"
+	"strings"
 )
 
 const (
@@ -101,7 +102,7 @@ func BuildConfig(configFile string) (bool, error) {
 		return false, nil
 	}
 
-	if e := os.WriteFile(configFile, []byte(cliffConfig), 0776); e != nil {
+	if e := os.WriteFile(configFile, []byte(cliffConfig), 0664); e != nil {
 		// Attempted but failed to write the config file.
 		return false, e
 	}
@@ -114,7 +115,7 @@ func BuildConfig(configFile string) (bool, error) {
 //
 //	This will return an empty string if there are no released changes, however
 //	that does NOT mean the changelog is up-to-date.
-func Bump(wd string) string {
+func Bump(wd string, enableTagVPrefix bool) string {
 	so, se, _, cs := cli.RunCommand(
 		wd,
 		Cmd,
@@ -144,7 +145,13 @@ func Bump(wd string) string {
 		found = re.Find(out[0])
 	}
 
-	return string(found)
+	sv := string(found)
+
+	if enableTagVPrefix && !strings.HasPrefix(sv, "v") {
+		return "v" + string(found)
+	}
+
+	return sv
 }
 
 // NextVersionUnreleased Get the next version from the unreleased changes that
@@ -168,10 +175,10 @@ func NextVersionUnreleased(wd string) (string, error) {
 	return version, nil
 }
 
-func NextVersion(wd, nextVer string) string {
+func NextVersion(wd, nextVer string, enableTagVPrefix bool) string {
 	// check if a version has been provided as input.
 	if nextVer == "" {
-		nextVer = Bump(wd)
+		nextVer = Bump(wd, enableTagVPrefix)
 	}
 
 	log.Infof(stdout.NextSemVer, nextVer)

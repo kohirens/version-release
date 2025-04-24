@@ -18,6 +18,11 @@ parameters:
     default: true
     description: Set to `false` to skip performing a checkout.
     type: boolean
+  enable_tag_v_prefix:
+    default: false
+    description: |2
+      Prefix git tags with a "v" before the semantic version number.
+    type: boolean
   exec_img_tag:
     default: "VERSION_RELEASE_IMAGE"
     description: Version of the executor image to pull.
@@ -73,19 +78,20 @@ steps:
       steps:
         - attach_workspace:
             at: "<< parameters.attach_workspace_path >>"
-  - when:
-      condition: <<parameters.abort_dupe_release>>
-      steps:
-        - gh-has-release:
-           owner: <<parameters.owner>>
-           repo: <<parameters.repo>>
-           tag_cmd: <<parameters.tag_cmd>>
-           tag_env_var: <<parameters.tag_env_var>>
-           tag_file: <<parameters.tag_file>>
-           file: <<parameters.release_file>>
+#  - when:
+#      condition: <<parameters.abort_dupe_release>>
+#      steps:
+#        - gh-has-release:
+#           owner: <<parameters.owner>>
+#           repo: <<parameters.repo>>
+#           tag_cmd: <<parameters.tag_cmd>>
+#           tag_env_var: <<parameters.tag_env_var>>
+#           tag_file: <<parameters.tag_file>>
+#           file: <<parameters.release_file>>
   - run:
       environment:
         GITHUB_API_URL: "<< parameters.github_api_url >>"
+        PARAM_ENABLE_TAG_V_PREFIX: "<< parameters.enable_tag_v_prefix >>"
         PARAM_MAIN_TRUNK_BRANCH: "<< parameters.main_trunk_branch >>"
         PARAM_TAG_CMD: "<< parameters.tag_cmd >>"
         PARAM_TAG_ENV_VAR: "<< parameters.tag_env_var >>"

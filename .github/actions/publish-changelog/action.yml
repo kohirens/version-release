@@ -38,6 +38,11 @@ inputs: # https://docs.github.com/en/actions/writing-workflows/choosing-what-you
         default: ""
     committer_name:
         required: true
+    enable_tag_v_prefix:
+        default: "false"
+        description: |2
+          Prefix git tags with a "v" before the semantic version number.
+        required: false
     github_server:
         default: "github.com"
         description: GitHub server domain name.
@@ -89,6 +94,7 @@ runs: # https://docs.github.com/en/actions/sharing-automations/creating-actions/
         PARAM_COMMITTER_EMAIL: ${{ inputs.committer_email }}
         PARAM_COMMITTER_GPG_KEY: ${{ inputs.committer_gpg_key }}
         PARAM_COMMITTER_NAME: ${{ inputs.committer_name }}
+        PARAM_ENABLE_TAG_V_PREFIX: ${{ inputs.enable_tag_v_prefix }}
         PARAM_MAIN_TRUNK_BRANCH: ${{ inputs.main_trunk_branch }}
         PARAM_MERGE_TYPE: ${{ inputs.merge_type }}
         PARAM_GITHUB_SERVER: ${{ inputs.github_server }}

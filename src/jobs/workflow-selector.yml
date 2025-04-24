@@ -31,6 +31,11 @@ parameters:
     description: In case you need to customize.
     type: boolean
     default: true
+  enable_tag_v_prefix:
+    default: false
+    description: |2
+      Prefix git tags with a "v" before the semantic version number.
+    type: boolean
   exec_img_tag:
     default: "VERSION_RELEASE_IMAGE"
     description: Version of the executor image to pull.
