@@ -63,8 +63,8 @@ func PublishChangelog(wd, chgLogFile, branch, semVer string, ghc GithubClient) e
 	}
 
 	// Add additional files to the commit.
-	addFiles, ok := os.LookupEnv("PARAM_ADD_FILES_TO_COMMIT")
-	if ok {
+	addFiles := os.Getenv("PARAM_ADD_FILES_TO_COMMIT")
+	if addFiles != "" {
 		filesBytes, e := os.ReadFile(wd + "/" + addFiles)
 		if e != nil {
 			return fmt.Errorf(stderr.AdditionalFiles, e.Error())
