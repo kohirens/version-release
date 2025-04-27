@@ -26,7 +26,7 @@ var stderr = struct {
 	ResponseStatusCode,
 	UpdateRef string
 }{
-	BranchExists:             "the branch %q exists on %s, please delete it manually, then re-run this job so it can complete successfully",
+	BranchExists:             "the branch %q exists on %v, please delete it manually, then re-run this job so it can complete successfully",
 	CouldNotGetRequest:       "could not GET request: %v",
 	CouldNotJsonEncode:       "could not encode %t to JSON: %v",
 	CouldNotJsonDecode:       "could not decode JSON: %s",

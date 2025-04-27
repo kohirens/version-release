@@ -73,12 +73,8 @@ func (gh *Client) DoesBranchExistRemotely(branch string) bool {
 // PublishChangelog Stage, commit, and push local changes, then make a pull
 // request and merge it containing the CHANGELOG.md if it contains changes.
 func (gh *Client) PublishChangelog(wd, baseRef, header, msgBody, footer string, files []string) error {
-	// Return early if the branch that updates the change log exists remotely.
-	uri := fmt.Sprintf(repoUrl, Server, gh.Repository)
-	Log.Dbugf(stdout.RepoUrl, uri)
-
 	if gh.ReferenceExist("heads/" + GenBranchName) {
-		return fmt.Errorf(stderr.BranchExists, GenBranchName, uri)
+		return fmt.Errorf(stderr.BranchExists, GenBranchName, gh.Repository)
 	}
 
 	if e := Push(wd, GenBranchName, baseRef, header+"\n"+msgBody+"\n"+footer, files, gh); e != nil {

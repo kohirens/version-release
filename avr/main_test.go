@@ -84,7 +84,6 @@ func TestWorkflowSelector_PublishChangelog(runner *testing.T) {
 
 	for _, c := range cases {
 		runner.Run(c.name, func(t *testing.T) {
-			t.Setenv(circleci.EnvRepoUrl, fmt.Sprintf("git@github.com:kohirens/test-workflow-selector-publish-chglog.git"))
 			cmd := help.GetTestBinCmd(subEnvVarName, c.args)
 
 			so, _ := help.VerboseSubCmdOut(cmd.CombinedOutput())
@@ -142,8 +141,6 @@ func TestWorkflowSelector_TagRelease(runner *testing.T) {
 }
 
 func TestTriggeredPublishReleaseTagWorkflow(t *testing.T) {
-	t.Setenv(circleci.EnvRepoUrl, "git@github.com:kohirens/repo-03.git")
-
 	wantCode := 1
 
 	repo := git2.CloneFromBundle("repo-03", tmpDir, fixtureDir, ps)
@@ -173,7 +170,6 @@ func TestTriggeredPublishChangelogWorkflow(t *testing.T) {
 
 	// This git commit has changes where the change log needs updating
 	fixedArgs := []string{"-wd", repo, "publish-changelog", "CHANGELOG.md"}
-	t.Setenv(circleci.EnvRepoUrl, "git@github.com:kohirens/repo-01.git")
 	t.Setenv(circleci.EnvProjectRepoName, "repo-01")
 	t.Setenv(circleci.EnvProjectUsername, "kohirens")
 
@@ -223,8 +219,6 @@ func TestTriggerPipeline_NoChangelogOrTaggableChanges(t *testing.T) {
 }
 
 func TestPublishReleaseTagWorkflows(t *testing.T) {
-	t.Setenv(circleci.EnvRepoUrl, "git@github.com:kohirens/version-release.git")
-
 	fixedArgs := []string{"-wd", "", "publish-release-tag"}
 	ghFixedArgs := []string{"-wd", "", "-cicd", "github", "publish-release-tag"}
 	tests := []struct {
