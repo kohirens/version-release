@@ -24,11 +24,6 @@ trigger_workflow() {
         GIT_SHA="${GITHUB_SHA}"
     fi
 
-    # Allow git command to work
-    git config --global --add safe.directory /github/workspace
-    git config user.name "GitHub Actions Bot"
-    git config user.email "<>"
-
     if [ "${CIRCLECI}" = "true" ]; then
         CICD_PLATFORM="circleci"
     fi
