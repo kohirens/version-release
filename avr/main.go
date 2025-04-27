@@ -118,6 +118,9 @@ func main() {
 
 	log.Dbugf("command line args: %v", cla)
 
+	github.Server = clo.GitHubServer
+	github.APIURL = clo.GitHubAPIURL
+
 	switch cla[0] {
 	case publishReleaseTagWorkflow:
 		if e := clo.TagAndRelease.Flags.Parse(cla[1:]); e != nil {
@@ -188,8 +191,6 @@ func main() {
 
 		log.Logf(stdout.StartWorkflow, publishChgLogWorkflow)
 
-		github.PublicServer = clo.PublishChangelog.GitHubServer
-
 		// Get command line arguments.
 		subCla := clo.PublishChangelog.Flags.Args()
 		log.Dbugf(stdout.SubCla, subCla)
@@ -215,7 +216,6 @@ func main() {
 
 		gitHubToken := lib.GetEnv(github.EnvToken)
 		log.Dbugf("token: ***%v", gitHubToken[len(gitHubToken)-5:])
-		gitHubApiUrl := lib.GetEnv(github.EnvApiUrl)
 
 		var gh *github.Client
 		var repo string
@@ -250,7 +250,7 @@ func main() {
 			repo = eVars[github.EnvRepository]
 		}
 
-		gh = github.NewClient(repo, gitHubToken, gitHubApiUrl, client)
+		gh = github.NewClient(repo, gitHubToken, client)
 		gh.MergeMethod = mergeType
 		mainErr = PublishChangelog(workDir, changelog, clo.Branch, nextVer, gh)
 

@@ -15,7 +15,6 @@ import (
 const (
 	EnvActions         = "GITHUB_ACTIONS"
 	EnvActor           = "GITHUB_ACTOR"
-	EnvApiUrl          = "GITHUB_API_URL"
 	EnvRepository      = "GITHUB_REPOSITORY"
 	EnvRepositoryOwner = "GITHUB_REPOSITORY_OWNER"
 	EnvToken           = "GH_WRITE_TOKEN"
@@ -23,9 +22,10 @@ const (
 )
 
 var (
-	envs         map[string]string
-	PublicServer = "github.com"
-	Log          = logger.Standard{}
+	envs   map[string]string
+	Server = "github.com"
+	APIURL = "https://api.github.com"
+	Log    = logger.Standard{}
 )
 
 func init() {
@@ -46,7 +46,7 @@ func processEnvironment() {
 		)
 	}
 
-	envs, e = lib.GetRequiredEnvVars(append(vars, EnvApiUrl, EnvToken))
+	envs, e = lib.GetRequiredEnvVars(append(vars, EnvToken))
 
 	if e != nil {
 		panic(e.Error())

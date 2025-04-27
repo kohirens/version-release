@@ -38,6 +38,16 @@ on:
                   Prefix git tags with a "v" before the semantic version number.
                 required: false
                 type: bool
+            github_api_url:
+                default: "https://api.github.com"
+                description: Github API URL.
+                required: false
+                type: string
+            github_server:
+                default: "github.com"
+                description: GitHub server domain name.
+                required: true
+                type: string
         secrets:
             github_write_token:
                 required: true
@@ -69,6 +79,8 @@ jobs:
               id: selector
               with:
                   enable_tag_v_prefix: ${{ inputs.enable_tag_v_prefix }}
+                  github_api_url: ${{ inputs.github_api_url }}
+                  github_server: ${{ inputs.github_server }}
     publish-changelog:
         permissions:
             contents: write
@@ -98,6 +110,8 @@ jobs:
                   committer_name: ${{ inputs.committer_name }}
                   add_files_to_commit: ${{ inputs.add_files_to_commit }}
                   enable_tag_v_prefix: ${{ inputs.enable_tag_v_prefix }}
+                  github_api_url: ${{ inputs.github_api_url }}
+                  github_server: ${{ inputs.github_server }}
         needs: select-a-workflow
     publish-release-tag:
         if: ${{ needs.select-a-workflow.outputs.workflow == 'publish-release-tag' }}
@@ -115,4 +129,6 @@ jobs:
               with:
                   tag_cmd: 'echo "${{ needs.select-a-workflow.outputs.next_semver }}"'
                   enable_tag_v_prefix: ${{ inputs.enable_tag_v_prefix }}
+                  github_api_url: ${{ inputs.github_api_url }}
+                  github_server: ${{ inputs.github_server }}
         needs: select-a-workflow

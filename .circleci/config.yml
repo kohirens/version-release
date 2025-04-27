@@ -114,7 +114,6 @@ jobs:
             - run:
                   name: "Generate GitHub Action files"
                   command: |
-                      export GITHUB_API_URL="none"
                       # Update the selector.yaml workflow
                       next_version="$(git-cliff --bumped-version)"
                       if [ -z "${next_version}" ]; then

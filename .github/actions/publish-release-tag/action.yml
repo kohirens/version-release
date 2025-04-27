@@ -9,6 +9,14 @@ inputs: # https://docs.github.com/en/actions/writing-workflows/choosing-what-you
         description: |2
           Prefix git tags with a "v" before the semantic version number.
         required: false
+    github_api_url:
+        default: "https://api.github.com"
+        description: Github API URL.
+        required: false
+    github_server:
+        default: "github.com"
+        description: GitHub server domain name.
+        required: false
     main_trunk_branch:
         default: "main"
         description: Name of the main trunk branch to tag.
@@ -48,6 +56,8 @@ runs: # https://docs.github.com/en/actions/sharing-automations/creating-actions/
     image: docker://kohirens/version-release:dev
     env:
       PARAM_ENABLE_TAG_V_PREFIX: ${{ inputs.enable_tag_v_prefix }}
+      PARAM_GITHUB_API_URL: ${{ inputs.github_api_url }}
+      PARAM_GITHUB_SERVER: ${{ inputs.github_server }}
       PARAM_OWNER_SLASH_REPO: ${{ inputs.repository }}
       PARAM_TAG_CMD: ${{ inputs.tag_cmd }}
       PARAM_TAG_ENV_VAR: ${{ inputs.tag_env_var }}
