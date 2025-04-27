@@ -54,7 +54,7 @@ func CheckoutFileFrom(wd, treeIsh, filename string) error {
 	}
 
 	if ec != 0 {
-		return fmt.Errorf(stderr.CouldNotCheckoutFile, filename)
+		return fmt.Errorf(stderr.CouldNotCheckoutFile, filename, ec)
 	}
 
 	log.Logf(stdout.Status, string(so))

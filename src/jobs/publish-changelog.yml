@@ -68,6 +68,10 @@ parameters:
     default: "https://api.github.com"
     description: Github API URL.
     type: string
+  github_server:
+    default: "github.com"
+    description: GitHub server domain name.
+    type: string
   main_trunk_branch:
     default: "main"
     description: Name of the main trunk branch to tag.
@@ -116,13 +120,14 @@ steps:
             at: "<< parameters.attach_workspace_path >>"
   - run:
       environment:
-        GITHUB_API_URL: "<< parameters.github_api_url >>"
         PARAM_ADD_FILES_TO_COMMIT: "<< parameters.add_files_to_commit >>"
         PARAM_CHANGELOG_FILE: "<< parameters.changelog_file >>"
         PARAM_COMMITTER_EMAIL: "<< parameters.committer_email >>"
         PARAM_COMMITTER_GPG_KEY: "<< parameters.committer_gpg_key >>"
         PARAM_COMMITTER_NAME: "<< parameters.committer_name >>"
         PARAM_ENABLE_TAG_V_PREFIX: "<< parameters.enable_tag_v_prefix >>"
+        PARAM_GITHUB_API_URL: "<< parameters.github_api_url >>"
+        PARAM_GITHUB_SERVER: "<< parameters.github_server >>"
         PARAM_MAIN_TRUNK_BRANCH: "<< parameters.main_trunk_branch >>"
         PARAM_MERGE_TYPE: "<< parameters.merge_type >>"
         PARAM_TAG_CMD: "<< parameters.tag_cmd >>"

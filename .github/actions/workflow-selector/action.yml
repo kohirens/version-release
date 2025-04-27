@@ -15,6 +15,13 @@ inputs: # https://docs.github.com/en/actions/writing-workflows/choosing-what-you
         default: "VERSION_RELEASE_IMAGE"
         description: Version of the executor image to pull.
         required: true
+    github_api_url:
+        default: "https://api.github.com"
+        description: Github API URL.
+        required: false
+    github_server:
+        default: "github.com"
+        description: GitHub server domain name.
     main_trunk_branch:
         default: "main"
         description: Name of the main trunk branch to tag.
@@ -54,6 +61,8 @@ runs: # https://docs.github.com/en/actions/sharing-automations/creating-actions/
     env: # https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/store-information-in-variables#default-environment-variables
         PARAM_CHANGELOG_FILE: ${{ inputs.changelog_file }}
         PARAM_ENABLE_TAG_V_PREFIX: ${{ inputs.enable_tag_v_prefix }}
+        PARAM_GITHUB_API_URL: ${{ inputs.github_api_url }}
+        PARAM_GITHUB_SERVER: ${{ inputs.github_server }}
         PARAM_MAIN_TRUNK_BRANCH: ${{ inputs.main_trunk_branch }}
         PARAM_TAG_CMD: ${{ inputs.tag_cmd }}
         PARAM_TAG_ENV_VAR: ${{ inputs.tag_env_var }}

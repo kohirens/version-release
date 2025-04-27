@@ -15,13 +15,14 @@ type commandLineOptions struct {
 	CommitHash       string
 	CurrentVersion   string
 	EnableTagVPrefix bool
+	GitHubAPIURL     string
+	GitHubServer     string
 	SemVer           string
 	WorkDir          string
 	PublishChangelog struct {
-		Flags        flag.FlagSet
-		Help         bool
-		MergeType    string
-		GitHubServer string
+		Flags     flag.FlagSet
+		Help      bool
+		MergeType string
 	}
 	TagAndRelease struct {
 		Flags flag.FlagSet
@@ -45,6 +46,8 @@ func defineOptions(options *commandLineOptions) {
 	flag.StringVar(&options.CiCd, "cicd", circleci.Name, um["cicd"])
 	flag.StringVar(&options.SemVer, "semver", "", um["semver"])
 	flag.StringVar(&options.WorkDir, "wd", ".", um["wd"])
+	flag.StringVar(&options.GitHubServer, "github-server", github.Server, um["gh_server"])
+	flag.StringVar(&options.GitHubAPIURL, "github-api-url", github.APIURL, um["gh_api_url"])
 }
 
 func definePublishChangelogOptions(options *commandLineOptions) {
@@ -60,12 +63,6 @@ func definePublishChangelogOptions(options *commandLineOptions) {
 		"merge-type",
 		"rebase",
 		um["publish_changelog_merge_type"],
-	)
-	options.PublishChangelog.Flags.StringVar(
-		&options.PublishChangelog.GitHubServer,
-		"gh-server",
-		github.PublicServer,
-		um["publish_changelog_github_server"],
 	)
 }
 

@@ -65,7 +65,6 @@ func newGitHubClient(client *http.Client) (*github.Client, error) {
 			github.EnvToken,
 			circleci.EnvProjectRepoName,
 			circleci.EnvProjectUsername,
-			github.EnvApiUrl,
 		})
 
 		if e1 != nil {
@@ -75,12 +74,10 @@ func newGitHubClient(client *http.Client) (*github.Client, error) {
 		gh = github.NewClient(
 			eVars[circleci.EnvProjectUsername]+"/"+eVars[circleci.EnvProjectRepoName],
 			eVars[github.EnvToken],
-			eVars[github.EnvApiUrl],
 			client,
 		)
 	case github.Name:
 		eVars, e1 := lib.GetRequiredEnvVars([]string{
-			github.EnvApiUrl,
 			github.EnvRepository,
 			github.EnvRepositoryOwner,
 			github.EnvToken,
@@ -93,7 +90,6 @@ func newGitHubClient(client *http.Client) (*github.Client, error) {
 		gh = github.NewClient(
 			eVars[github.EnvRepository],
 			eVars[github.EnvToken],
-			eVars[github.EnvApiUrl],
 			client,
 		)
 

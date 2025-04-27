@@ -36,16 +36,16 @@ type Client struct {
 	Host        string
 }
 
-// NewClient GitHub API client. Set the host with the `-gh-api-url` options.
-// Public host: https://api.github.com
+// NewClient GitHub API client. Set the host with the `-github-api-url` options.
+// Defaults to the public API URL: https://api.github.com
 // Possible enterprise format: https://<github-enterprise-server>/api/v3
-func NewClient(repo, token, host string, client HttpClient) *Client {
+func NewClient(repo, token string, client HttpClient) *Client {
 
 	return &Client{
 		Client:     client,
 		Repository: repo,
 		Token:      token,
-		Host:       host,
+		Host:       APIURL,
 	}
 }
 
@@ -74,7 +74,7 @@ func (gh *Client) DoesBranchExistRemotely(branch string) bool {
 // request and merge it containing the CHANGELOG.md if it contains changes.
 func (gh *Client) PublishChangelog(wd, baseRef, header, msgBody, footer string, files []string) error {
 	// Return early if the branch that updates the change log exists remotely.
-	uri := fmt.Sprintf(repoUrl, PublicServer, gh.Repository)
+	uri := fmt.Sprintf(repoUrl, Server, gh.Repository)
 	Log.Dbugf(stdout.RepoUrl, uri)
 
 	if gh.ReferenceExist("heads/" + GenBranchName) {

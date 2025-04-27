@@ -33,6 +33,8 @@ publish_tag_and_release() {
     cmd_str="${cmd_str} -branch ""${PARAM_MAIN_TRUNK_BRANCH}"""
     cmd_str="${cmd_str} -cicd ""${CICD_PLATFORM}"""
     cmd_str="${cmd_str} -wd ""${PARAM_WORKING_DIRECTORY}"""
+    cmd_str="${cmd_str} -github-api-url ""${PARAM_GITHUB_API_URL}"""
+    cmd_str="${cmd_str} -github-server ""${PARAM_GITHUB_SERVER}"""
 
     if [ -n "${semver}" ]; then
         cmd_str="${cmd_str} -semver \"${semver}\""
