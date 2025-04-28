@@ -2,6 +2,7 @@ package github
 
 var stderr = struct {
 	BranchExists,
+	BuildJWT,
 	CouldNotGetRequest,
 	CouldNotJsonEncode,
 	CouldNotJsonDecode,
@@ -17,6 +18,7 @@ var stderr = struct {
 	GetMetaUnmarshall,
 	GetRef,
 	GetTree,
+	InstallationToken,
 	MakeTree,
 	MergeWaitTimeout,
 	NewCommit,
@@ -27,6 +29,7 @@ var stderr = struct {
 	UpdateRef string
 }{
 	BranchExists:             "the branch %q exists on %v, please delete it manually, then re-run this job so it can complete successfully",
+	BuildJWT:                 "failed to build a JWT: %v",
 	CouldNotGetRequest:       "could not GET request: %v",
 	CouldNotJsonEncode:       "could not encode %t to JSON: %v",
 	CouldNotJsonDecode:       "could not decode JSON: %s",
@@ -42,6 +45,7 @@ var stderr = struct {
 	GetMetaUnmarshall:        "could not decode response from github meta endpoint: %v",
 	GetRef:                   "failed to get git reference, responded with status %v %v",
 	GetTree:                  "failed to get git tree, responded with status %v %v",
+	InstallationToken:        "failed to retrieve an installation token: %v",
 	MakeTree:                 "failed to make tree, responded with status %v %v",
 	MergeWaitTimeout:         "pr %d has not merged after %d seconds",
 	NewCommit:                "failed to make a new commit, responded with status %v %v",

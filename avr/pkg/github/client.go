@@ -21,6 +21,7 @@ const (
 	epRelease      = BaseUri + "/releases"
 	epReleaseByTag = epRelease + "/tags/%s"
 	epTree         = BaseUri + "/git/trees"
+	epAppToken     = "%v/app/installations/%v/access_tokens"
 	fullRefPrefix  = "refs/heads/"
 	GenBranchName  = "auto-update-changelog"
 	repoUrl        = "git@%v:%v.git"
@@ -34,6 +35,20 @@ type Client struct {
 	Server      string
 	Token       string
 	Host        string
+	Jwt         string
+}
+
+func (gh *Client) AuthorizeApp() error {
+	jwt, e1 := BuildJWT()
+	if e1 != nil {
+		return fmt.Errorf(stderr.BuildJWT, "AuthorizeApp", e1.Error())
+	}
+
+	gh.Token = jwt
+
+	//installationId, e2 := Installation(gh)
+	//Token(installationId, gh)
+	return nil
 }
 
 // NewClient GitHub API client. Set the host with the `-github-api-url` options.

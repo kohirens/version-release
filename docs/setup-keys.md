@@ -106,6 +106,24 @@ measure and hand-holding for those new to GitHub Actions. However, when we
 publish the change log then merge it in, we'll need the workflow-selector to
 run once more, automatically, to decided if a release should be published.
 
+### GitHub App Auto-Version-Release
+
+You can grant this application access using the GitHub App.
+
+1. In the upper-right corner of any page on GitHub, click your profile photo.
+2. For a personal account, navigate to your account settings or for an organization,
+Click Your organizations and navigate to the organization Settings.
+3. In the left sidebar, click  Developer settings.
+4. In the left sidebar, click GitHub Apps.
+5. Next to the GitHub App that you want to install, click Edit.
+6. Click Install App.
+7. Click Install next to the location where you want to install the GitHub App.
+8. If the app requires repository permissions, select All repositories or Only select repositories. The app will always have at least read-only access to all public repositories on GitHub.
+9. If the app does not require repository permissions, these options will be omitted.
+10. If you selected Only select repositories in the previous step, under the Select repositories dropdown, select the repositories that you want the app to access.
+11. If the app creates any repositories, the app will automatically be granted access to those repositories as well.
+12. Click Install.
+
 ---
 
 [this orbs docs]: https://circle`ci.com/developer/orbs/orb/kohirens/version-release
