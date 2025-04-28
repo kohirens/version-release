@@ -10,5 +10,33 @@ Accept: application/vnd.github+json
 Authorization: Bearer {{ github_token}}
 X-GitHub-Api-Version: 2022-11-28
 
+### Test JWT works
+
+GET https://api.github.com/app/installations
+Accept: application/vnd.github+json
+Authorization: Bearer {{ github_jwt }}
+X-GitHub-Api-Version: 2022-11-28
+
+> {%
+    client.global.set("installation_id", response.body[0].id);
+    client.global.set("client_id", response.body[0].client_id);
+    client.global.set("access_tokens_url", response.body[0].access_tokens_url);
+    client.global.set("login", response.body[0].account.login);
+%}
+
+###
+
+GET https://api.github.com/orgs/kohirens/installation
+Accept: application/vnd.github+json
+Authorization: Bearer {{ github_jwt }}
+X-GitHub-Api-Version: 2022-11-28
+
+###
+
+POST https://api.github.com/app/installations/{{ installation_id }}/access_tokens
+Accept: application/vnd.github+json
+Authorization: Bearer {{ github_jwt }}
+X-GitHub-Api-Version: 2022-11-28
+
 ###
 
