@@ -5,8 +5,12 @@ development life cycle, which the Version Release Orb provides.
 
 ## Prerequisites
 
-1. Read [Setup SSH Keys](/docs/setup-keys.md)
-2. Add an optional [git-cliff] config to your repo.
+1. Depending on which system you plan to use read on:
+   1. [CircleCI Setup](/docs/setup-keys.md#circleci-setup)
+   2. [GitHub Actions](/docs/setup-keys.md#github-actions)
+2. Add an optional [git-cliff] config to your repo. If you do not, then one will
+   be generated and added with the changelog the first time and auto-release
+   occurs.
 3. Add the [auto-release] workflow to your CI config.
 4. When using a private CircleCI Server ensure you set the parameters
    `circleci_api_host` and `circleci_app_host` to the correct values. This will

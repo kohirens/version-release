@@ -20,7 +20,7 @@ usage:
   version: 2.1
 
   orbs:
-    vr: kohirens/version-release@latest
+    avr: kohirens/version-release@latest
 
   parameters:
     ctx_auto_release:
