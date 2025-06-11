@@ -154,27 +154,6 @@ func Bump(wd string, enableTagVPrefix bool) string {
 	return sv
 }
 
-// NextVersionUnreleased Get the next version from the unreleased changes that
-// GitCliff finds.
-func NextVersionUnreleased(wd string) (string, error) {
-	var version string
-
-	u, e1 := UnreleasedChanges(wd)
-	if e1 != nil {
-		return "", e1
-	}
-
-	if len(u) > 0 {
-		version = u[0].Version
-	}
-
-	if version == "" {
-		return "", fmt.Errorf(stderr.NoVersionTag)
-	}
-
-	return version, nil
-}
-
 func NextVersion(wd, nextVer string, enableTagVPrefix bool) string {
 	// check if a version has been provided as input.
 	if nextVer == "" {
@@ -184,38 +163,6 @@ func NextVersion(wd, nextVer string, enableTagVPrefix bool) string {
 	log.Infof(stdout.NextSemVer, nextVer)
 
 	return nextVer
-}
-
-// HasUnreleasedChanges Indicate there are changes in the current branch that
-// needed to be added to the changelog and tagged.
-//
-//	This makes use of the --context flag to return any unreleased commit.
-func HasUnreleasedChanges(wd string) (bool, error) {
-	so, se, _, cs := cli.RunCommand(
-		wd,
-		Cmd,
-		[]string{"--unreleased", "--context"},
-	)
-
-	log.Infof(stdout.Cs, cs)
-
-	if se != nil {
-		return false, fmt.Errorf(stderr.UpdateChgLog, se.Error())
-	}
-
-	// remove extra INFO|WARN git-cliff output
-	soClean := bytes.Trim(trimOutput(so), "\n")
-	if len(soClean) < 1 || bytes.Equal(soClean, []byte("[]")) {
-		return false, nil
-	}
-
-	var u []Unreleased
-
-	if e := json.Unmarshal(soClean, &u); e != nil {
-		return false, fmt.Errorf(stderr.CannotDecodeJson, e.Error())
-	}
-
-	return len(u[0].Commits) > 0, nil
 }
 
 // UnreleasedChanges Indicate there are changes in the current branch that
