@@ -66,19 +66,19 @@ func TestUnreleasedChanges(t *testing.T) {
 		wantErr bool
 	}{
 		{"has-unreleased", "repo-02", 1, false},
-		{"no-unreleased", "repo-03", 0, false},
+		{"no-unreleased", "03-no-unreleased", 0, false},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			repo := git.CloneFromBundle(tt.bundle, tmpDir, fixtureDir, ps)
 			got, e1 := UnreleasedChanges(repo)
 			if (e1 != nil) != tt.wantErr {
-				t.Errorf("HasUnreleasedChanges() error = %v, wantErr %v", e1.Error(), tt.wantErr)
+				t.Errorf("UnreleasedChanges() error = %v, wantErr %v", e1.Error(), tt.wantErr)
 				return
 			}
 
 			if len(got) != tt.want {
-				t.Errorf("HasUnreleasedChanges() want %v, got %v", got, tt.want)
+				t.Errorf("UnreleasedChanges() got %v, want %v", got, tt.want)
 				return
 			}
 		})
