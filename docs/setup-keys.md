@@ -77,13 +77,43 @@ The fix was generating a new token in my case.
    ![Fine-grained organization selection](/docs/assets/fine-grained-organization-selection.png)
 
 3. If this is for an organization you'll need to have it approved before it can
-   access any of those repositories. For details see [Setting a personal access token policy for your organization]
+   access any of those repositories. For details see
+   [Setting a personal access token policy for your organization]
+   Also, you can test the token with curl:
+   ```shell
+   curl -i -H "Authorization: Bearer ${GH_WRITE_TOKEN}" https://api.github.com/repos/<your-repos>/pulls
+   ```
 4. Add the token as the `GH_WRITE_TOKEN` secret, either in the repository settings or
    the organization settings.
 
    NOTE: You need to have a paid plan to use organization secrets in private
    repositories.
-5. Pass the secret to the selector job in your workflow.
+5. Make the directories and file `.github/workflows/auto-version-release.yml`
+   in your repository with the contents:
+   ```yaml
+    name: auto-version-release
+    on:
+      pull_request:
+        branches: [main] # pull request that target these branches.
+        types: [closed]
+
+    concurrency:
+      group: release-group
+      cancel-in-progress: true
+
+    run-name: ${{ github.actor }} run avr workflow-selector
+
+    jobs:
+      selector: # trigger this on push to main and only when a PR merge.
+        uses: kohirens/version-release/.github/workflows/selector.yml@5.0.4
+        name: workflow-selector
+        secrets:
+          github_write_token: ${{ secrets.GH_WRITE_TOKEN }}
+        with:
+          committer_email: <email-of-your-choice>
+          committer_name: <name-of-your-choice>
+   ```
+6. Pass the secret to the selector job in your workflow.
    ```yaml
    jobs:
      selector: # trigger this on push to main and only when a PR merge.
@@ -93,15 +123,9 @@ The fix was generating a new token in my case.
          github_write_token: ${{ secrets.GH_WRITE_TOKEN }}
    ```
 
-   ![Passing secrets to job step](/docs/assets/passing-secrets.png)
-6. Example curl test:
-   ```shell
-   curl -i -H "Authorization: Bearer ${GH_WRITE_TOKEN}" https://api.github.com/repos/blast-zone/pulls
-   ```
-
 NOTE: Even though were running GitHub Actions which will automatically generate
 a temporary GITHUB_TOKEN for use in steps; it is prevented from triggering any
-additional actions/workflows we may want to run. I assume this is a security
+additional actions/workflows we may want to run. Assume this is a security
 measure and hand-holding for those new to GitHub Actions. However, when we
 publish the change log then merge it in, we'll need the workflow-selector to
 run once more, automatically, to decided if a release should be published.

@@ -6,8 +6,8 @@ development life cycle, which the Version Release Orb provides.
 ## Prerequisites
 
 1. Depending on which system you plan to use read on:
-   1. [CircleCI Setup](/docs/setup-keys.md#circleci-setup)
-   2. [GitHub Actions](/docs/setup-keys.md#github-actions)
+   1. [CircleCI Setup]
+   2. [GitHub Actions]
 2. Add an optional [git-cliff] config to your repo. If you do not, then one will
    be generated and added with the changelog the first time and auto-release
    occurs.
@@ -99,3 +99,5 @@ the patch number will reset to zero.
 
 [auto-release]: https://circleci.com/developer/orbs/orb/kohirens/version-release#usage-auto-release
 [git-cliff]: https://git-cliff.org/docs/configuration
+[CircleCI Setup]: /docs/setup-keys.md#circleci-setup
+[GitHub Actions]: /docs/setup-keys.md#github-actions
