@@ -57,8 +57,10 @@ concurrency:
     group: qa-group
     cancel-in-progress: false
 
-env:
+env: # This is where the extra variable come from: https://docs.github.com/en/actions/tutorials/authenticate-with-github_token
     GH_WRITE_TOKEN: ${{ secrets.github_write_token }}
+    GH_TOKEN: ${{ secrets.github_write_token }}
+    GITHUB_TOKEN: ${{ secrets.github_write_token }}
 
 jobs:
     select-a-workflow:
@@ -82,8 +84,8 @@ jobs:
                   github_api_url: ${{ inputs.github_api_url }}
                   github_server: ${{ inputs.github_server }}
     publish-changelog:
-        permissions:
-            contents: write
+        # permissions:
+        #     contents: read,write,pull-request
         if: ${{ needs.select-a-workflow.outputs.workflow == 'publish-changelog' }}
         runs-on: ubuntu-latest
         name: Publish changelog workflow
