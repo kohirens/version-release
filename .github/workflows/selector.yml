@@ -37,7 +37,7 @@ on:
                 description: |2
                   Prefix git tags with a "v" before the semantic version number.
                 required: false
-                type: bool
+                type: string
             github_api_url:
                 default: "https://api.github.com"
                 description: Github API URL.
