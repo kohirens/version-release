@@ -37,7 +37,7 @@ on:
                 description: |2
                   Prefix git tags with a "v" before the semantic version number.
                 required: false
-                type: boolean
+                type: bool
             github_api_url:
                 default: "https://api.github.com"
                 description: Github API URL.
@@ -46,7 +46,7 @@ on:
             github_server:
                 default: "github.com"
                 description: GitHub server domain name.
-                required: false
+                required: true
                 type: string
         secrets:
             github_write_token:
@@ -57,10 +57,8 @@ concurrency:
     group: qa-group
     cancel-in-progress: false
 
-env: # This is where the extra variable come from: https://docs.github.com/en/actions/tutorials/authenticate-with-github_token
+env:
     GH_WRITE_TOKEN: ${{ secrets.github_write_token }}
-    GH_TOKEN: ${{ secrets.github_write_token }}
-    GITHUB_TOKEN: ${{ secrets.github_write_token }}
 
 jobs:
     select-a-workflow:
@@ -77,15 +75,15 @@ jobs:
                   fetch-tags: true
                   fetch-depth: 0
             - name: Select a workflow
-              uses: kohirens/version-release/.github/actions/workflow-selector@5.1.1
+              uses: kohirens/version-release/.github/actions/workflow-selector@5.1.2
               id: selector
               with:
                   enable_tag_v_prefix: ${{ inputs.enable_tag_v_prefix }}
                   github_api_url: ${{ inputs.github_api_url }}
                   github_server: ${{ inputs.github_server }}
     publish-changelog:
-        # permissions:
-        #     contents: read,write,pull-request
+        permissions:
+            contents: write
         if: ${{ needs.select-a-workflow.outputs.workflow == 'publish-changelog' }}
         runs-on: ubuntu-latest
         name: Publish changelog workflow
@@ -103,7 +101,7 @@ jobs:
                   merge-multiple: true
                   run-id: ${{ inputs.add_files_to_commit_run_id }}
             - name: Update and publish the changelog
-              uses: kohirens/version-release/.github/actions/publish-changelog@5.1.1
+              uses: kohirens/version-release/.github/actions/publish-changelog@5.1.2
               id: changelog
               with:
                   changelog_hash: ${{ needs.select-a-workflow.outputs.changelog_hash }}
@@ -126,7 +124,7 @@ jobs:
                   fetch-tags: true
                   fetch-depth: 0
             - name: Publish a release
-              uses: kohirens/version-release/.github/actions/publish-release-tag@5.1.1
+              uses: kohirens/version-release/.github/actions/publish-release-tag@5.1.2
               id: release
               with:
                   tag_cmd: 'echo "${{ needs.select-a-workflow.outputs.next_semver }}"'
