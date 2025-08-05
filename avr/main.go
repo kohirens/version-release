@@ -22,7 +22,8 @@ import (
 )
 
 const (
-	autoReleaseHeader         = "# Auto Version Release %v"
+	//autoReleaseHeader         = "Auto Version Release %v"
+	autoReleaseHeader         = "auto: Release %v"
 	autoReleaseFooter         = "changes sha256 %v"
 	maxRequestTimeout         = 10 * time.Second
 	publishChgLogWorkflow     = "publish-changelog"
