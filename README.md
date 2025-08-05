@@ -22,6 +22,21 @@ FYI: Changelog updates are performed using the [git-cliff] tool.
 3. Automatically publish a new release tag on GitHub (will fail if the
    calculated release already exists).
 
+## What Determines a Release
+
+For sanity purposes. This application defines "Release" and "Unreleased" as
+such.
+
+*Release*
+A release is an annotated tag that points to Git commit, and any
+commits that came before it, in reverse chronological order by committer date.
+
+All commits are considered to be part of that release, until you hit another
+annotated tag or the first commit.
+
+**Unreleased**
+Are commits that do not fall under an annotated tag.
+
 ## CI/CD Pipeline Integration
 
 Make use of the Auto Version Release Docker image to integrate with any
