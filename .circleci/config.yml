@@ -21,7 +21,7 @@ parameters:
         description: Container automation
         type: string
     orb_version:
-        default: "5.0.5"
+        default: "5.1.8"
         description: >
             The development version of the orb to test.
             This value is automatically adjusted by the "trigger-integration-tests-workflow" job to correspond with the specific version created by the commit and should not be edited.
@@ -271,6 +271,8 @@ workflows:
                   do_attach_workspace: true
                   do_checkout: false
                   requires: [ publish-github-action-files ]
+                  committer_email: "619281+b01@users.noreply.github.com"
+                  committer_name: "Khalifah K Shabazz"
 
     publish-release-tag:
         when:
