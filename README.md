@@ -10,63 +10,54 @@ FYI: Changelog updates are performed using the [git-cliff] tool.
 ## Features
 
 * Integrate with existing CircleCI and GitHub Actions workflows.
-* Automated change log publishing.
-* Automated GitHub release publishing.
+* Automated change log publishing by aggregating Git commit messages that
+  follow conventional commits standard, then generating a new CHANGELOG.md with
+  those updates; Then automatically commit, branch and then merge the
+  CHANGELOG.md into a trunk (named or ref) of your choosing.
+* Automated GitHub release publishing and updating the semantic version number.
 
-## How It Works
+## Definitions
 
-1. Automatically update the change log from Git commit messages based on
-   conventional commits.
-2. Automatically commit, branch and then merge any CHANGELOG.md updates into
-   a trunk (named or ref) of your choosing.
-3. Automatically publish a new release tag on GitHub (will fail if the
-   calculated release already exists).
+This application defines "Release" and "Unreleased" as such.
 
-## What Determines a Release
-
-For sanity purposes. This application defines "Release" and "Unreleased" as
-such.
-
-*Release*
-A release is an annotated tag that points to Git commit, and any
+**Release** - An annotated tag that points to Git commit, and any
 commits that came before it, in reverse chronological order by committer date.
 
 All commits are considered to be part of that release, until you hit another
 annotated tag or the first commit.
 
-**Unreleased**
-Are commits that do not fall under an annotated tag.
+**Unreleased** - Are commits that do not fall under an annotated tag.
 
-## CI/CD Pipeline Integration
+## What Determines a Release
 
-Make use of the Auto Version Release Docker image to integrate with any
-pipeline.
+Conventional commit rely on semantic versioning rules. The commit
+messages themselves will contain keywords/markers/labels that control which
+number of the semantic version will be incremented based on "Unreleased"
+commits.
+
+## Get Started
+
+Make use of this Auto Version Release tool in your new or existing CI/CD
+pipelines.
 
 ### CircleCI
 
-You will need to allow CircleCI read/write permissions to your GitHub
-repository, which can be done with these steps.
-
-1. [Set up a personal access token on GitHub] to allow CircleCI to make GitHub
-   API request on your behalf.
-2. Edit `.circleci/config.yml` to:
-   1. Update the change log by extracting changes from (conventional) commits
-      messages.
-   2. Make a pull request and with the updated changes then auto merge them.
-   3. Perform a release if the changes warrant one.
+1. You will need to grant your CircleCI app read/write permissions to your GitHub
+repository, you can follow the [CircleCI Setup].
+2. Then review the [Orb example] to integrate the necessary changes in your
+   `.circleci/config.yml`
+3. Then you can try it out by following the [How to Release] guide.
 
 See the [Version Release Orb] documentation for an example.
 
 ### GitHub Actions
 
-1. [Set up a personal fine-grained access token on GitHub] to allow GitHub
-   Actions, through the GitHub REST API, to make changes to the repo on your
-   behalf.
-2. Add `.github/workflows/avr.yml` to:
-    1. Update the change log by extracting changes from (conventional) commits
-       messages.
-    2. Make a pull request and with the updated changes then auto merge them.
-    3. Perform a release if the changes warrant one.
+1. You will need to grant your repo GitHub Actions read/write permissions to
+   your GitHub repository, which you can follow the [GitHub Actions] to set that
+   up. This also gives an example of how you could integrate the necessary
+   changes in your GitHub Actions.
+2. Once that is done, then you can try it out by following the [How to Release]
+   guide.
 
 ## Resources
 
@@ -75,7 +66,6 @@ See the [Version Release Orb] documentation for an example.
 
 ---
 
-[Generate an SSH key for your repository]: /docs/setup-keyss.md#generate-an-ssh-key-for-circle-ci
 [Set up a personal access token on GitHub]: /docs/setup-keys.md#setup-a-personal-access-token-on-github
 [Version Release Orb]: https://circleci.com/developer/orbs/orb/kohirens/version-release#usage-examples
 [Docs]: /docs/index.md
@@ -83,3 +73,7 @@ See the [Version Release Orb] documentation for an example.
 [git-cliff]: https://git-cliff.org/docs/
 [Setup Deploy Keys]: /docs/setup-keys.md
 [.circleci/config.yml]: /.circleci/config.yml
+[CircleCI Setup]: /docs/setup-keys.md#circleci-setup
+[GitHub Actions]: /docs/setup-keys.md#github-actions
+[How to Release]: /docs/how-to-release.md
+[Orb example]: /src/examples/auto-release.yml
