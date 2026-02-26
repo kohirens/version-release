@@ -65,7 +65,7 @@ commit_parsers = [
   { message = "^chore(\\(.*\\))?:", group = "Regular Maintenance" },
 ]
 # protect breaking changes from being skipped due to matching a skipping commit_parser
-protect_breaking_commits = false
+protect_breaking_commits = true
 # filter out the commits that are not matched by commit parsers
 filter_commits = true
 # regex for matching git tags
