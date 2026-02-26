@@ -53,8 +53,8 @@ You will also need a CircleCI Token for accessing the API to trigger workflows.
    Releases" (or give it any name you like).
 3. Save the token as `CIRCLE_TOKEN` in the same context as the GH_WRITE_TOKEN.
 
-NOTE: `GH_WRITE_TOKEN` and `CIRCLE_TOKEN` cannot be changed as they are 
-      hardcoded into the AVR application.
+NOTE: `GH_WRITE_TOKEN` and `CIRCLE_TOKEN` variable names cannot be changed as
+they are hardcoded into the AVR application.
 
 ## GitHub Actions
 
