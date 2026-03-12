@@ -70,7 +70,7 @@ jobs:
             next_semver: ${{ steps.selector.outputs.next_semver }}
         steps:
             - name: Checkout
-              uses: actions/checkout@v4
+              uses: actions/checkout@v6
               with:
                   fetch-tags: true
                   fetch-depth: 0
@@ -87,7 +87,7 @@ jobs:
         name: Publish changelog workflow
         steps:
             - name: Checkout
-              uses: actions/checkout@v4
+              uses: actions/checkout@v6
               with:
                   fetch-tags: true
                   fetch-depth: 0
@@ -117,7 +117,7 @@ jobs:
         name: Publish release workflow
         steps:
             - name: Checkout
-              uses: actions/checkout@v4
+              uses: actions/checkout@v6
               with:
                   fetch-tags: true
                   fetch-depth: 0
