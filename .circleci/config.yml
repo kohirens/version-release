@@ -21,7 +21,7 @@ parameters:
         description: Container automation
         type: string
     orb_version:
-        default: "5.1.10"
+        default: "6.0.0"
         description: >
             The development version of the orb to test.
             This value is automatically adjusted by the "trigger-integration-tests-workflow" job to correspond with the specific version created by the commit and should not be edited.
@@ -50,7 +50,7 @@ executors:
         resource_class: small
     avr:
         docker:
-            - image: kohirens/version-release:5.1.10
+            - image: kohirens/version-release:6.0.0
               auth:
                   username: ${DH_USER}
                   password: ${DH_API_TOKEN}

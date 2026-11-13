@@ -161,6 +161,7 @@ func Test_unreleasedChangesMessage(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 
+			// TODO: Need to filter out INFO and WARN message in the GitCliff output.
 			wd := git.CloneFromBundle(tt.bundle, tmpDir, fixtureDir, ps)
 			got, err := unreleasedChangesCommits(wd)
 			if (err != nil) != tt.wantErr {
