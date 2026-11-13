@@ -19,13 +19,14 @@ export BUILD_ARGS="--build-arg ARG1"
 export e_tag_name="example/com:abc123"
 export e_build_file="path/to/Dockerfile"
 export e_build_target="test-target"
-export e_build_args="ARG1"
+export e_build_args="ARG1 SEMVER=1.0.0"
 export e_build_context="."
 export e_image="example/com:abc123"
 
 @test '1: publish multiple docker images' {
     # setup
-    export TAGS="latest 1.0.0"
+    export SEMVER_TAG="1.0.0"
+    export TAGS="latest"
 
     # test
     source ./src/scripts/publish-docker-hub.sh
@@ -37,7 +38,7 @@ export e_image="example/com:abc123"
 
 @test '2: publish a docker image' {
     # setup
-    export IMG_TAG="1.0.0"
+    export SEMVER_TAG="1.0.0"
 
     # test
     source ./src/scripts/publish-docker-hub.sh
