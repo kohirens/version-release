@@ -3,13 +3,14 @@ package gitcliff
 import (
 	"bytes"
 	"fmt"
-	"github.com/kohirens/stdlib/fsio"
-	"github.com/kohirens/stdlib/git"
-	help "github.com/kohirens/stdlib/test"
 	"os"
 	"reflect"
 	"testing"
 	"time"
+
+	"github.com/kohirens/stdlib/fsio"
+	"github.com/kohirens/stdlib/git"
+	help "github.com/kohirens/stdlib/test"
 )
 
 const (
@@ -167,7 +168,7 @@ func Test_unreleasedChangesMessage(t *testing.T) {
 				return
 			}
 			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("unreleasedChangesMessage() got = %v, want %v", got, tt.want)
+				t.Errorf("unreleasedChangesMessage() got = %s, want %s", got, tt.want)
 			}
 		})
 	}

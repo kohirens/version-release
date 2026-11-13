@@ -6,33 +6,29 @@ fi
 # Get the value of the semantic version tag in 1 of 3 way.
 # If more than 1 is set, the last wins.
 semver=""
-if [ -n "${PARAM_TAG_CMD}" ]; then
-    semver="$("${PARAM_TAG_CMD}")"
+if [ -n "${SEMVER_TAG_CMD}" ]; then
+    semver="$("${SEMVER_TAG_CMD}")"
     echo "semantic version ${semver} was set by command"
 fi
 
-if [ -n "${PARAM_TAG_ENV_VAR}" ]; then
-    semver="${!PARAM_TAG_ENV_VAR}"
-    echo "semantic version ${semver} was extracted from environment variable ${PARAM_TAG_ENV_VAR}"
+if [ -n "${SEMVER_TAG_ENV_VAR}" ]; then
+    semver="${!SEMVER_TAG_ENV_VAR}"
+    echo "semantic version ${semver} was extracted from environment variable ${SEMVER_TAG_ENV_VAR}"
 fi
 
-if [ -n "${PARAM_TAG_FILE}" ]; then
-    semver="$(cat "${PARAM_TAG_FILE}")"
-    echo "semantic version ${semver} was pulled from the file ${PARAM_TAG_FILE}"
+if [ -n "${SEMVER_TAG_FILE}" ]; then
+    semver="$(cat "${SEMVER_TAG_FILE}")"
+    echo "semantic version ${semver} was pulled from the file ${SEMVER_TAG_FILE}"
 fi
 
-if [ -z "${semver}" ] && [ -z "${IMG_TAG}" ] && [ -z "${TAGS}" ]; then
-    echo "cannot build the image, tag_cmd, tag_env_var, tag_fileimage_tag, tags parameters are all empty; at least 1 needs to be set"
+if [ -n "${SEMVER_TAG}" ]; then
+    semver="${SEMVER_TAG}"
+    echo "semantic version ${semver} was explicitly set"
+fi
+
+if [ -z "${semver}" ]; then
+    echo "cannot build the image because semver_tag, semver_tag_cmd, semver_tag_env_var, and semver_tag_file parameters are all empty; at least 1 needs to be set"
     exit 1
-fi
-
-# For backward compatibility.
-if [ -n "${semver}" ]; then
-    TAGS="${semver}"
-elif [ -n "${IMG_TAG}" ] && [ -z "${TAGS}" ]; then
-    TAGS="${IMG_TAG}"
-elif [ -n "${IMG_TAG}" ] && [ -n "${TAGS}" ]; then
-    TAGS="${TAGS} ${IMG_TAG}"
 fi
 
 if [ -z "${REPOSITORY}" ]; then
@@ -72,20 +68,31 @@ fi
 
 build_cmd="${build_cmd} ${BUILD_CONTEXT}"
 
-printf "\nBuilding %s\n" "${DH_IMAGE}"
+echo "executing build command:"
+printf "\t%s\n" "${build_cmd}"
+
 $build_cmd
+
+# The user should not prefix the semver tag since it is done here automatically.
+# If they do, it will just perform an overwrite, which could throw an
+# error if they do not have permissions set appropriately.
+TAGS="${semver} ${TAGS}"
+
+if [ -n "${TAGS}" ]; then
+    printf "additional tags found: %s\n" "${TAGS}"
+fi
 
 for tag in ${TAGS}; do
     stamp="${REPOSITORY}:${tag}"
 
     docker tag "${DH_IMAGE}" "${stamp}"
 
-    printf "\nPushing %s\n" "${stamp}"
+    printf "pushing %s\n" "${stamp}"
     docker push "${stamp}"
 
-    printf "\nCleaning up %s\n" "${stamp}"
+    printf "cleaning up %s\n" "${stamp}"
     docker rmi "${stamp}"
 done
 
-printf "\nCleaning up %s\n" "${DH_IMAGE}"
+printf "cleaning up %s\n" "${DH_IMAGE}"
 docker rmi "${DH_IMAGE}"

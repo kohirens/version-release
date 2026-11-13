@@ -39,29 +39,29 @@ parameters:
         default: ""
         description: Environment file containing variable value pairs to export to the build environment.
         type: string
-    image_tag:
-        default: ""
-        description: Obsolete, use tags parameter instead. This parameter will be removed in the next major release. A single tag to stamp the image in Docker Hub.
-        type: string
     repository:
         description: |2
           Docker Hub image repository for example "kohirens/version-release".
         type: string
-    tag_cmd:
+    semver_tag:
         default: ""
-        description: Command to run to get the semantic version tag, will override the auto generated value.
+        description: The semantic version, will override all other settings.
         type: string
-    tag_env_var:
+    semver_tag_cmd:
         default: ""
-        description: Environment variable to get the semantic version tag, will override the auto generated value.
+        description: Command to run to get the semantic version, will override the auto generated value.
         type: string
-    tag_file:
+    semver_tag_env_var:
         default: ""
-        description: File to get the semantic version tag, will override the auto generated value.
+        description: Environment variable to get the semantic version, will override the auto generated value.
+        type: string
+    semver_tag_file:
+        default: ""
+        description: File to get the semantic version, it must be on the first line of the file. It will override the auto generated value.
         type: string
     tags:
         default: ""
-        description: Tags to stamp the image and push to Docker Hub. Space delimited.
+        description: A space separated list of additional tags that will be applied to the image pushed to Docker Hub. The semantic version will automatically be prefixed to this list.
         type: string
     target:
         default: ""
@@ -78,10 +78,10 @@ environment:
     DOCKER_BUILDKIT: << parameters.docker_buildkit >>
     DOCKER_FILE: << parameters.dockerfile >>
     ENV_FILE: << parameters.env_file >>
-    IMG_TAG: << parameters.image_tag >>
-    PARAM_TAG_CMD: "<< parameters.tag_cmd >>"
-    PARAM_TAG_ENV_VAR: "<< parameters.tag_env_var >>"
-    PARAM_TAG_FILE: "<< parameters.tag_file >>"
+    SEMVER_TAG: << parameters.semver_tag >>
+    SEMVER_TAG_CMD: << parameters.semver_tag_cmd >>
+    SEMVER_TAG_ENV_VAR: << parameters.semver_tag_env_var >>
+    SEMVER_TAG_FILE: << parameters.semver_tag_file >>
     TAGS: << parameters.tags >>
     REPOSITORY: << parameters.repository >>
     TARGET: << parameters.target >>

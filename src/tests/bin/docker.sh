@@ -14,6 +14,8 @@ OPTIONS=c:,d,f:,t:,u:
 PARSED=$(getopt --options=${OPTIONS} --longoptions=${LONG_OPTS} --name "$0" -- "${@}") || exit 1
 eval set -- "${PARSED}"
 
+build_args=""
+
 while true; do
     case "${1}" in
         -c)
@@ -34,11 +36,15 @@ while true; do
             shift 2
             ;;
         --build-arg)
-            build_args="${2}"
+            if [ -z "${build_args}" ]; then
+                build_args="${2}"
+            else
+                build_args="${build_args} ${2}"
+            fi
             shift 2
             ;;
         --entrypoint)
-            build_args="${2}"
+            entrypoint="${2}"
             shift 2
             ;;
         --name)
@@ -93,8 +99,23 @@ if [ "${1}" = "build" ]; then
         exit 1
     fi
 
-    if [ "${build_args}" != "${e_build_args}" ]; then
-        echo "expected build args ${e_build_args}, got ${build_args}"
+    if [ -n "${build_args}" ]; then
+        for build_arg in $build_args; do
+            # Verify each arg is in the list of expected args.
+            case " $e_build_args " in
+                *" ${build_arg} "*)
+                    echo "found expected build arg ${build_arg}"
+                    ;;
+                *)
+                    echo "expected build args ${e_build_args}, got ${build_args}"
+                    exit 1
+                    ;;
+            esac
+        done
+    fi
+
+    if [ "${entrypoint}" != "${e_entrypoint}" ]; then
+        echo "expected entrypoint ${e_entrypoint}, got ${entrypoint}"
         exit 1
     fi
 
