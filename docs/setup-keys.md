@@ -105,7 +105,7 @@ The fix was generating a new token in my case.
 
     jobs:
       selector: # trigger this on push to main and only when a PR merge.
-        uses: kohirens/version-release/.github/workflows/selector.yml@5.0.4
+        uses: kohirens/version-release/.github/workflows/selector.yml@6.0.0
         name: workflow-selector
         secrets:
           github_write_token: ${{ secrets.GH_WRITE_TOKEN }}
