@@ -201,7 +201,7 @@ workflows:
                   context: << pipeline.parameters.ctx_docker_hub >>
                   requires: [ bats/run, shellcheck/check ]
                   dockerfile: ".docker/vr/Dockerfile"
-                  image_tag: "dev"
+                  semver_tag: "dev"
                   repository: << pipeline.parameters.orb_repo >>
             - orb-publish:
                   name: "publish-dev-orb"
@@ -242,7 +242,7 @@ workflows:
 #                  dockerfile: ".docker/vr/Dockerfile"
 #                  tags: "dummy"
 #                  repository: << pipeline.parameters.orb_repo >>
-#                  tag_env_var: "DUMMY_RELEASE_TAG" # this is defined in the CircleCI project environment settings.
+#                  semver_env_var: "DUMMY_RELEASE_TAG" # this is defined in the CircleCI project environment settings.
 #                  do_attach_workspace: true
 #                  do_checkout: false
         when: <<pipeline.parameters.run_integration_tests>>
@@ -298,6 +298,7 @@ workflows:
                   dockerfile: ".docker/vr/Dockerfile"
                   repository: << pipeline.parameters.orb_repo >>
                   tags: "<< pipeline.git.tag >> latest"
+                  semver_tag: << pipeline.git.tag >>
             - orb-publish:
                   name: "publish-prod-orb"
                   context: << pipeline.parameters.ctx_auto_release >>
