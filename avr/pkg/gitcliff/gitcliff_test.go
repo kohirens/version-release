@@ -117,7 +117,7 @@ func TestBump(t *testing.T) {
 	}
 }
 
-func Test_trimOutput(t *testing.T) {
+func Test_scrubOutput(t *testing.T) {
 	cases := []struct {
 		name string
 		so   []byte
@@ -136,9 +136,9 @@ func Test_trimOutput(t *testing.T) {
 	}
 	for _, c := range cases {
 		t.Run(c.name, func(t *testing.T) {
-			got := trimOutput(c.so)
+			got := scrubOutput(c.so)
 			if !reflect.DeepEqual(got, c.want) {
-				t.Errorf("trimOutput() = %v, want %v", got, c.want)
+				t.Errorf("scrubOutput() = %q, want %q", got, c.want)
 			}
 		})
 	}

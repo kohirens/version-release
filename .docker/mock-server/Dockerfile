@@ -1,7 +1,7 @@
 ARG REPO='github.com/kohirens/version-release'
-ARG GIT_CLIFF_VER="2.2.1"
+ARG GIT_CLIFF_VER="2.14.2"
 
-FROM golang:1.23-alpine3.20 AS base
+FROM golang:1.26-alpine3.24 AS base
 
 WORKDIR /tmp
 
