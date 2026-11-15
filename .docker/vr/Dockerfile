@@ -3,10 +3,10 @@ ARG USER_UID='1000'
 ARG USER_GID='1000'
 ARG USER_GROUP='app_users'
 ARG REPO='github.com/kohirens/version-release'
-ARG GIT_CLIFF_VER="2.8.0"
+ARG GIT_CLIFF_VER="2.14.2"
 ARG SEMVER
 
-FROM kohirens/go:1.21.0 AS build
+FROM golang:1.26-alpine3.24 AS build
 
 ARG USER_NAME
 ARG USER_UID

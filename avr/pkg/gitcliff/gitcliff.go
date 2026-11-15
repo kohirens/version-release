@@ -4,15 +4,16 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"os"
+	"regexp"
+	"strings"
+
 	"github.com/kohirens/stdlib"
 	"github.com/kohirens/stdlib/cli"
 	"github.com/kohirens/stdlib/fsio"
 	"github.com/kohirens/stdlib/logger"
 	"github.com/kohirens/stdlib/str"
 	"github.com/kohirens/version-release/avr/pkg/lib"
-	"os"
-	"regexp"
-	"strings"
 )
 
 const (
@@ -134,8 +135,13 @@ func Bump(wd string, enableTagVPrefix bool) string {
 		return ""
 	}
 
+	log.Dbugf("so: %v", so)
+
 	re := regexp.MustCompile(lib.CheckSemVer)
-	soClean := bytes.Trim(trimOutput(so), "\n")
+
+	log.Dbugf(stdout.Fmt, cs, so)
+
+	soClean := bytes.Trim(scrubOutput(so), "\n")
 	var found []byte
 	out := bytes.Split(soClean, []byte("\n"))
 
@@ -186,8 +192,10 @@ func UnreleasedChanges(wd string) ([]Unreleased, error) {
 		return nil, nil
 	}
 
+	log.Dbugf(stdout.Fmt, cs, so)
+
 	// remove extra INFO|WARN git-cliff output
-	soClean := trimOutput(so)
+	soClean := scrubOutput(so)
 	var u []Unreleased
 
 	if e := json.Unmarshal(soClean, &u); e != nil {
@@ -231,7 +239,7 @@ func unreleasedChangesCommits(wd string) ([]byte, error) {
 
 	log.Infof(stdout.Cs, cs)
 
-	soClean := trimOutput(so)
+	soClean := scrubOutput(so)
 
 	if se != nil {
 		return soClean, fmt.Errorf(stderr.UnreleasedMsg, se.Error())
@@ -240,49 +248,33 @@ func unreleasedChangesCommits(wd string) ([]byte, error) {
 	return soClean, nil
 }
 
-// trimOutput Git-Cliff unfortunately adds diagnostic messages like warnings to
-// the standard output alone with program data, making it hard to parse. This
+// scrubOutput Git-Cliff unfortunately adds diagnostic messages like warnings to
+// the standard output along with program data, making it hard to parse. This
 // trims that output.
-func trimOutput(so []byte) []byte {
-	log.Dbugf(stdout.Fmt, Cmd, string(so))
+func scrubOutput(so []byte) []byte {
+	if len(so) < 1 {
+		return []byte{}
+	}
 
-	le := []byte("\n")
-	re := regexp.MustCompile(`^\s*INFO|ERROR|WARN\s+`)
-	b := bytes.Split(so, le)
-	var start int
-	var bLine []byte
-	trimmed := make([]byte, 0)
+	lines := bytes.Split(so, []byte("\n"))
+	re := regexp.MustCompile(`(INFO|ERROR|WARN)\s*.*$`)
+	start := 0
 
-	for start, bLine = range b {
-		line := string(bLine)
-		if !re.MatchString(line) {
-			log.Dbugf(stdout.NoMoreDiagnostics)
+	for i, line := range lines {
+		log.Dbugf(stdout.Scrubbing, fmt.Sprintf("line %v", i), line)
+		if !re.Match(line) {
 			break
 		}
 
-		log.Dbugf(stdout.DiagnosticsFound, line)
-
-		if start == len(b)-1 {
-			// we reached the end and found no output worth returning.
-			// set the starting point past the last index.
-			start++
-		}
+		// Skip over GitCliff log output.
+		start = i + 1
 	}
 
-	// We could start when it is past the index. That would work for arrays
-	// or strings, the indices are in range if 0 <= low <= high <= len(a),
-	// otherwise they are out of range.
-	// See Slice expressions https://go.dev/ref/spec#Index_expressions
-	// However that kind of coding is not a good practice and can be hard to
-	// interpret as time goes on. So just check if start is equal to length and
-	// return an empty array if it is.
-	if start < len(b) {
-		log.Dbugf(stdout.TrimmedStart, len(b), start)
-
-		trimmed = bytes.Join(b[start:], le)
+	if start > 0 {
+		trimmed := bytes.Join(lines[start:], []byte("\n"))
+		log.Dbugf(stdout.Trimmed, trimmed)
+		return trimmed
 	}
 
-	log.Dbugf(stdout.Trimmed, string(trimmed))
-
-	return trimmed
+	return so
 }

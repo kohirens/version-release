@@ -26,20 +26,20 @@ var stdout = struct {
 	NoMoreDiagnostics,
 	NothingToTag,
 	PrependToChangelog,
+	Scrubbing,
 	Trimmed,
-	TrimmedStart,
 	Wd string
 }{
 	AddTagManually:     "adding manual semver tag %v",
 	Cs:                 "exec command string: %s",
 	DiagnosticsFound:   "found diagnostic message: %v",
-	Fmt:                "%v stdout: \n%v",
+	Fmt:                "%v stdout: \n%s",
 	NextSemVer:         "next semantic version: %v",
 	NoCommitsToBump:    "There is nothing to bump",
 	NoMoreDiagnostics:  "no more matches found",
 	NothingToTag:       "next semantic version is empty, so we cannot release a tag",
 	PrependToChangelog: "will prepend unreleased to the changelog.",
+	Scrubbing:          "scrubbing output:\n%s\nscrubbing output end",
 	Trimmed:            "trimmed:\n%v",
-	TrimmedStart:       "stdout len: %v, start at index: %v",
 	Wd:                 "%v working directory: %s",
 }
