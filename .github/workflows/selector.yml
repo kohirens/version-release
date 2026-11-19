@@ -48,6 +48,21 @@ on:
                 description: GitHub server domain name.
                 required: false
                 type: string
+            tag_cmd:
+                default: ""
+                description: Command to run to get the semantic version tag, will override the auto generated value.
+                required: false
+                type: string
+            tag_env_var:
+                default: ""
+                description: Environment variable to get the semantic version tag, will override the auto generated value.
+                required: false
+                type: string
+            tag_file:
+                default: ""
+                description: File to get the semantic version tag, will override the auto generated value.
+                required: false
+                type: string
         secrets:
             github_write_token:
                 required: true
@@ -70,7 +85,7 @@ jobs:
             next_semver: ${{ steps.selector.outputs.next_semver }}
         steps:
             - name: Checkout
-              uses: actions/checkout@v6
+              uses: actions/checkout@v7
               with:
                   fetch-tags: true
                   fetch-depth: 0
@@ -81,13 +96,16 @@ jobs:
                   enable_tag_v_prefix: ${{ inputs.enable_tag_v_prefix }}
                   github_api_url: ${{ inputs.github_api_url }}
                   github_server: ${{ inputs.github_server }}
+                  tag_cmd: ${{ inputs.tag_cmd }}
+                  tag_env_var: ${{ inputs.tag_env_var }}
+                  tag_file: ${{ inputs.tag_file }}
     publish-changelog:
         if: ${{ needs.select-a-workflow.outputs.workflow == 'publish-changelog' }}
         runs-on: ubuntu-latest
         name: Publish changelog workflow
         steps:
             - name: Checkout
-              uses: actions/checkout@v6
+              uses: actions/checkout@v7
               with:
                   fetch-tags: true
                   fetch-depth: 0
@@ -110,6 +128,7 @@ jobs:
                   enable_tag_v_prefix: ${{ inputs.enable_tag_v_prefix }}
                   github_api_url: ${{ inputs.github_api_url }}
                   github_server: ${{ inputs.github_server }}
+                  tag_cmd: 'echo "${{ needs.select-a-workflow.outputs.next_semver }}"'
         needs: select-a-workflow
     publish-release-tag:
         if: ${{ needs.select-a-workflow.outputs.workflow == 'publish-release-tag' }}
