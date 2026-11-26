@@ -21,7 +21,7 @@ parameters:
         description: Container automation
         type: string
     orb_version:
-        default: "6.0.0"
+        default: "6.0.2"
         description: >
             The development version of the orb to test.
             This value is automatically adjusted by the "trigger-integration-tests-workflow" job to correspond with the specific version created by the commit and should not be edited.
@@ -92,6 +92,7 @@ jobs:
                   name: "Publish Orb"
                   command: |
                       # Update the placeholders in these files
+                      echo "replacing 'VERSION_RELEASE_IMAGE' placeholder with '<<parameters.image_tag>>'"
                       sed -i -e "s/VERSION_RELEASE_IMAGE/<<parameters.image_tag>>/g" src/executors/default.yml
                       sed -i -e "s/VERSION_RELEASE_IMAGE/<<parameters.image_tag>>/g" src/jobs/publish-changelog.yml
                       sed -i -e "s/VERSION_RELEASE_IMAGE/<<parameters.image_tag>>/g" src/jobs/tag-and-release.yml
@@ -121,11 +122,19 @@ jobs:
                         exit 1
                       fi
                       echo "next_version = ${next_version}"
-                      sed -e "s/VERSION_RELEASE_IMAGE/${next_version}/g" templates/selector.yml > .github/workflows/selector.yml
+                      sed -e "s/VERSION_RELEASE_IMAGE/${next_version}/g" templates/publish-changelog-action.yml > .github/actions/publish-changelog/action.yml
+                      sed -e "s/VERSION_RELEASE_IMAGE/${next_version}/g" templates/publish-release-tag-action.yml > .github/actions/publish-release-tag/action.yml
+                      sed -e "s/VERSION_RELEASE_IMAGE/${next_version}/g" templates/workflow-selector-action.yml > .github/actions/workflow-selector/action.yml
+                      sed -e "s/VERSION_RELEASE_IMAGE/${next_version}/g" templates/workflow-selector-workflows.yml > .github/workflows/selector.yml
+                      # Debug
                       cat .github/workflows/selector.yml
                       # Start adding files to the list of files that should be committed.
                       echo ".github/workflows/selector.yml" > << pipeline.parameters.additional_files_file >>
+                      echo ".github/actions/publish-changelog/action.yml" >> << pipeline.parameters.additional_files_file >>
+                      echo ".github/actions/publish-release-tag/action.yml" >> << pipeline.parameters.additional_files_file >>
+                      echo ".github/actions/workflow-selector/action.yml" >> << pipeline.parameters.additional_files_file >>
                       echo ".github/workflows/selector.yml updated"
+                      # Debug
                       cat .github/workflows/selector.yml
                       echo ""
                       echo "additional files to commit"

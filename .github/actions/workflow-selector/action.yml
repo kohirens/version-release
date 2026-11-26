@@ -11,10 +11,6 @@ inputs: # https://docs.github.com/en/actions/writing-workflows/choosing-what-you
         description: |2
           Prefix git tags with a "v" before the semantic version number.
         required: false
-    exec_img_tag:
-        default: "VERSION_RELEASE_IMAGE"
-        description: Version of the executor image to pull.
-        required: true
     github_api_url:
         default: "https://api.github.com"
         description: Github API URL.
