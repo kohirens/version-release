@@ -3,7 +3,7 @@ description: CircleCI base image
 parameters:
   exec_img_tag:
     type: string
-    default: "2023.04"
+    default: "2026.11"
 
 docker:
   - image: cimg/base:<< parameters.exec_img_tag >>
