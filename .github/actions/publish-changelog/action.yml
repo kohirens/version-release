@@ -91,7 +91,7 @@ inputs: # https://docs.github.com/en/actions/writing-workflows/choosing-what-you
 
 runs: # https://docs.github.com/en/actions/sharing-automations/creating-actions/metadata-syntax-for-github-actions#runs-for-docker-container-actions
     using: docker
-    image: docker://kohirens/version-release:dev
+    image: docker://kohirens/version-release:6.0.3
     env: # https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/store-information-in-variables#default-environment-variables
         PARAM_ADD_FILES_TO_COMMIT: ${{ inputs.add_files_to_commit }}
         PARAM_CHANGELOG_FILE: ${{ inputs.changelog_file }}
