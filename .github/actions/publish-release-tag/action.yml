@@ -53,7 +53,7 @@ outputs:
 
 runs: # https://docs.github.com/en/actions/sharing-automations/creating-actions/metadata-syntax-for-github-actions#runs-for-composite-actions
     using: docker
-    image: docker://kohirens/version-release:dev
+    image: docker://kohirens/version-release:6.0.3
     env:
       PARAM_ENABLE_TAG_V_PREFIX: ${{ inputs.enable_tag_v_prefix }}
       PARAM_GITHUB_API_URL: ${{ inputs.github_api_url }}
